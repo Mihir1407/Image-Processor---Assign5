@@ -12,4 +12,14 @@ public interface IImage {
   IImage blueComponent();
 
   IImage greenComponent();
+
+  IImage valueComponent();
+
+  IImage lumaComponent();
+
+  IImage intensityComponent();
+
+  IImage verticalFlip();
+
+  IImage horizontalFlip();
 }

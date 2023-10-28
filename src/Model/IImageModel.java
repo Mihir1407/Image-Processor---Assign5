@@ -49,4 +49,34 @@ public interface IImageModel {
    */
   void blueComponent(String imageName, String destImageName) throws IOException;
 
+  /**
+   * Extracts the value component of the image.
+   *
+   * @param imageName The name of the image.
+   * @param destImageName The path where the value component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  void valueComponent(String imageName, String destImageName) throws IOException;
+
+  /**
+   * Extracts the luma component of the image.
+   *
+   * @param imageName The name of the image.
+   * @param destImageName The path where the luma component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  void lumaComponent(String imageName, String destImageName) throws IOException;
+
+  /**
+   * Extracts the intensity component of the image.
+   *
+   * @param imageName The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  void intensityComponent(String imageName, String destImageName) throws IOException;
+
+  void horizontalFlip(String imageName, String destImageName) throws IOException;
+
+  void verticalFlip(String imageName, String destImageName) throws IOException;
 }
