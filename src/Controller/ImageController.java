@@ -4,10 +4,15 @@ import java.util.List;
 
 import Commands.BlueComponent;
 import Commands.GreenComponent;
+import Commands.HorizontalFlip;
 import Commands.ICommand;
+import Commands.IntensityComponent;
 import Commands.LoadCommand;
+import Commands.LumaComponent;
 import Commands.RedComponent;
 import Commands.SaveCommand;
+import Commands.ValueComponent;
+import Commands.VerticalFlip;
 import Model.IImageModel;
 import View.IView;
 
@@ -46,6 +51,26 @@ public class ImageController implements IController {
           break;
         case "blue-component":
           newCommand = new BlueComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "value-component":
+          newCommand = new ValueComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "luma-component":
+          newCommand = new LumaComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "intensity-component":
+          newCommand = new IntensityComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "horizontal-flip":
+          newCommand = new HorizontalFlip(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "vertical-flip":
+          newCommand = new VerticalFlip(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "run":

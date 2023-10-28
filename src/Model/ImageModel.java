@@ -56,7 +56,7 @@ public class ImageModel implements IImageModel {
       throw new IOException("Image not found.");
     }
   }
-  
+
   @Override
   public void blueComponent(String imageName, String destImageName) throws IOException {
     IImage image = imageMap.get(imageName);
@@ -67,4 +67,53 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  @Override
+  public void valueComponent(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.valueComponent());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void lumaComponent(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.lumaComponent());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void intensityComponent(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.intensityComponent());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void horizontalFlip(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.horizontalFlip());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void verticalFlip(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.verticalFlip());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
 }
