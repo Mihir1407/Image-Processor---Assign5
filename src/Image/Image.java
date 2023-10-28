@@ -46,4 +46,36 @@ public class Image implements IImage {
     }
     return new Image(redPixels);
   }
+
+  @Override
+  public IImage greenComponent() {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] greenPixels = new IPixel[height][width];
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        IPixel originalPixel = getPixel(x, y);
+        greenPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
+      }
+    }
+    return new Image(greenPixels);
+  }
+
+  @Override
+  public IImage blueComponent() {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] bluePixels = new IPixel[height][width];
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        IPixel originalPixel = getPixel(x, y);
+        bluePixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
+      }
+    }
+    return new Image(bluePixels);
+  }
+
+
 }

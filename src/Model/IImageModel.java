@@ -31,4 +31,22 @@ public interface IImageModel {
    */
   void redComponent(String imageName, String destImageName) throws IOException;
 
+  /**
+   * Extracts the green component of the image.
+   *
+   * @param imageName The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  void greenComponent(String imageName, String destImageName) throws IOException;
+
+  /**
+   * Extracts the blue component of the image.
+   *
+   * @param imageName The name of the image.
+   * @param destImageName The path where the blue component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  void blueComponent(String imageName, String destImageName) throws IOException;
+
 }

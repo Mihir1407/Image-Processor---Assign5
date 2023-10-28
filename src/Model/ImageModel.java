@@ -46,4 +46,25 @@ public class ImageModel implements IImageModel {
       throw new IOException("Image not found.");
     }
   }
+
+  @Override
+  public void greenComponent(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.greenComponent());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+  
+  @Override
+  public void blueComponent(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.blueComponent());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
 }
