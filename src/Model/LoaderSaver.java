@@ -52,7 +52,12 @@ public class LoaderSaver {
     int height = image.getHeight();
     int width = image.getWidth();
 
-    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    String extension = getFileExtension(savePath);
+
+    int imageType = (extension.equals("jpg") || extension.equals("jpeg")) ?
+            BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+
+    BufferedImage bufferedImage = new BufferedImage(width, height, imageType);
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
@@ -68,7 +73,6 @@ public class LoaderSaver {
       }
     }
 
-    String extension = getFileExtension(savePath);
     ImageIO.write(bufferedImage, extension, new File(savePath));
   }
 

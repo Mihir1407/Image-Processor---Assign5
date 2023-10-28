@@ -153,4 +153,116 @@ public class Image implements IImage {
     return new Image(vFlipPixels);
   }
 
+  @Override
+  public IImage sepia() {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] sepiaPixels = new IPixel[height][width];
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        IPixel originalPixel = getPixel(x, y);
+
+        int originalRed = originalPixel.getRed();
+        int originalGreen = originalPixel.getGreen();
+        int originalBlue = originalPixel.getBlue();
+
+        int newRed = (int) (0.393 * originalRed + 0.769 * originalGreen + 0.189 * originalBlue);
+        int newGreen = (int) (0.349 * originalRed + 0.686 * originalGreen + 0.168 * originalBlue);
+        int newBlue = (int) (0.272 * originalRed + 0.534 * originalGreen + 0.131 * originalBlue);
+
+        newRed = Math.min(255, newRed);
+        newGreen = Math.min(255, newGreen);
+        newBlue = Math.min(255, newBlue);
+
+        sepiaPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
+      }
+    }
+
+    return new Image(sepiaPixels);
+  }
+
+  @Override
+  public IImage sharpen() {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] sharpenedPixels = new IPixel[height][width];
+
+    double[][] kernel = {
+            {-1.0/8, -1.0/8, -1.0/8, -1.0/8, -1.0/8},
+            {-1.0/8, 1.0/4, 1.0/4, 1.0/4, -1.0/8},
+            {-1.0/8, 1.0/4, 1, 1.0/4, -1.0/8},
+            {-1.0/8, 1.0/4, 1.0/4, 1.0/4, -1.0/8},
+            {-1.0/8, -1.0/8, -1.0/8, -1.0/8, -1.0/8}
+    };
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        double redSum = 0;
+        double greenSum = 0;
+        double blueSum = 0;
+
+        for (int i = -2; i <= 2; i++) {
+          for (int j = -2; j <= 2; j++) {
+
+            if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) continue;
+
+            IPixel neighboringPixel = getPixel(x + i, y + j);
+            redSum += neighboringPixel.getRed() * kernel[i + 2][j + 2];
+            greenSum += neighboringPixel.getGreen() * kernel[i + 2][j + 2];
+            blueSum += neighboringPixel.getBlue() * kernel[i + 2][j + 2];
+          }
+        }
+
+        int newRed = Math.min(255, Math.max(0, (int) Math.round(redSum)));
+        int newGreen = Math.min(255, Math.max(0, (int) Math.round(greenSum)));
+        int newBlue = Math.min(255, Math.max(0, (int) Math.round(blueSum)));
+
+        sharpenedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
+      }
+    }
+
+    return new Image(sharpenedPixels);
+  }
+
+  @Override
+  public IImage blur() {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] blurredPixels = new IPixel[height][width];
+
+    double[][] kernel = {
+            {1.0/16, 1.0/8, 1.0/16},
+            {1.0/8, 1.0/4, 1.0/8},
+            {1.0/16, 1.0/8, 1.0/16}
+    };
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        double redSum = 0;
+        double greenSum = 0;
+        double blueSum = 0;
+
+        for (int i = -1; i <= 1; i++) {
+          for (int j = -1; j <= 1; j++) {
+
+            if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) continue;
+
+            IPixel neighboringPixel = getPixel(x + i, y + j);
+            redSum += neighboringPixel.getRed() * kernel[i + 1][j + 1];
+            greenSum += neighboringPixel.getGreen() * kernel[i + 1][j + 1];
+            blueSum += neighboringPixel.getBlue() * kernel[i + 1][j + 1];
+          }
+        }
+        int newRed = (int) Math.round(redSum);
+        int newGreen = (int) Math.round(greenSum);
+        int newBlue = (int) Math.round(blueSum);
+
+        blurredPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
+      }
+    }
+
+    return new Image(blurredPixels);
+  }
+
 }

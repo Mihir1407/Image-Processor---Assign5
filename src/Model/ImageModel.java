@@ -116,4 +116,34 @@ public class ImageModel implements IImageModel {
       throw new IOException("Image not found.");
     }
   }
+
+  @Override
+  public void blur(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.blur());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void sharpen(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.sharpen());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void sepia(String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.sepia());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
 }

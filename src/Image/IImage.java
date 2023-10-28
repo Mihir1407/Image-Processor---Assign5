@@ -22,4 +22,10 @@ public interface IImage {
   IImage verticalFlip();
 
   IImage horizontalFlip();
+
+  IImage sepia();
+
+  IImage sharpen();
+
+  IImage blur();
 }

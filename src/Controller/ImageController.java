@@ -3,6 +3,7 @@ package Controller;
 import java.util.List;
 
 import Commands.BlueComponent;
+import Commands.BlurCommand;
 import Commands.GreenComponent;
 import Commands.HorizontalFlip;
 import Commands.ICommand;
@@ -11,6 +12,8 @@ import Commands.LoadCommand;
 import Commands.LumaComponent;
 import Commands.RedComponent;
 import Commands.SaveCommand;
+import Commands.SepiaCommand;
+import Commands.SharpenCommand;
 import Commands.ValueComponent;
 import Commands.VerticalFlip;
 import Model.IImageModel;
@@ -53,15 +56,15 @@ public class ImageController implements IController {
           newCommand = new BlueComponent(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "value-component":
+        case "value":
           newCommand = new ValueComponent(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "luma-component":
+        case "luma":
           newCommand = new LumaComponent(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "intensity-component":
+        case "intensity":
           newCommand = new IntensityComponent(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
@@ -71,6 +74,18 @@ public class ImageController implements IController {
           break;
         case "vertical-flip":
           newCommand = new VerticalFlip(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "blur":
+          newCommand = new BlurCommand(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "sharpen":
+          newCommand = new SharpenCommand(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "sepia":
+          newCommand = new SepiaCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "run":
