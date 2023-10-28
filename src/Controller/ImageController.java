@@ -2,6 +2,8 @@ package Controller;
 
 import java.util.List;
 
+import Commands.BlueComponent;
+import Commands.GreenComponent;
 import Commands.ICommand;
 import Commands.LoadCommand;
 import Commands.RedComponent;
@@ -36,6 +38,14 @@ public class ImageController implements IController {
           break;
         case "red-component":
           newCommand = new RedComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "green-component":
+          newCommand = new GreenComponent(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "blue-component":
+          newCommand = new BlueComponent(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "run":

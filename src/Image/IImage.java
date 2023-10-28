@@ -8,4 +8,8 @@ public interface IImage {
   void setPixel(int x, int y, IPixel pixel);
 
   IImage redComponent();
+
+  IImage blueComponent();
+
+  IImage greenComponent();
 }

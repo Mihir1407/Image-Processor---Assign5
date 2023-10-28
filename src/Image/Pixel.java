@@ -2,7 +2,7 @@ package Image;
 
 import Image.IPixel;
 
-public class Pixel implements IPixel {
+public class  Pixel implements IPixel {
   private int red;
   private int green;
   private int blue;
