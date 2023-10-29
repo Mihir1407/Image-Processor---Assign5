@@ -1,5 +1,8 @@
 package Image;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Image implements IImage {
   private IPixel[][] pixels;
 
@@ -151,6 +154,28 @@ public class Image implements IImage {
       }
     }
     return new Image(vFlipPixels);
+  }
+
+  @Override
+  public IImage brightenCommand(int increment) {
+    int height = getHeight();
+    int width = getWidth();
+    IPixel[][] brightenPixels = new IPixel[height][width];
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        IPixel originalPixel = getPixel(x, y);
+        int red = originalPixel.getRed() + increment > 255 ? 255 :
+                Math.max(originalPixel.getRed() + increment, 0);
+        int green = originalPixel.getGreen() + increment > 255 ? 255 :
+                Math.max(originalPixel.getGreen() + increment, 0);
+        int blue = originalPixel.getBlue() + increment > 255 ? 255 :
+                Math.max(originalPixel.getBlue() + increment, 0);
+
+        brightenPixels[y][x] = new Pixel(red,green,blue);
+      }
+    }
+    return new Image(brightenPixels);
   }
 
   @Override

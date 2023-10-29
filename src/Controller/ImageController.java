@@ -4,12 +4,14 @@ import java.util.List;
 
 import Commands.BlueComponent;
 import Commands.BlurCommand;
+import Commands.BrightenCommand;
 import Commands.GreenComponent;
 import Commands.HorizontalFlip;
 import Commands.ICommand;
 import Commands.IntensityComponent;
 import Commands.LoadCommand;
 import Commands.LumaComponent;
+import Commands.RGBSplit;
 import Commands.RedComponent;
 import Commands.SaveCommand;
 import Commands.SepiaCommand;
@@ -74,6 +76,15 @@ public class ImageController implements IController {
           break;
         case "vertical-flip":
           newCommand = new VerticalFlip(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "brighten":
+          int inc = Integer.parseInt(parts[1]);
+          newCommand = new BrightenCommand(inc, parts[2], parts[3], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "rgb-split":
+          newCommand = new RGBSplit(parts[1], parts[2], parts[3], parts[4],model);
           commandSuccessful = newCommand.execute();
           break;
         case "blur":

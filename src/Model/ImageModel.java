@@ -118,6 +118,16 @@ public class ImageModel implements IImageModel {
   }
 
   @Override
+  public void brightenCommand(int increment, String imageName, String destImageName) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageName, image.brightenCommand(increment));
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
   public void blur(String imageName, String destImageName) throws IOException {
     IImage image = imageMap.get(imageName);
     if (image != null) {
@@ -142,6 +152,19 @@ public class ImageModel implements IImageModel {
     IImage image = imageMap.get(imageName);
     if (image != null) {
       imageMap.put(destImageName, image.sepia());
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
+                       String destImageNameBlue) throws IOException {
+    IImage image = imageMap.get(imageName);
+    if (image != null) {
+      imageMap.put(destImageNameRed, image.redComponent());
+      imageMap.put(destImageNameGreen, image.greenComponent());
+      imageMap.put(destImageNameBlue, image.blueComponent());
     } else {
       throw new IOException("Image not found.");
     }

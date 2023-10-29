@@ -1,5 +1,7 @@
 package Image;
 
+import java.util.List;
+
 public interface IImage {
   IPixel[][] getPixels();
   IPixel getPixel(int x, int y);
@@ -22,6 +24,8 @@ public interface IImage {
   IImage verticalFlip();
 
   IImage horizontalFlip();
+
+  IImage brightenCommand(int increment);
 
   IImage sepia();
 
