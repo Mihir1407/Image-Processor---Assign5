@@ -8,28 +8,4 @@ public interface IImage {
   int getWidth();
   int getHeight();
   void setPixel(int x, int y, IPixel pixel);
-
-  IImage redComponent();
-
-  IImage blueComponent();
-
-  IImage greenComponent();
-
-  IImage valueComponent();
-
-  IImage lumaComponent();
-
-  IImage intensityComponent();
-
-  IImage verticalFlip();
-
-  IImage horizontalFlip();
-
-  IImage brightenCommand(int increment);
-
-  IImage sepia();
-
-  IImage sharpen();
-
-  IImage blur();
 }
