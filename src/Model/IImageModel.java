@@ -78,6 +78,8 @@ public interface IImageModel {
 
   void horizontalFlip(String imageName, String destImageName) throws IOException;
 
+  void brightenCommand(int increment, String imageName, String destImageName) throws IOException;
+
   void blur(String imageName, String destImageName) throws IOException;
 
   void sharpen(String imageName, String destImageName) throws IOException;
@@ -85,4 +87,7 @@ public interface IImageModel {
   void verticalFlip(String imageName, String destImageName) throws IOException;
 
   void sepia(String imageName, String destImageName) throws IOException;
+
+  void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
+                String destImageNameBlue) throws IOException;
 }
