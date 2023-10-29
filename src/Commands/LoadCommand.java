@@ -2,9 +2,10 @@ package Commands;
 
 import java.io.IOException;
 
+import Controller.IImageFileParser;
 import Model.IImageModel;
 
-public class LoadCommand implements ICommand{
+public class LoadCommand extends AbstractCommand{
   private final IImageModel model;
   private final String imagePath;
 
@@ -20,7 +21,8 @@ public class LoadCommand implements ICommand{
   public boolean execute() {
     boolean success = true;
     try {
-      this.model.loadImage(this.imagePath, this.imageName);
+      IImageFileParser imageParser = getImageObject(imagePath);
+      this.model.addImage(imageParser.loadImage(imagePath), imageName);
     } catch (Exception e) {
       success = false;
     }

@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import Commands.BlueComponent;
@@ -18,6 +19,7 @@ import Commands.SepiaCommand;
 import Commands.SharpenCommand;
 import Commands.ValueComponent;
 import Commands.VerticalFlip;
+import Image.IImage;
 import Model.IImageModel;
 import View.IView;
 
