@@ -91,4 +91,6 @@ public interface IImageModel {
 
   void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
                 String destImageNameBlue) throws IOException;
+
+  void rgbCombine(String redImageName, String greenImageName, String blueImageName, String destImageName) throws IOException;
 }
