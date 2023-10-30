@@ -1,6 +1,4 @@
-package Image;
-
-import java.util.List;
+package Model.Image;
 
 public interface IImage {
   IPixel[][] getPixels();

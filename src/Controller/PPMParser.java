@@ -7,10 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import Image.IImage;
-import Image.Image;
-import Image.Pixel;
-import Image.IPixel;
+import Model.Image.IImage;
+import Model.Image.Image;
+import Model.Image.Pixel;
+import Model.Image.IPixel;
 
 public class PPMParser implements IImageFileParser {
 

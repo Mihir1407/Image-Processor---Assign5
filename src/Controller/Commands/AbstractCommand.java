@@ -1,11 +1,10 @@
-package Commands;
+package Controller.Commands;
 
 import Controller.IImageFileParser;
 import Controller.JPEGParser;
 import Controller.JPGParser;
 import Controller.PNGParser;
 import Controller.PPMParser;
-import Image.IImage;
 
 abstract class AbstractCommand implements ICommand{
   protected String getFileExtension(String path) throws IllegalArgumentException {

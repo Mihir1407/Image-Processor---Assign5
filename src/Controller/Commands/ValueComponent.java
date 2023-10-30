@@ -1,14 +1,14 @@
-package Commands;
+package Controller.Commands;
 
 import Model.IImageModel;
 
-public class SharpenCommand implements ICommand{
+public class ValueComponent implements ICommand{
   private final IImageModel model;
   private final String destImageName;
 
   private final String imageName;
 
-  public SharpenCommand(String imageName, String destImageName, IImageModel model){
+  public ValueComponent(String imageName, String destImageName, IImageModel model){
     this.model = model;
     this.imageName = imageName;
     this.destImageName = destImageName;
@@ -18,7 +18,7 @@ public class SharpenCommand implements ICommand{
   public boolean execute() {
     boolean success = true;
     try {
-      this.model.sharpen(this.imageName, this.destImageName);
+      this.model.valueComponent(this.imageName, this.destImageName);
     } catch (Exception e) {
       success = false;
     }

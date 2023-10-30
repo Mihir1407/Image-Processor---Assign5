@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import Image.IImage;
-import Image.IPixel;
-import Image.Image;
-import Image.Pixel;
+import Model.Image.IImage;
+import Model.Image.IPixel;
+import Model.Image.Image;
+import Model.Image.Pixel;
 
 public class ImageModel implements IImageModel {
 
@@ -22,7 +22,7 @@ public class ImageModel implements IImageModel {
     if (image != null) {
       imageMap.put(imageName, image);
     } else {
-      throw new IOException("Image not loaded.");
+      throw new IOException("Model.Image not loaded.");
     }
   }
 
@@ -32,7 +32,7 @@ public class ImageModel implements IImageModel {
     if (image != null) {
       return image;
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -53,7 +53,7 @@ public class ImageModel implements IImageModel {
       IImage redComponentImage = new Image(redPixels);
       imageMap.put(destImageName, redComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -74,7 +74,7 @@ public class ImageModel implements IImageModel {
       IImage greenComponentImage = new Image(greenPixels);
       imageMap.put(destImageName, greenComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -95,7 +95,7 @@ public class ImageModel implements IImageModel {
       IImage blueComponentImage = new Image(bluePixels);
       imageMap.put(destImageName, blueComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -116,7 +116,7 @@ public class ImageModel implements IImageModel {
       IImage valueComponentImage = new Image(valuePixels);
       imageMap.put(destImageName, valueComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -138,7 +138,7 @@ public class ImageModel implements IImageModel {
       IImage lumaComponentImage = new Image(lumaPixels);
       imageMap.put(destImageName, lumaComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -160,7 +160,7 @@ public class ImageModel implements IImageModel {
       IImage intensityComponentImage = new Image(intensityPixels);
       imageMap.put(destImageName, intensityComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -180,7 +180,7 @@ public class ImageModel implements IImageModel {
       IImage hFlipComponentImage = new Image(hFlipPixels);
       imageMap.put(destImageName, hFlipComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -201,7 +201,7 @@ public class ImageModel implements IImageModel {
       IImage vFlipComponentImage = new Image(vFlipPixels);
       imageMap.put(destImageName, vFlipComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -228,7 +228,7 @@ public class ImageModel implements IImageModel {
       IImage brightenComponentImage = new Image(brightenPixels);
       imageMap.put(destImageName, brightenComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -273,7 +273,7 @@ public class ImageModel implements IImageModel {
       IImage blurredComponentImage = new Image(blurredPixels);
       imageMap.put(destImageName, blurredComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -321,7 +321,7 @@ public class ImageModel implements IImageModel {
       IImage sharpenedComponentImage = new Image(sharpenedPixels);
       imageMap.put(destImageName, sharpenedComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -355,7 +355,7 @@ public class ImageModel implements IImageModel {
       IImage sepiaComponentImage = new Image(sepiaPixels);
       imageMap.put(destImageName, sepiaComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -368,7 +368,7 @@ public class ImageModel implements IImageModel {
       blueComponent(imageName,destImageNameBlue);
       greenComponent(imageName,destImageNameGreen);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 
@@ -394,7 +394,7 @@ public class ImageModel implements IImageModel {
       IImage combineComponentImage = new Image(combinePixels);
       imageMap.put(destImageName, combineComponentImage);
     } else {
-      throw new IOException("Image not found.");
+      throw new IOException("Model.Image not found.");
     }
   }
 }

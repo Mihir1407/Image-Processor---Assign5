@@ -2,7 +2,7 @@ package Controller;
 
 import java.io.IOException;
 
-import Image.IImage;
+import Model.Image.IImage;
 
 public interface IImageFileParser {
   IImage loadImage(String path) throws IOException;

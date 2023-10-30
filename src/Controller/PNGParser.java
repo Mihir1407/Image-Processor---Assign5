@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import Image.IImage;
-import Image.IPixel;
-import Image.Image;
-import Image.Pixel;
+import Model.Image.IImage;
+import Model.Image.IPixel;
+import Model.Image.Image;
+import Model.Image.Pixel;
 
 public class PNGParser implements IImageFileParser {
   @Override

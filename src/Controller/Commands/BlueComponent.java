@@ -1,6 +1,4 @@
-package Commands;
-
-import java.io.IOException;
+package Controller.Commands;
 
 import Model.IImageModel;
 

@@ -1,6 +1,4 @@
-package Image;
-
-import Image.IPixel;
+package Model.Image;
 
 public class  Pixel implements IPixel {
   private int red;

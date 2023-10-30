@@ -1,14 +1,14 @@
-package Commands;
+package Controller.Commands;
 
 import Model.IImageModel;
 
-public class ValueComponent implements ICommand{
+public class HorizontalFlip implements ICommand{
   private final IImageModel model;
   private final String destImageName;
 
   private final String imageName;
 
-  public ValueComponent(String imageName, String destImageName, IImageModel model){
+  public HorizontalFlip(String imageName, String destImageName, IImageModel model){
     this.model = model;
     this.imageName = imageName;
     this.destImageName = destImageName;
@@ -18,7 +18,7 @@ public class ValueComponent implements ICommand{
   public boolean execute() {
     boolean success = true;
     try {
-      this.model.valueComponent(this.imageName, this.destImageName);
+      this.model.horizontalFlip(this.imageName, this.destImageName);
     } catch (Exception e) {
       success = false;
     }

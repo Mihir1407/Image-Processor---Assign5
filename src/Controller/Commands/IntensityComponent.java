@@ -1,4 +1,4 @@
-package Commands;
+package Controller.Commands;
 
 import Model.IImageModel;
 

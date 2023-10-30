@@ -1,4 +1,4 @@
-package Image;
+package Model.Image;
 
 public interface IPixel {
   int getRed();

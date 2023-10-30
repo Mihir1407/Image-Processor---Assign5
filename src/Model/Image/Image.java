@@ -1,4 +1,4 @@
-package Image;
+package Model.Image;
 
 
 public class Image implements IImage {

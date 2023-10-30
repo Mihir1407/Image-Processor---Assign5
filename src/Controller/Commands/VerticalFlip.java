@@ -1,16 +1,14 @@
-package Commands;
-
-import java.io.IOException;
+package Controller.Commands;
 
 import Model.IImageModel;
 
-public class RedComponent implements ICommand{
+public class VerticalFlip implements ICommand{
   private final IImageModel model;
   private final String destImageName;
 
   private final String imageName;
 
-  public RedComponent(String imageName, String destImageName, IImageModel model){
+  public VerticalFlip(String imageName, String destImageName, IImageModel model){
     this.model = model;
     this.imageName = imageName;
     this.destImageName = destImageName;
@@ -20,7 +18,7 @@ public class RedComponent implements ICommand{
   public boolean execute() {
     boolean success = true;
     try {
-      this.model.redComponent(this.imageName, this.destImageName);
+      this.model.verticalFlip(this.imageName, this.destImageName);
     } catch (Exception e) {
       success = false;
     }

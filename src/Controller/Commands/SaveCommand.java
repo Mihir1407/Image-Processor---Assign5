@@ -1,17 +1,15 @@
-package Commands;
-
-import java.io.IOException;
+package Controller.Commands;
 
 import Controller.IImageFileParser;
 import Model.IImageModel;
 
-public class LoadCommand extends AbstractCommand{
+public class SaveCommand extends AbstractCommand{
   private final IImageModel model;
   private final String imagePath;
 
   private final String imageName;
 
-  public LoadCommand(String imagePath, String imageName, IImageModel model){
+  public SaveCommand(String imagePath, String imageName, IImageModel model){
     this.model = model;
     this.imageName = imageName;
     this.imagePath = imagePath;
@@ -22,7 +20,7 @@ public class LoadCommand extends AbstractCommand{
     boolean success = true;
     try {
       IImageFileParser imageParser = getImageObject(imagePath);
-      this.model.addImage(imageParser.loadImage(imagePath), imageName);
+      imageParser.saveImage(imagePath, this.model.getImage(imageName));
     } catch (Exception e) {
       success = false;
     }
