@@ -11,16 +11,6 @@ public class Application {
     IView view = new ConsoleView();
     ImageController controller = new ImageController(model, view);
 
-    while (true) {
-      String command = view.getInput();
-      if ("exit".equals(command)) {
-        break;
-      }
-      try {
-        controller.executeCommand(command);
-      } catch (Exception e) {
-        view.showError("Error: " + e.getMessage());
-      }
-    }
+    controller.execute();
   }
 }

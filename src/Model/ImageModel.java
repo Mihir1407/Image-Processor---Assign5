@@ -11,7 +11,7 @@ import Image.Pixel;
 
 public class ImageModel implements IImageModel {
 
-  private Map<String, IImage> imageMap;
+  private final Map<String, IImage> imageMap;
 
   public ImageModel() {
     this.imageMap = new HashMap<>();
@@ -373,7 +373,7 @@ public class ImageModel implements IImageModel {
   }
 
   @Override
-  public void rgbCombine(String redImageName, String greenImageName, String blueImageName, String destImageName) throws IOException {
+  public void rgbCombine(String destImageName, String redImageName, String greenImageName, String blueImageName) throws IOException {
     IImage redImage = imageMap.get(redImageName);
     IImage greenImage = imageMap.get(greenImageName);
     IImage blueImage = imageMap.get(blueImageName);

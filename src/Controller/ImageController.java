@@ -1,6 +1,5 @@
 package Controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import Commands.BlueComponent;
@@ -12,6 +11,7 @@ import Commands.ICommand;
 import Commands.IntensityComponent;
 import Commands.LoadCommand;
 import Commands.LumaComponent;
+import Commands.RGBCombine;
 import Commands.RGBSplit;
 import Commands.RedComponent;
 import Commands.SaveCommand;
@@ -19,13 +19,12 @@ import Commands.SepiaCommand;
 import Commands.SharpenCommand;
 import Commands.ValueComponent;
 import Commands.VerticalFlip;
-import Image.IImage;
 import Model.IImageModel;
 import View.IView;
 
 public class ImageController implements IController {
-  private IImageModel model;
-  private IView view;
+  private final IImageModel model;
+  private final IView view;
 
   public ImageController(IImageModel model, IView view) {
     this.model = model;
@@ -33,7 +32,21 @@ public class ImageController implements IController {
   }
 
   @Override
-  public void executeCommand(String command) {
+  public void execute(){
+    while (true) {
+      String command = this.view.getInput();
+      if ("exit".equals(command)) {
+        break;
+      }
+      try {
+        executeCommand(command);
+      } catch (Exception e) {
+        view.showError("Error: " + e.getMessage());
+      }
+    }
+  }
+
+  private void executeCommand(String command) {
     String[] parts = command.split(" ");
     boolean commandSuccessful;
     ICommand newCommand;
@@ -89,6 +102,10 @@ public class ImageController implements IController {
           newCommand = new RGBSplit(parts[1], parts[2], parts[3], parts[4],model);
           commandSuccessful = newCommand.execute();
           break;
+        case "rgb-combine":
+          newCommand = new RGBCombine(parts[1], parts[2], parts[3], parts[4],model);
+          commandSuccessful = newCommand.execute();
+          break;
         case "blur":
           newCommand = new BlurCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
@@ -105,7 +122,7 @@ public class ImageController implements IController {
           runScript(parts[1]);
           break;
         default:
-          view.showMessage("Unknown command.");
+          view.showError("Unknown command.");
           break;
       }
     } catch (Exception e) {

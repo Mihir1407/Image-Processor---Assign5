@@ -12,7 +12,7 @@ public class RGBCombine implements ICommand{
 
   private final String blueImageName;
 
-  public RGBCombine(String redImageName, String greenImageName, String blueImageName, String destImageName, IImageModel model) {
+  public RGBCombine(String destImageName, String redImageName, String greenImageName, String blueImageName, IImageModel model) {
     this.model = model;
     this.destImageName = destImageName;
     this.redImageName = redImageName;
@@ -25,7 +25,7 @@ public class RGBCombine implements ICommand{
   public boolean execute() {
     boolean success = true;
     try {
-      this.model.rgbCombine(redImageName, greenImageName, blueImageName, destImageName);
+      this.model.rgbCombine(destImageName, redImageName, greenImageName, blueImageName);
     } catch (Exception e) {
       success = false;
     }

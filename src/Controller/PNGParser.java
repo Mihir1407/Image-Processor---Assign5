@@ -7,11 +7,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import Image.IImage;
+import Image.IPixel;
 import Image.Image;
 import Image.Pixel;
-import Image.IPixel;
 
-public class PNGParser implements IImageFileParser{
+public class PNGParser implements IImageFileParser {
   @Override
   public IImage loadImage(String path) throws IOException {
     BufferedImage bufferedImage = ImageIO.read(new File(path));
