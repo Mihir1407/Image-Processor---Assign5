@@ -2,37 +2,59 @@ package Controller;
 
 import java.util.List;
 
-import Controller.Commands.BlueComponent;
+import Controller.Commands.BlueComponentCommand;
 import Controller.Commands.BlurCommand;
 import Controller.Commands.BrightenCommand;
-import Controller.Commands.GreenComponent;
-import Controller.Commands.HorizontalFlip;
+import Controller.Commands.GreenComponentCommand;
+import Controller.Commands.HorizontalFlipCommand;
 import Controller.Commands.ICommand;
-import Controller.Commands.IntensityComponent;
+import Controller.Commands.IntensityComponentCommand;
 import Controller.Commands.LoadCommand;
-import Controller.Commands.LumaComponent;
-import Controller.Commands.RGBCombine;
-import Controller.Commands.RGBSplit;
-import Controller.Commands.RedComponent;
+import Controller.Commands.LumaComponentCommand;
+import Controller.Commands.RGBCombineCommand;
+import Controller.Commands.RGBSplitCommand;
+import Controller.Commands.RedComponentCommand;
 import Controller.Commands.SaveCommand;
 import Controller.Commands.SepiaCommand;
 import Controller.Commands.SharpenCommand;
-import Controller.Commands.ValueComponent;
-import Controller.Commands.VerticalFlip;
+import Controller.Commands.ValueComponentCommand;
+import Controller.Commands.VerticalFlipCommand;
 import Model.IImageModel;
 import View.IView;
 
+/**
+ * Implementation of the IController interface for image manipulation.
+ * This controller takes user input commands from a given view and processes
+ * them using an image model to perform various image operations.
+ */
 public class ImageController implements IController {
+  /**
+   * The model responsible for performing image manipulations.
+   */
   private final IImageModel model;
+  /**
+   * The view through which user input is received and feedback is given.
+   */
   private final IView view;
 
+  /**
+   * Constructs an ImageController with a given image model and view.
+   *
+   * @param model The model to be used for image manipulations.
+   * @param view  The view to be used for user interaction.
+   */
   public ImageController(IImageModel model, IView view) {
     this.model = model;
     this.view = view;
   }
 
+  /**
+   * Waits for user input, processes commands until the user decides to exit.
+   * For each command, it delegates the task to a corresponding command implementation
+   * and then provides feedback to the user through the view.
+   */
   @Override
-  public void execute(){
+  public void execute() {
     while (true) {
       String command = this.view.getInput();
       if ("exit".equals(command)) {
@@ -46,6 +68,12 @@ public class ImageController implements IController {
     }
   }
 
+  /**
+   * Parses the given command and delegates it to the corresponding command implementation.
+   * After executing the command, it provides feedback about the operation's success or failure.
+   *
+   * @param command The command string input by the user.
+   */
   private void executeCommand(String command) {
     String[] parts = command.split(" ");
     boolean commandSuccessful;
@@ -62,35 +90,35 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "red-component":
-          newCommand = new RedComponent(parts[1], parts[2], model);
+          newCommand = new RedComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "green-component":
-          newCommand = new GreenComponent(parts[1], parts[2], model);
+          newCommand = new GreenComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "blue-component":
-          newCommand = new BlueComponent(parts[1], parts[2], model);
+          newCommand = new BlueComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "value":
-          newCommand = new ValueComponent(parts[1], parts[2], model);
+        case "value-component":
+          newCommand = new ValueComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "luma":
-          newCommand = new LumaComponent(parts[1], parts[2], model);
+        case "luma-component":
+          newCommand = new LumaComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
-        case "intensity":
-          newCommand = new IntensityComponent(parts[1], parts[2], model);
+        case "intensity-component":
+          newCommand = new IntensityComponentCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "horizontal-flip":
-          newCommand = new HorizontalFlip(parts[1], parts[2], model);
+          newCommand = new HorizontalFlipCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "vertical-flip":
-          newCommand = new VerticalFlip(parts[1], parts[2], model);
+          newCommand = new VerticalFlipCommand(parts[1], parts[2], model);
           commandSuccessful = newCommand.execute();
           break;
         case "brighten":
@@ -99,11 +127,11 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "rgb-split":
-          newCommand = new RGBSplit(parts[1], parts[2], parts[3], parts[4],model);
+          newCommand = new RGBSplitCommand(parts[1], parts[2], parts[3], parts[4], model);
           commandSuccessful = newCommand.execute();
           break;
         case "rgb-combine":
-          newCommand = new RGBCombine(parts[1], parts[2], parts[3], parts[4],model);
+          newCommand = new RGBCombineCommand(parts[1], parts[2], parts[3], parts[4], model);
           commandSuccessful = newCommand.execute();
           break;
         case "blur":
@@ -122,7 +150,8 @@ public class ImageController implements IController {
           runScript(parts[1]);
           break;
         default:
-          view.showError("Unknown command.");
+          view.showError("Unknown command " + parts[0]);
+          commandSuccessful = false;
           break;
       }
     } catch (Exception e) {
@@ -135,6 +164,12 @@ public class ImageController implements IController {
     }
   }
 
+  /**
+   * Parses a script file and executes a list of commands.
+   * This method allows batch processing of multiple commands.
+   *
+   * @param filePath Path to the script file containing a list of commands.
+   */
   private void runScript(String filePath) {
     IScriptParser scriptParser = new ScriptParser();
     List<String> commands = scriptParser.parse(filePath);

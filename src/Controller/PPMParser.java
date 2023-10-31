@@ -7,15 +7,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import Model.Image.IImage;
 import Model.Image.Image;
 import Model.Image.Pixel;
-import Model.Image.IPixel;
 
+/**
+ * Implements the IImageFileParser interface for parsing PPM image files.
+ */
 public class PPMParser implements IImageFileParser {
 
+  /**
+   * Loads the image from a specified path in the PPM format.
+   *
+   * @param path the path of the PPM image file to be loaded
+   * @return an Image object representing the loaded image
+   * @throws IOException if there's an error reading the file or the file is not a valid PPM
+   */
   @Override
-  public IImage loadImage(String path) throws IOException {
+  public Image loadImage(String path) throws IOException {
     Scanner sc;
 
     try {
@@ -46,7 +54,7 @@ public class PPMParser implements IImageFileParser {
       throw new IOException("Unsupported color depth. Maximum value should be 255.");
     }
 
-    IImage image = new Image(new IPixel[height][width]);
+    Image image = new Image(new Pixel[height][width]);
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
@@ -60,8 +68,15 @@ public class PPMParser implements IImageFileParser {
     return image;
   }
 
+  /**
+   * Saves the given Image object to the specified path in PPM format.
+   *
+   * @param path  the path where the PPM image file will be saved
+   * @param image the Image object to save
+   * @throws IOException if there's an error writing to the file
+   */
   @Override
-  public void saveImage(String path, IImage image) throws IOException {
+  public void saveImage(String path, Image image) throws IOException {
     if (image.getPixels() == null) {
       throw new IOException("No image data to save.");
     }
@@ -76,7 +91,7 @@ public class PPMParser implements IImageFileParser {
 
       for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-          IPixel pixel = image.getPixel(x, y);
+          Pixel pixel = image.getPixel(x, y);
           writer.write(pixel.getRed() + " " + pixel.getGreen() + " " + pixel.getBlue() + " ");
         }
         writer.write("\n");

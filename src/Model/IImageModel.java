@@ -2,7 +2,7 @@ package Model;
 
 import java.io.IOException;
 
-import Model.Image.IImage;
+import Model.Image.Image;
 
 public interface IImageModel {
 
@@ -13,7 +13,7 @@ public interface IImageModel {
    * @param imagePath The path to the image.
    * @throws IOException If an error occurs during the reading process.
    */
-  void addImage(IImage image, String imagePath) throws IOException;
+  void addImage(Image image, String imagePath) throws IOException;
 
   /**
    * Saves the image to a specified location.
@@ -21,7 +21,7 @@ public interface IImageModel {
    * @param imageName The name of the image to save.
    * @throws IOException If an error occurs during the saving process.
    */
-  IImage getImage(String imageName) throws IOException;
+  Image getImage(String imageName) throws IOException;
 
   /**
    * Extracts the red component of the image.

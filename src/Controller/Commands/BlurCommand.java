@@ -2,26 +2,14 @@ package Controller.Commands;
 
 import Model.IImageModel;
 
-public class BlurCommand implements ICommand{
-  private final IImageModel model;
-  private final String destImageName;
+public class BlurCommand extends AbstractTransformCommand {
 
-  private final String imageName;
-
-  public BlurCommand(String imageName, String destImageName, IImageModel model){
-    this.model = model;
-    this.imageName = imageName;
-    this.destImageName = destImageName;
+  public BlurCommand(String imageName, String destImageName, IImageModel model) {
+    super(imageName, destImageName, model);
   }
 
   @Override
-  public boolean execute() {
-    boolean success = true;
-    try {
-      this.model.blur(this.imageName, this.destImageName);
-    } catch (Exception e) {
-      success = false;
-    }
-    return success;
+  protected void processImage() throws Exception {
+    this.model.blur(this.imageName, this.destImageName);
   }
 }

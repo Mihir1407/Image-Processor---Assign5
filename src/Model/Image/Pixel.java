@@ -1,43 +1,52 @@
 package Model.Image;
 
-public class  Pixel implements IPixel {
+/**
+ * Represents a pixel in an image, consisting of red, green, and blue color components.
+ * Each color component can have a value ranging from 0 to 255.
+ */
+public class Pixel {
   private int red;
   private int green;
   private int blue;
 
+  /**
+   * Constructs a new Pixel with the specified red, green, and blue color values.
+   *
+   * @param red   the red color component (0-255)
+   * @param green the green color component (0-255)
+   * @param blue  the blue color component (0-255)
+   */
   public Pixel(int red, int green, int blue) {
     this.red = red;
     this.green = green;
     this.blue = blue;
   }
 
-  @Override
+  /**
+   * Returns the red color component of this pixel.
+   *
+   * @return the red color value (0-255)
+   */
   public int getRed() {
     return red;
   }
 
-  @Override
+  /**
+   * Returns the green color component of this pixel.
+   *
+   * @return the green color value (0-255)
+   */
   public int getGreen() {
     return green;
   }
 
-  @Override
+  /**
+   * Returns the blue color component of this pixel.
+   *
+   * @return the blue color value (0-255)
+   */
   public int getBlue() {
     return blue;
   }
 
-  @Override
-  public void setRed(int value) {
-    this.red = value;
-  }
-
-  @Override
-  public void setGreen(int value) {
-    this.green = value;
-  }
-
-  @Override
-  public void setBlue(int value) {
-    this.blue = value;
-  }
 }

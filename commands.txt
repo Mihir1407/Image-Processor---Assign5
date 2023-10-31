@@ -12,11 +12,11 @@ blur testMan testManBlur
 
 sharpen testManBlur testManSharpen
 
-value testMan testManValue
+value-component testMan testManValue
 
-luma testMan testManLuma
+luma-component testMan testManLuma
 
-intensity testMan testManIntensity
+intensity-component testMan testManIntensity
 
 horizontal-flip testMan testManHFlip
 

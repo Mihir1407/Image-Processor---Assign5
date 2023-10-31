@@ -1,6 +1,12 @@
 package View;
 
+/**
+ * Represents the View component in the MVC pattern.
+ * Provides methods for displaying messages and errors to the user,
+ * and for retrieving user input.
+ */
 public interface IView {
+
   /**
    * Displays a message to the user.
    *
