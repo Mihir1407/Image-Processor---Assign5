@@ -69,8 +69,10 @@ public class ImageController implements IController {
   }
 
   /**
-   * Parses the given command and delegates it to the corresponding command implementation.
-   * After executing the command, it provides feedback about the operation's success or failure.
+   * Parses the given command and delegates it to the corresponding
+   * command implementation.
+   * After executing the command, it provides feedback about the
+   * operation's success or failure.
    *
    * @param command The command string input by the user.
    */
@@ -157,7 +159,7 @@ public class ImageController implements IController {
     } catch (Exception e) {
       commandSuccessful = false;
     }
-    if (commandSuccessful == true) {
+    if (commandSuccessful) {
       view.showMessage(parts[0] + " operation successful.");
     } else {
       view.showError(parts[0] + " operation failed.");
