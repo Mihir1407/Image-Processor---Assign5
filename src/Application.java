@@ -1,8 +1,8 @@
-import Controller.ImageController;
-import Model.IImageModel;
-import Model.ImageModel;
-import View.ConsoleView;
-import View.IView;
+import controller.ImageController;
+import model.IImageModel;
+import model.ImageModel;
+import view.ConsoleView;
+import view.IView;
 
 /**
  * The main application class that initiates and starts the Image processing program.
