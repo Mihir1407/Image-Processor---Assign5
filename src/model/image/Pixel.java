@@ -11,15 +11,26 @@ public class Pixel {
 
   /**
    * Constructs a new Pixel with the specified red, green, and blue color values.
+   * The color values are clamped to ensure they lie between 0 and 255.
    *
    * @param red   the red color component (0-255)
    * @param green the green color component (0-255)
    * @param blue  the blue color component (0-255)
    */
   public Pixel(int red, int green, int blue) {
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
+    this.red = clamp(red);
+    this.green = clamp(green);
+    this.blue = clamp(blue);
+  }
+
+  /**
+   * Clamps the given value between 0 and 255.
+   *
+   * @param value the value to be clamped
+   * @return the clamped value, ensuring it's within the range [0, 255]
+   */
+  private int clamp(int value) {
+    return Math.max(0, Math.min(value, 255));
   }
 
   /**
