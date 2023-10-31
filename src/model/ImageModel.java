@@ -7,13 +7,102 @@ import java.util.Map;
 import model.image.Image;
 import model.image.Pixel;
 
+/**
+ * Represents the model class for images, responsible for
+ * managing and processing images.
+ * Provides methods to extract color components, apply filters,
+ * and perform various image processing operations.
+ * Images are stored with a String identifier in a map.
+ */
 public class ImageModel implements IImageModel {
 
   private final Map<String, Image> imageMap;
 
+  /**
+   * Constructs a new instance of the ImageModel.
+   * Initializes an empty map to store images.
+   */
   public ImageModel() {
     this.imageMap = new HashMap<>();
   }
+
+  /**
+   * Processes an image based on a given command and returns the processed image.
+   * The method retrieves the image from the map using the provided imageName,
+   * then applies operation based on the command.
+   * Supported commands include: "red", "green", "blue", "value", "luma",
+   * "intensity", and "sepia".
+   *
+   * @param imageName The name or identifier of the image to be processed.
+   * @param command   The image processing operation to apply.
+   * @return The processed image.
+   * @throws IOException If the image with the provided imageName is not found in the map.
+   */
+  private Image processImage(String imageName, String command) throws IOException {
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      int height = image.getHeight();
+      int width = image.getWidth();
+      Pixel[][] processedPixels = new Pixel[height][width];
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          Pixel originalPixel = image.getPixel(x, y);
+          switch (command) {
+            case "red":
+              processedPixels[y][x] = new Pixel(originalPixel.getRed(), 0, 0);
+              break;
+            case "green":
+              processedPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
+              break;
+            case "blue":
+              processedPixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
+              break;
+            case "value":
+              int maxPixelVal = Math.max(originalPixel.getRed(),
+                      Math.max(originalPixel.getGreen(), originalPixel.getBlue()));
+              processedPixels[y][x] = new Pixel(maxPixelVal, maxPixelVal, maxPixelVal);
+              break;
+            case "luma":
+              int lumaPixelVal = (int) (0.2126 * originalPixel.getRed()
+                      + 0.7152 * originalPixel.getGreen() + 0.0722 * originalPixel.getBlue());
+              processedPixels[y][x] = new Pixel(lumaPixelVal, lumaPixelVal, lumaPixelVal);
+              break;
+            case "intensity":
+              int intensityPixelVal = ((originalPixel.getRed() + originalPixel.getGreen()
+                      + originalPixel.getBlue()) / 3);
+              processedPixels[y][x] = new Pixel(intensityPixelVal,
+                      intensityPixelVal, intensityPixelVal);
+              break;
+            case "sepia":
+              int originalRed = originalPixel.getRed();
+              int originalGreen = originalPixel.getGreen();
+              int originalBlue = originalPixel.getBlue();
+
+              int newRed = Math.min(255, (int) (0.393 * originalRed
+                      + 0.769 * originalGreen + 0.189 * originalBlue));
+              int newGreen = Math.min(255, (int) (0.349 * originalRed
+                      + 0.686 * originalGreen + 0.168 * originalBlue));
+              int newBlue = Math.min(255, (int) (0.272 * originalRed
+                      + 0.534 * originalGreen + 0.131 * originalBlue));
+
+              processedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
+              break;
+          }
+        }
+      }
+      return new Image(processedPixels);
+    } else {
+      throw new IOException("Model.Image not found.");
+    }
+  }
+
+  /**
+   * Loads an image into the model.
+   *
+   * @param image     The name assigned to the loaded image.
+   * @param imageName The path to the image.
+   * @throws IOException If an error occurs during the reading process.
+   */
 
   @Override
   public void addImage(Image image, String imageName) throws IOException {
@@ -24,6 +113,12 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Saves the image to a specified location.
+   *
+   * @param imageName The name of the image to save.
+   * @throws IOException If an error occurs during the saving process.
+   */
   @Override
   public Image getImage(String imageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -34,135 +129,97 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Extracts the red component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the red component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void redComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] redPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          redPixels[y][x] = new Pixel(originalPixel.getRed(), 0, 0);
-        }
-      }
-      Image redComponentImage = new Image(redPixels);
-      imageMap.put(destImageName, redComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "red"));
   }
 
+  /**
+   * Extracts the green component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void greenComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] greenPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          greenPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
-        }
-      }
-      Image greenComponentImage = new Image(greenPixels);
-      imageMap.put(destImageName, greenComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "green"));
   }
 
+  /**
+   * Extracts the blue component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void blueComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] bluePixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          bluePixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
-        }
-      }
-      Image blueComponentImage = new Image(bluePixels);
-      imageMap.put(destImageName, blueComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "blue"));
   }
 
+  /**
+   * Extracts the value component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void valueComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] valuePixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          int maxPixelVal = Math.max(originalPixel.getRed(), Math.max(originalPixel.getGreen(), originalPixel.getBlue()));
-          valuePixels[y][x] = new Pixel(maxPixelVal, maxPixelVal, maxPixelVal);
-        }
-      }
-      Image valueComponentImage = new Image(valuePixels);
-      imageMap.put(destImageName, valueComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "value"));
   }
 
+  /**
+   * Extracts the luma component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void lumaComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] lumaPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          int lumaPixelVal = (int) (0.2126 * originalPixel.getRed() + 0.7152 * originalPixel.getGreen() + 0.0722 * originalPixel.getBlue());
-          lumaPixels[y][x] = new Pixel(lumaPixelVal, lumaPixelVal, lumaPixelVal);
-        }
-      }
-      Image lumaComponentImage = new Image(lumaPixels);
-      imageMap.put(destImageName, lumaComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "luma"));
   }
 
+  /**
+   * Extracts the intensity component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the green component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void intensityComponent(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] intensityPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          int intensityPixelVal = ((originalPixel.getRed() + originalPixel.getGreen() + originalPixel.getBlue()) / 3);
-          intensityPixels[y][x] = new Pixel(intensityPixelVal, intensityPixelVal, intensityPixelVal);
-        }
-      }
-      Image intensityComponentImage = new Image(intensityPixels);
-      imageMap.put(destImageName, intensityComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
+    imageMap.put(destImageName, processImage(imageName, "intensity"));
   }
 
+  /**
+   * Extracts the sepia component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
+  @Override
+  public void sepia(String imageName, String destImageName) throws IOException {
+    imageMap.put(destImageName, processImage(imageName, "sepia"));
+  }
+
+  /**
+   * Applies horizontal flip effect on the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void horizontalFlip(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -183,7 +240,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
-
+  /**
+   * Applies vertical flip effect on the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void verticalFlip(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -204,6 +267,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Applies brightening(increment/decrement) effect on the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void brightenCommand(int increment, String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -231,6 +301,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Applies blur effect on the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void blur(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -276,6 +353,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Applies sharpening effect on the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void sharpen(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -324,40 +408,16 @@ public class ImageModel implements IImageModel {
     }
   }
 
-  @Override
-  public void sepia(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] sepiaPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-
-          int originalRed = originalPixel.getRed();
-          int originalGreen = originalPixel.getGreen();
-          int originalBlue = originalPixel.getBlue();
-
-          int newRed = (int) (0.393 * originalRed + 0.769 * originalGreen + 0.189 * originalBlue);
-          int newGreen = (int) (0.349 * originalRed + 0.686 * originalGreen + 0.168 * originalBlue);
-          int newBlue = (int) (0.272 * originalRed + 0.534 * originalGreen + 0.131 * originalBlue);
-
-          newRed = Math.min(255, newRed);
-          newGreen = Math.min(255, newGreen);
-          newBlue = Math.min(255, newBlue);
-
-          sepiaPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
-        }
-      }
-      Image sepiaComponentImage = new Image(sepiaPixels);
-      imageMap.put(destImageName, sepiaComponentImage);
-    } else {
-      throw new IOException("Model.Image not found.");
-    }
-  }
-
+  /**
+   * Splits the RGB components of an image into three separate images
+   * Red, Green, and Blue channels.
+   *
+   * @param imageName          The name of the source image to be split.
+   * @param destImageNameRed   The name of the destination image for the Red channel.
+   * @param destImageNameGreen The name of the destination image for the Green channel.
+   * @param destImageNameBlue  The name of the destination image for the Blue channel.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
                        String destImageNameBlue) throws IOException {
@@ -371,6 +431,16 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Combines three images representing the Red, Green, and Blue channels
+   * into a single RGB image.
+   *
+   * @param redImageName   The name of the source image for the Red channel.
+   * @param greenImageName The name of the source image for the Green channel.
+   * @param blueImageName  The name of the source image for the Blue channel.
+   * @param destImageName  The name of the combined destination RGB image.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void rgbCombine(String destImageName, String redImageName, String greenImageName, String blueImageName) throws IOException {
     Image redImage = imageMap.get(redImageName);
