@@ -1,0 +1,114 @@
+#load film_original.jpg and call it 'film'
+load res\images\film_original.jpg film
+
+#extract red component of 'film' as an image 'filmRedComponent'
+red-component film filmRedComponent
+
+#extract blue component of 'film' as an image 'filmBlueComponent'
+blue-component film filmBlueComponent
+
+#extract green component of 'film' as an image 'filmGreenComponent'
+green-component film filmGreenComponent
+
+#produce a sepia-toned version of 'film' as an image 'filmSepia'
+sepia film filmSepia
+
+#produce a blurred version of 'film' as an image 'filmBlur'
+blur film filmBlur
+
+#produce a sharpened version of 'film' as an image 'filmSharpen'
+sharpen film filmSharpen
+
+#create a greyscale using only the value component, as an image 'filmValue'
+value-component film filmValue
+
+#create a greyscale using only the luma component, as an image 'filmLuma'
+luma-component film filmLuma
+
+#create a greyscale using only the luma component, as an image 'filmIntensity'
+intensity-component film filmIntensity
+
+#flip 'film' horizontally and store it as an image 'filmHFlip'
+horizontal-flip film filmHFlip
+
+#flip 'film' vertically and store it as an image 'filmVFlip'
+vertical-flip film filmVFlip
+
+#brighten 'film' by adding 70 and store it as an image 'filmBrighter'
+brighten 70 film filmBrighter
+
+#darken 'film' by adding -70 and store it as an image 'filmDarker'
+brighten -70 film filmDarker
+
+#split 'film' into its red, green and blue components, as images 'redSplit', 'greenSplit',
+#'blueSplit'
+rgb-split film redSplit greenSplit blueSplit
+
+#combine 'redSplit', 'greenSplit', 'blueSplit' into an image 'filmCombined'
+rgb-combine filmCombined redSplit greenSplit blueSplit
+
+#save 'filmRedComponent' as 'filmRedComponent.png'
+save res\images\filmRedComponent.png filmRedComponent
+
+#save 'filmGreenComponent' as 'filmGreenComponent.png'
+save res\images\filmGreenComponent.png filmGreenComponent
+
+#save 'filmBlueComponent' as 'filmBlueComponent.jpg'
+save res\images\filmBlueComponent.jpg filmBlueComponent
+
+#save 'filmBlur' as 'filmBlur.jpg'
+save res\images\filmBlur.jpg filmBlur
+
+#save 'filmSharpen' as 'filmSharpen.jpeg'
+save res\images\filmSharpen.jpeg filmSharpen
+
+#save 'filmSepia' as 'filmSepia.png'
+save res\images\filmSepia.png filmSepia
+
+#save 'filmValue' as 'filmValue.jpg'
+save res\images\filmValue.jpg filmValue
+
+#save 'filmLuma' as 'filmLuma.jpeg'
+save res\images\filmLuma.jpeg filmLuma
+
+#save 'filmIntensity' as 'filmIntensity.jpeg'
+save res\images\filmIntensity.jpg filmIntensity
+
+#save 'filmHFlip' as 'filmHFlip.png'
+save res\images\filmHFlip.png filmHFlip
+
+#save 'filmVFlip' as 'filmVFlip.png'
+save res\images\filmVFlip.png filmVFlip
+
+#save 'filmBrighter' as 'filmBrighter.jpg'
+save res\images\filmBrighter.jpg filmBrighter
+
+#save 'filmDarker' as 'filmDarker.png'
+save res\images\filmDarker.png filmDarker
+
+#save 'blueSplit' as 'blueSplit.jpg'
+save res\images\blueSplit.jpg blueSplit
+
+#save 'greenSplit' as 'greenSplit.jpeg'
+save res\images\greenSplit.jpeg greenSplit
+
+#save 'redSplit' as 'redSplit.png'
+save res\images\redSplit.png redSplit
+
+#save 'filmCombined' as 'filmCombined.jpg'
+save res\images\filmCombined.jpg filmCombined
+
+#give 'film' a green tint and save the image as 'filmGreenTint.jpg'
+rgb-split film filmRedComp2 filmGreenComp2 filmBlueComp2
+brighten 50 filmGreenComp2 filmGreenComp2
+rgb-combine filmGreenTint filmRedComp2 filmGreenComp2 filmBlueComp2
+save res\images\filmGreenTint.jpg filmGreenTint
+
+#save 'filmIntensity' as 'filmIntensity.ppm'
+save res\images\filmIntensity.ppm filmIntensity
+
+#flip the 'flipHFlip' vertically and store as an image 'flipHFlipVFlip'
+vertical-flip filmHFlip filmHFlipVFlip
+
+#save 'filmHFlipVFlip' as 'filmHFlipVFlip.png'
+save res\images\filmHFlipVFlip.png filmHFlipVFlip

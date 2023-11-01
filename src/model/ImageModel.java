@@ -92,7 +92,7 @@ public class ImageModel implements IImageModel {
       }
       return new Image(processedPixels);
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 
@@ -109,7 +109,7 @@ public class ImageModel implements IImageModel {
     if (image != null) {
       imageMap.put(imageName, image);
     } else {
-      throw new IOException("Model.Image not loaded.");
+      throw new IOException("Image not loaded.");
     }
   }
 
@@ -125,7 +125,7 @@ public class ImageModel implements IImageModel {
     if (image != null) {
       return image;
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 

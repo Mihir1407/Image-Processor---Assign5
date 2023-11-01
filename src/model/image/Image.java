@@ -28,12 +28,18 @@ public class Image {
 
   /**
    * Retrieves the pixel at the specified (x, y) position.
+   * Throws an IllegalArgumentException if the x and y coordinates are outside
+   * the bounds of the image dimensions.
    *
    * @param x the x-coordinate of the desired pixel
    * @param y the y-coordinate of the desired pixel
    * @return the Pixel object at the specified position
+   * @throws IllegalArgumentException if x or y coordinates are out of bounds
    */
-  public Pixel getPixel(int x, int y) {
+  public Pixel getPixel(int x, int y) throws IllegalArgumentException {
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight()) {
+      throw new IllegalArgumentException("Coordinates out of bounds!");
+    }
     return pixels[y][x];
   }
 
@@ -57,12 +63,18 @@ public class Image {
 
   /**
    * Sets the pixel value at the specified (x, y) position.
+   * Throws an IllegalArgumentException if the x and y coordinates are outside
+   * the bounds of the image dimensions.
    *
    * @param x     the x-coordinate of the pixel to be set
    * @param y     the y-coordinate of the pixel to be set
    * @param pixel the new Pixel object to be placed at the specified position
+   * @throws IllegalArgumentException if x or y coordinates are out of bounds
    */
   public void setPixel(int x, int y, Pixel pixel) {
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight()) {
+      throw new IllegalArgumentException("Coordinates out of bounds!");
+    }
     pixels[y][x] = pixel;
   }
 }
