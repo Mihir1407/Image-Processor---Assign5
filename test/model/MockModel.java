@@ -12,18 +12,18 @@ import model.image.Pixel;
  * and perform various image processing operations.
  * Images are stored with a String identifier in a map.
  */
-public class mockModel implements IImageModel {
+public class MockModel implements IImageModel {
 
-  private StringBuilder log = new StringBuilder();
+  private final StringBuilder log = new StringBuilder();
 
-  private Image dummyImage;
+  private final Image dummyImage;
 
   /**
    * Constructs a new mockModel instance. Initializes the log and creates a
    * dummy image with a single red pixel to be used as a return value for image
    * retrieval methods.
    */
-  public mockModel() {
+  public MockModel() {
     Pixel[][] pixels = new Pixel[1][1];
     pixels[0][0] = new Pixel(255, 0, 0);
     dummyImage = new Image(pixels);

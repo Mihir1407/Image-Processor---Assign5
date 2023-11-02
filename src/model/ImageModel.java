@@ -99,11 +99,11 @@ public class ImageModel implements IImageModel {
   }
 
   /**
-   * Loads an image into the model.
+   * Adds a new image into the model.
    *
-   * @param image     The name assigned to the loaded image.
-   * @param imageName The path to the image.
-   * @throws IOException If an error occurs during the reading process.
+   * @param image     The image to be added into the model.
+   * @param imageName The name by which the image should be stored.
+   * @throws IOException If the image to be added to the model is null.
    */
 
   @Override
@@ -116,10 +116,10 @@ public class ImageModel implements IImageModel {
   }
 
   /**
-   * Saves the image to a specified location.
+   * Retrieves an image with provided name from the model.
    *
-   * @param imageName The name of the image to save.
-   * @throws IOException If an error occurs during the saving process.
+   * @param imageName The name of the image to be retrieved.
+   * @throws IOException If the image to be retrieved does not exist in the model.
    */
   @Override
   public Image getImage(String imageName) throws IOException {

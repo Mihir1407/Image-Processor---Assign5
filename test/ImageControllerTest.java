@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import controller.ImageController;
-import model.mockModel;
+import model.MockModel;
 import view.ConsoleView;
 
 
@@ -63,7 +63,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -85,7 +85,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -107,7 +107,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -129,7 +129,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -151,7 +151,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -173,7 +173,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -195,7 +195,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -217,7 +217,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -239,7 +239,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -261,7 +261,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -283,7 +283,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -306,7 +306,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -329,7 +329,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -351,7 +351,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -393,7 +393,7 @@ public class ImageControllerTest {
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -449,7 +449,7 @@ public class ImageControllerTest {
     PrintStream originalErr = System.err;
     System.setErr(new PrintStream(errContent));
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -479,7 +479,7 @@ public class ImageControllerTest {
     PrintStream originalErr = System.err;
     System.setErr(new PrintStream(errContent));
     ConsoleView view = new ConsoleView();
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     ImageController controller = new ImageController(model, view);
     try {
       controller.execute();
@@ -497,7 +497,7 @@ public class ImageControllerTest {
 
   @Test
   public void testLoadCommand() {
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     String inputData = "load res/images/film_original.jpg film_original";
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);
@@ -514,7 +514,7 @@ public class ImageControllerTest {
 
   @Test
   public void testSaveCommand() {
-    mockModel model = new mockModel();
+    MockModel model = new MockModel();
     String inputData = "save res/images/film_original_save.jpg film_original";
     ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
     System.setIn(inContent);

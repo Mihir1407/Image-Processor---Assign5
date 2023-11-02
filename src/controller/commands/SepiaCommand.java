@@ -3,10 +3,9 @@ package controller.commands;
 import model.IImageModel;
 
 /**
- * Represents a command that extracts and processes
- * the sepia component of an image.
- * This command uses the underlying image model to extract the sepia component
- * of the source image and saves the resultant image with a new name.
+ * Represents a command that produces a sepia-toned version of an image.
+ * This command uses the underlying image model to apply the sepia tone
+ * to the source image and saves the resultant image with a new name.
  */
 public class SepiaCommand extends AbstractTransformCommand {
 
