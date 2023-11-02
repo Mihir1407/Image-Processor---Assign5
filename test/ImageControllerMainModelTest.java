@@ -88,6 +88,46 @@ public class ImageControllerMainModelTest {
   }
 
   /**
+   * Tests the red component method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerRedComponentMainModelPPM() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img_ppm.ppm main_model_test_img_ppm",
+            "red-component main_model_test_img_ppm main_model_test_img_red_ppm",
+            "save res/controllerTest/main_model_test_img_red_ppm.ppm main_model_test_img_red_ppm"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "red-component operation successful.",
+            "save operation successful.", "");
+    assertEquals(expectedOutput, outContent.toString());
+    Image redImage = imageModel.getImage("main_model_test_img_red_ppm");
+    for (int y = 0; y < redImage.getHeight(); y++) {
+      for (int x = 0; x < redImage.getWidth(); x++) {
+        Pixel redPixel = redImage.getPixel(x, y);
+        int expectedRedValue = redPixel.getRed();
+        assertEquals(expectedRedValue, redPixel.getRed());
+        assertEquals(0, redPixel.getGreen());
+        assertEquals(0, redPixel.getBlue());
+      }
+    }
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
    * Tests the blue component method call of the ImageController
    * class using execute.
    * Ensures it processes the simulated console input correctly.

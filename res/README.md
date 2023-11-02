@@ -594,6 +594,9 @@ This folder contains the image which is used as an input file in `commands.txt`.
 ### controllerTest folder:
 This folder contains the image which is used as an input file in `ImageControllerMainModelTest.java`. All the image files generated as a result of execution of all tests in `ImageControllerMainModelTest.java` are also stored in this folder.
 
+### ClassDiagram.png:
+This image shows the class diagram for this image processing application. The class diagram shows names of classes and interfaces, signature of methods and relationships (inheritance and composition).
+
 # Image Citation:
 The image used in this project is sourced from Pixabay(https://pixabay.com/), a platform for high-quality stock photos free from copyright restrictions. The specific image can be accessed here - https://pixabay.com/illustrations/film-negative-photographs-slides-1668918/.
 
