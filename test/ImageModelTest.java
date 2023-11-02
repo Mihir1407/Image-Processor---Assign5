@@ -588,12 +588,12 @@ public class ImageModelTest {
   @Test
   public void testBlur() throws IOException {
     Pixel[][] samplePixels = {
-            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
-                    new Pixel(0, 0, 255)},
-            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
-                    new Pixel(255, 0, 0)},
-            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
-                    new Pixel(0, 255, 0)}
+      {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+       new Pixel(0, 0, 255)},
+      {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+       new Pixel(255, 0, 0)},
+      {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+       new Pixel(0, 255, 0)}
     };
     Image img = new Image(samplePixels);
     imageModel.addImage(img, "TestImage");
@@ -604,12 +604,12 @@ public class ImageModelTest {
     Pixel[][] blurredPixels = blurredImage.getPixels();
 
     Pixel[][] expectedPixels = {
-            {new Pixel(64, 64, 16), new Pixel(48, 80, 64),
-                    new Pixel(32, 32, 80)},
-            {new Pixel(48, 80, 64), new Pixel(80, 80, 96),
-                    new Pixel(80, 48, 64)},
-            {new Pixel(32, 32, 80), new Pixel(80, 48, 64),
-                    new Pixel(64, 64, 16)}
+      {new Pixel(64, 64, 16), new Pixel(48, 80, 64),
+       new Pixel(32, 32, 80)},
+      {new Pixel(48, 80, 64), new Pixel(80, 80, 96),
+       new Pixel(80, 48, 64)},
+      {new Pixel(32, 32, 80), new Pixel(80, 48, 64),
+       new Pixel(64, 64, 16)}
     };
 
     for (int y = 0; y < 3; y++) {
@@ -635,12 +635,12 @@ public class ImageModelTest {
   @Test
   public void testSharpen() throws IOException {
     Pixel[][] samplePixels = {
-            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
-                    new Pixel(0, 0, 255)},
-            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
-                    new Pixel(255, 0, 0)},
-            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
-                    new Pixel(0, 255, 0)}
+      {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+       new Pixel(0, 0, 255)},
+      {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+       new Pixel(255, 0, 0)},
+      {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+       new Pixel(0, 255, 0)}
     };
     Image img = new Image(samplePixels);
     imageModel.addImage(img, "sample");
@@ -651,12 +651,12 @@ public class ImageModelTest {
     Pixel[][] sharpenedPixels = sharpenedImage.getPixels();
 
     Pixel[][] expectedPixels = {
-            {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
-                    new Pixel(0, 0, 255)},
-            {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
-                    new Pixel(255, 96, 96)},
-            {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
-                    new Pixel(96, 191, 0)}
+      {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
+       new Pixel(0, 0, 255)},
+      {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
+       new Pixel(255, 96, 96)},
+      {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
+       new Pixel(96, 191, 0)}
     };
 
     for (int y = 0; y < 3; y++) {

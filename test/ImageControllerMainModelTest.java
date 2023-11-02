@@ -599,12 +599,12 @@ public class ImageControllerMainModelTest {
     Image sharpenedImage = imageModel.getImage("main_model_test_img_sharpened");
 
     Pixel[][] expectedPixels = {
-            {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
-                    new Pixel(0, 0, 255)},
-            {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
-                    new Pixel(255, 96, 96)},
-            {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
-                    new Pixel(96, 191, 0)}
+      {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
+       new Pixel(0, 0, 255)},
+      {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
+       new Pixel(255, 96, 96)},
+      {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
+       new Pixel(96, 191, 0)}
     };
 
     for (int y = 0; y < sharpenedImage.getHeight(); y++) {
@@ -653,12 +653,12 @@ public class ImageControllerMainModelTest {
     Image blurImage = imageModel.getImage("main_model_test_img_blur");
 
     Pixel[][] expectedPixels = {
-            {new Pixel(37, 71, 49), new Pixel(58, 76, 65),
-                    new Pixel(49, 29, 43)},
-            {new Pixel(58, 76, 66), new Pixel(72, 84, 74),
-                    new Pixel(58, 55, 51)},
-            {new Pixel(50, 28, 44), new Pixel(57, 53, 49),
-                    new Pixel(41, 70, 37)}
+      {new Pixel(37, 71, 49), new Pixel(58, 76, 65),
+       new Pixel(49, 29, 43)},
+      {new Pixel(58, 76, 66), new Pixel(72, 84, 74),
+       new Pixel(58, 55, 51)},
+      {new Pixel(50, 28, 44), new Pixel(57, 53, 49),
+       new Pixel(41, 70, 37)}
     };
 
     for (int y = 0; y < blurImage.getHeight(); y++) {
