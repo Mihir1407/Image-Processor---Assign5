@@ -18,7 +18,8 @@ public class RedComponentCommand extends AbstractTransformCommand {
    * @param destImageName The name of the destination image.
    * @param model         A reference to the image model.
    */
-  public RedComponentCommand(String imageName, String destImageName, IImageModel model) {
+  public RedComponentCommand(String imageName,
+                             String destImageName, IImageModel model) {
     super(imageName, destImageName, model);
   }
 

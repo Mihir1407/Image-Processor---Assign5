@@ -13,7 +13,8 @@ import java.util.List;
 public class ScriptParser implements IScriptParser {
 
   /**
-   * Parses the script file provided by the given file path and retrieves a list of commands.
+   * Parses the script file provided by the given file path and
+   * retrieves a list of commands.
    * Lines starting with "#" or empty lines are ignored.
    *
    * @param scriptFilePath Path to the script file to be parsed.
@@ -35,7 +36,8 @@ public class ScriptParser implements IScriptParser {
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException("Error reading the script file: " + e.getMessage());
+      throw new RuntimeException("Error reading the script file: "
+              + e.getMessage());
     }
 
     return commands;

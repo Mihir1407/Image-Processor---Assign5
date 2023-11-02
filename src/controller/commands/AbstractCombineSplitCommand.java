@@ -3,8 +3,9 @@ package controller.commands;
 import model.IImageModel;
 
 /**
- * Represents an abstract command for operations that involve combining or splitting
- * the RGB channels of an image. This class provides the foundation for commands that
+ * Represents an abstract command for operations that involve
+ * combining or splitting the RGB channels of an image.
+ * This class provides the foundation for commands that
  * work with separate red, green, and blue channel images.
  */
 abstract class AbstractCombineSplitCommand extends AbstractCommand {

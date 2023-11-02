@@ -70,6 +70,7 @@ public class ConsoleViewTest {
   public void testShowError() {
     view = new ConsoleView();
     view.showError("Test Error");
-    assertEquals("ERROR: Test Error" + System.lineSeparator(), errContent.toString());
+    assertEquals("ERROR: Test Error"
+            + System.lineSeparator(), errContent.toString());
   }
 }

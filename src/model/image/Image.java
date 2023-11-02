@@ -1,9 +1,11 @@
 package model.image;
 
+import java.awt.image.RenderedImage;
+
 /**
  * Represents a 2D image composed of pixels.
- * Provides methods to get pixel data, retrieve the width and height of the image, and set pixel
- * values.
+ * Provides methods to get pixel data, retrieve the width and
+ * height of the image, and set pixel values.
  */
 public class Image {
   private Pixel[][] pixels;
@@ -63,8 +65,8 @@ public class Image {
 
   /**
    * Sets the pixel value at the specified (x, y) position.
-   * Throws an IllegalArgumentException if the x and y coordinates are outside
-   * the bounds of the image dimensions.
+   * Throws an IllegalArgumentException if the x and y
+   * coordinates are outside the bounds of the image dimensions.
    *
    * @param x     the x-coordinate of the pixel to be set
    * @param y     the y-coordinate of the pixel to be set
@@ -77,4 +79,5 @@ public class Image {
     }
     pixels[y][x] = pixel;
   }
+
 }

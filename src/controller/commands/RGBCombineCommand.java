@@ -8,7 +8,7 @@ import model.IImageModel;
  * This command encapsulates the logic required to merge the RGB
  * components of an image from individual color channels.
  */
-public class RGBCombineCommand extends AbstractCombineSplitCommand{
+public class RGBCombineCommand extends AbstractCombineSplitCommand {
 
   /**
    * Constructs an RGBCombineCommand with the provided image
@@ -20,7 +20,8 @@ public class RGBCombineCommand extends AbstractCombineSplitCommand{
    * @param blueImageName  The name of the source image for the blue component.
    * @param model          A reference to the image model.
    */
-  public RGBCombineCommand(String ImageName, String redImageName, String greenImageName, String blueImageName, IImageModel model) {
+  public RGBCombineCommand(String ImageName, String redImageName, String greenImageName,
+                           String blueImageName, IImageModel model) {
     super(ImageName, redImageName, greenImageName, blueImageName, model);
   }
 
@@ -33,6 +34,7 @@ public class RGBCombineCommand extends AbstractCombineSplitCommand{
    */
   @Override
   protected void processImage() throws Exception {
-    this.model.rgbCombine(this.imageName, this.redImageName, this.greenImageName, this.blueImageName);
+    this.model.rgbCombine(this.imageName, this.redImageName,
+            this.greenImageName, this.blueImageName);
   }
 }

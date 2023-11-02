@@ -10,8 +10,9 @@ import model.image.Image;
 import model.image.Pixel;
 
 /**
- * Provides an abstract implementation of the IImageFileParser interface, defining common
- * methods for loading and saving images from/to disk. Specific image formats provide concrete
+ * Provides an abstract implementation of the IImageFileParser
+ * interface, defining common methods for loading and saving images
+ * from/to disk. Specific image formats provide concrete
  * implementations of this class.
  */
 public abstract class AbstractImageParser implements IImageFileParser {
@@ -51,7 +52,8 @@ public abstract class AbstractImageParser implements IImageFileParser {
    *
    * @param path  the path where the image should be saved
    * @param image the Image object to be saved
-   * @throws IOException if an error occurs while writing to the file or if the image data is null
+   * @throws IOException if an error occurs while writing to the file \
+   *                     or if the image data is null
    */
   @Override
   public void saveImage(String path, Image image) throws IOException {
@@ -88,7 +90,8 @@ public abstract class AbstractImageParser implements IImageFileParser {
   protected abstract String getImageFormat();
 
   /**
-   * Returns the BufferedImage type constant appropriate for the implementing class.
+   * Returns the BufferedImage type constant appropriate for the
+   * implementing class.
    *
    * @return the image type constant
    */

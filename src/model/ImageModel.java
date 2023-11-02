@@ -63,9 +63,11 @@ public class ImageModel implements IImageModel {
               processedPixels[y][x] = new Pixel(maxPixelVal, maxPixelVal, maxPixelVal);
               break;
             case "luma":
-              int lumaPixelVal = (int) (0.2126 * originalPixel.getRed()
+              double lumaPixelVal = (0.2126 * originalPixel.getRed()
                       + 0.7152 * originalPixel.getGreen() + 0.0722 * originalPixel.getBlue());
-              processedPixels[y][x] = new Pixel(lumaPixelVal, lumaPixelVal, lumaPixelVal);
+              int roundedLumaValue = (int) Math.round(lumaPixelVal);
+              processedPixels[y][x] = new Pixel(roundedLumaValue, roundedLumaValue,
+                      roundedLumaValue);
               break;
             case "intensity":
               int intensityPixelVal = ((originalPixel.getRed() + originalPixel.getGreen()
@@ -275,7 +277,8 @@ public class ImageModel implements IImageModel {
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void brightenCommand(int increment, String imageName, String destImageName) throws IOException {
+  public void brightenCommand(int increment, String imageName,
+                              String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
       int height = image.getHeight();
@@ -331,7 +334,9 @@ public class ImageModel implements IImageModel {
           for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
 
-              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) continue;
+              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) {
+                continue;
+              }
 
               Pixel neighboringPixel = image.getPixel(x + i, y + j);
               redSum += neighboringPixel.getRed() * kernel[i + 1][j + 1];
@@ -357,7 +362,8 @@ public class ImageModel implements IImageModel {
    * Applies sharpening effect on the image.
    *
    * @param imageName     The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param destImageName The path where the intensity component
+   *                      image should be saved.
    * @throws IOException If an error occurs during the process.
    */
   @Override
@@ -442,7 +448,8 @@ public class ImageModel implements IImageModel {
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void rgbCombine(String destImageName, String redImageName, String greenImageName, String blueImageName) throws IOException {
+  public void rgbCombine(String destImageName, String redImageName,
+                         String greenImageName, String blueImageName) throws IOException {
     Image redImage = imageMap.get(redImageName);
     Image greenImage = imageMap.get(greenImageName);
     Image blueImage = imageMap.get(blueImageName);

@@ -5,8 +5,10 @@ import view.ConsoleView;
 import view.IView;
 
 /**
- * The main application class that initiates and starts the Image processing program.
- * This class initializes the Image model, a console-based view, and the Image controller.
+ * The main application class that initiates and
+ * starts the Image processing program.
+ * This class initializes the Image model, a console-based view,
+ * and the Image controller.
  * After setting up these components, it triggers the controller's execution.
  */
 public class Application {

@@ -14,7 +14,7 @@ public interface IImageModel {
   /**
    * Loads an image into the model.
    *
-   * @param image The name assigned to the loaded image.
+   * @param image     The name assigned to the loaded image.
    * @param imagePath The path to the image.
    * @throws IOException If an error occurs during the reading process.
    */
@@ -31,8 +31,8 @@ public interface IImageModel {
   /**
    * Extracts the red component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the red component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the red component image.
    * @throws IOException If an error occurs during the process.
    */
   void redComponent(String imageName, String destImageName) throws IOException;
@@ -40,8 +40,8 @@ public interface IImageModel {
   /**
    * Extracts the green component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the green component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the green component image.
    * @throws IOException If an error occurs during the process.
    */
   void greenComponent(String imageName, String destImageName) throws IOException;
@@ -49,8 +49,8 @@ public interface IImageModel {
   /**
    * Extracts the blue component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the blue component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the blue component image.
    * @throws IOException If an error occurs during the process.
    */
   void blueComponent(String imageName, String destImageName) throws IOException;
@@ -58,8 +58,8 @@ public interface IImageModel {
   /**
    * Extracts the value component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the value component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the value component image.
    * @throws IOException If an error occurs during the process.
    */
   void valueComponent(String imageName, String destImageName) throws IOException;
@@ -67,8 +67,8 @@ public interface IImageModel {
   /**
    * Extracts the luma component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the luma component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the luma component image.
    * @throws IOException If an error occurs during the process.
    */
   void lumaComponent(String imageName, String destImageName) throws IOException;
@@ -76,8 +76,8 @@ public interface IImageModel {
   /**
    * Extracts the intensity component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the intensity component image.
    * @throws IOException If an error occurs during the process.
    */
   void intensityComponent(String imageName, String destImageName) throws IOException;
@@ -85,8 +85,8 @@ public interface IImageModel {
   /**
    * Applies horizontal flip effect on the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the horizontal flip image.
    * @throws IOException If an error occurs during the process.
    */
   void horizontalFlip(String imageName, String destImageName) throws IOException;
@@ -94,17 +94,18 @@ public interface IImageModel {
   /**
    * Applies brightening(increment/decrement) effect on the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the brightening component image.
    * @throws IOException If an error occurs during the process.
    */
-  void brightenCommand(int increment, String imageName, String destImageName) throws IOException;
+  void brightenCommand(int increment, String imageName,
+                       String destImageName) throws IOException;
 
   /**
    * Applies blur effect on the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the blur component image.
    * @throws IOException If an error occurs during the process.
    */
   void blur(String imageName, String destImageName) throws IOException;
@@ -112,8 +113,8 @@ public interface IImageModel {
   /**
    * Applies sharpening effect on the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the sharpened image.
    * @throws IOException If an error occurs during the process.
    */
   void sharpen(String imageName, String destImageName) throws IOException;
@@ -121,8 +122,8 @@ public interface IImageModel {
   /**
    * Applies vertical flip effect on the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the vertical flip image.
    * @throws IOException If an error occurs during the process.
    */
   void verticalFlip(String imageName, String destImageName) throws IOException;
@@ -130,8 +131,8 @@ public interface IImageModel {
   /**
    * Extracts the sepia component of the image.
    *
-   * @param imageName The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName     The name of the image.
+   * @param destImageName The path to save the sepia component image.
    * @throws IOException If an error occurs during the process.
    */
   void sepia(String imageName, String destImageName) throws IOException;
@@ -144,7 +145,7 @@ public interface IImageModel {
    * @param destImageNameRed   The name of the destination image for the Red channel.
    * @param destImageNameGreen The name of the destination image for the Green channel.
    * @param destImageNameBlue  The name of the destination image for the Blue channel.
-   * @throws IOException       If an error occurs during the process.
+   * @throws IOException If an error occurs during the process.
    */
   void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
                 String destImageNameBlue) throws IOException;
@@ -153,11 +154,12 @@ public interface IImageModel {
    * Combines three images representing the Red, Green, and Blue channels
    * into a single RGB image.
    *
-   * @param redImageName     The name of the source image for the Red channel.
-   * @param greenImageName   The name of the source image for the Green channel.
-   * @param blueImageName    The name of the source image for the Blue channel.
-   * @param destImageName    The name of the combined destination RGB image.
-   * @throws IOException     If an error occurs during the process.
+   * @param redImageName   The name of the source image for the Red channel.
+   * @param greenImageName The name of the source image for the Green channel.
+   * @param blueImageName  The name of the source image for the Blue channel.
+   * @param destImageName  The name of the combined destination RGB image.
+   * @throws IOException If an error occurs during the process.
    */
-  void rgbCombine(String redImageName, String greenImageName, String blueImageName, String destImageName) throws IOException;
+  void rgbCombine(String redImageName, String greenImageName,
+                  String blueImageName, String destImageName) throws IOException;
 }
