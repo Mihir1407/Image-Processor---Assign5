@@ -15,7 +15,8 @@ public class ConsoleView implements IView {
   private final Scanner scanner;
 
   /**
-   * Initializes a new instance of the ConsoleView with a Scanner to read from the console.
+   * Initializes a new instance of the ConsoleView with a
+   * Scanner to read from the console.
    */
   public ConsoleView() {
     this.scanner = new Scanner(System.in);

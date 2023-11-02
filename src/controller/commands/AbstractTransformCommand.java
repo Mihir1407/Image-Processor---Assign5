@@ -19,7 +19,8 @@ public abstract class AbstractTransformCommand extends AbstractCommand {
    * @param destImageName The name of the transformed destination image.
    * @param model         A reference to the image model.
    */
-  public AbstractTransformCommand(String imageName, String destImageName, IImageModel model) {
+  public AbstractTransformCommand(String imageName, String destImageName,
+                                  IImageModel model) {
     super(imageName, model);
     this.destImageName = destImageName;
   }

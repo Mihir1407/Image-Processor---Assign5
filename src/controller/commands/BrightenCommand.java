@@ -19,7 +19,8 @@ public class BrightenCommand extends AbstractTransformCommand {
    * @param destImageName The name of the destination image after brightening.
    * @param model         A reference to the image model.
    */
-  public BrightenCommand(int increment, String imageName, String destImageName, IImageModel model) {
+  public BrightenCommand(int increment, String imageName,
+                         String destImageName, IImageModel model) {
     super(imageName, destImageName, model);
     this.increment = increment;
   }

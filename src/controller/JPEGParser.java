@@ -3,7 +3,8 @@ package controller;
 import java.awt.image.BufferedImage;
 
 /**
- * Provides a concrete implementation of the AbstractImageParser for the JPEG image format.
+ * Provides a concrete implementation of the AbstractImageParser
+ * for the JPEG image format.
  */
 public class JPEGParser extends AbstractImageParser {
 

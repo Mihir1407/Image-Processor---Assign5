@@ -8,7 +8,7 @@ import model.IImageModel;
  * This command encapsulates the logic required to extract RGB components
  * of an image.
  */
-public class RGBSplitCommand extends AbstractCombineSplitCommand{
+public class RGBSplitCommand extends AbstractCombineSplitCommand {
 
   /**
    * Constructs an RGBSplitCommand with the provided image names for
@@ -20,7 +20,8 @@ public class RGBSplitCommand extends AbstractCombineSplitCommand{
    * @param blueImageName  Destination image for the blue component.
    * @param model          A reference to the image model.
    */
-  public RGBSplitCommand(String ImageName, String redImageName, String greenImageName, String blueImageName, IImageModel model) {
+  public RGBSplitCommand(String ImageName, String redImageName,
+                         String greenImageName, String blueImageName, IImageModel model) {
     super(ImageName, redImageName, greenImageName, blueImageName, model);
   }
 
@@ -33,6 +34,7 @@ public class RGBSplitCommand extends AbstractCombineSplitCommand{
    */
   @Override
   protected void processImage() throws Exception {
-    this.model.rgbSplit(this.imageName, this.redImageName, this.greenImageName, this.blueImageName);
+    this.model.rgbSplit(this.imageName, this.redImageName,
+            this.greenImageName, this.blueImageName);
   }
 }

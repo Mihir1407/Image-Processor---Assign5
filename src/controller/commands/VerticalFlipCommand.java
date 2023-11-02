@@ -16,7 +16,8 @@ public class VerticalFlipCommand extends AbstractTransformCommand {
    * @param destImageName The name of the destination image.
    * @param model         A reference to the image model.
    */
-  public VerticalFlipCommand(String imageName, String destImageName, IImageModel model) {
+  public VerticalFlipCommand(String imageName, String destImageName,
+                             IImageModel model) {
     super(imageName, destImageName, model);
   }
 

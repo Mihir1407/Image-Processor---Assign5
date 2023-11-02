@@ -1,7 +1,8 @@
 package model.image;
 
 /**
- * Represents a pixel in an image, consisting of red, green, and blue color components.
+ * Represents a pixel in an image, consisting of red, green,
+ * and blue color components.
  * Each color component can have a value ranging from 0 to 255.
  */
 public class Pixel {
@@ -10,8 +11,10 @@ public class Pixel {
   private int blue;
 
   /**
-   * Constructs a new Pixel with the specified red, green, and blue color values.
-   * The color values are clamped to ensure they lie between 0 and 255.
+   * Constructs a new Pixel with the specified red, green,
+   * and blue color values.
+   * The color values are clamped to ensure they lie
+   * between 0 and 255.
    *
    * @param red   the red color component (0-255)
    * @param green the green color component (0-255)

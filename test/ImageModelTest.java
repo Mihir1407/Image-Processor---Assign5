@@ -300,11 +300,12 @@ public class ImageModelTest {
     for (int y = 0; y < lumaImage.getHeight(); y++) {
       for (int x = 0; x < lumaImage.getWidth(); x++) {
         Pixel lumaPixel = lumaImage.getPixel(x, y);
-        int lumaValue = (int) (0.2126 * pixelData[y][x].getRed()
+        double lumaValue = (0.2126 * pixelData[y][x].getRed()
                 + 0.7152 * pixelData[y][x].getGreen() + 0.0722 * pixelData[y][x].getBlue());
-        assertEquals(lumaValue, lumaPixel.getRed());
-        assertEquals(lumaValue, lumaPixel.getGreen());
-        assertEquals(lumaValue, lumaPixel.getBlue());
+        int roundedLumaValue = (int) Math.round(lumaValue);
+        assertEquals(roundedLumaValue, lumaPixel.getRed());
+        assertEquals(roundedLumaValue, lumaPixel.getGreen());
+        assertEquals(roundedLumaValue, lumaPixel.getBlue());
       }
     }
   }
@@ -512,7 +513,8 @@ public class ImageModelTest {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
     int increment = 50;
-    imageModel.brightenCommand(increment, "TestImage", "brightenTestImage");
+    imageModel.brightenCommand(increment, "TestImage",
+            "brightenTestImage");
 
     Image brightenedImage = imageModel.getImage("brightenTestImage");
 

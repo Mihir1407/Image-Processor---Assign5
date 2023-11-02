@@ -18,7 +18,8 @@ public class ValueComponentCommand extends AbstractTransformCommand {
    * @param destImageName The name of the destination image.
    * @param model         A reference to the image model.
    */
-  public ValueComponentCommand(String imageName, String destImageName, IImageModel model) {
+  public ValueComponentCommand(String imageName, String destImageName,
+                               IImageModel model) {
     super(imageName, destImageName, model);
   }
 

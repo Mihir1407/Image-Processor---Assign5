@@ -6,7 +6,8 @@ import model.image.Image;
 
 /**
  * Interface for image file parsing operations.
- * Provides methods for loading an image from a file and saving an image to a file.
+ * Provides methods for loading an image from a file and
+ * saving an image to a file.
  */
 public interface IImageFileParser {
 
@@ -22,7 +23,7 @@ public interface IImageFileParser {
   /**
    * Saves an IImage object to a specified path.
    *
-   * @param path The path where the image should be saved.
+   * @param path  The path where the image should be saved.
    * @param image The IImage object to be saved.
    * @throws IOException If there's an error during the saving process.
    */

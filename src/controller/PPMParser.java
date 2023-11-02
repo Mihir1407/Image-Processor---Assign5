@@ -20,7 +20,8 @@ public class PPMParser implements IImageFileParser {
    *
    * @param path the path of the PPM image file to be loaded
    * @return an Image object representing the loaded image
-   * @throws IOException if there's an error reading the file or the file is not a valid PPM
+   * @throws IOException if there's an error reading the file or
+   *                     the file is not a valid PPM
    */
   @Override
   public Image loadImage(String path) throws IOException {
@@ -43,7 +44,8 @@ public class PPMParser implements IImageFileParser {
     sc = new Scanner(builder.toString());
 
     if (!sc.next().equals("P3")) {
-      throw new IOException("Invalid PPM file: plain RAW file should begin with P3");
+      throw new IOException("Invalid PPM file: plain RAW file should "
+              + "begin with P3");
     }
 
     int width = sc.nextInt();
@@ -51,7 +53,8 @@ public class PPMParser implements IImageFileParser {
     int maxValue = sc.nextInt();
 
     if (maxValue > 255) {
-      throw new IOException("Unsupported color depth. Maximum value should be 255.");
+      throw new IOException("Unsupported color depth. Maximum value "
+              + "should be 255.");
     }
 
     Image image = new Image(new Pixel[height][width]);
@@ -92,7 +95,8 @@ public class PPMParser implements IImageFileParser {
       for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
           Pixel pixel = image.getPixel(x, y);
-          writer.write(pixel.getRed() + " " + pixel.getGreen() + " " + pixel.getBlue() + " ");
+          writer.write(pixel.getRed() + " " + pixel.getGreen()
+                  + " " + pixel.getBlue() + " ");
         }
         writer.write("\n");
       }

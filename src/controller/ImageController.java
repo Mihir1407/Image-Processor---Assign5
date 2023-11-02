@@ -157,6 +157,7 @@ public class ImageController implements IController {
           break;
       }
     } catch (Exception e) {
+      view.showError("Error executing command: " + e.getMessage());
       commandSuccessful = false;
     }
     if (commandSuccessful) {

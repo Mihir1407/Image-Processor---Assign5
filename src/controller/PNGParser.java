@@ -3,7 +3,8 @@ package controller;
 import java.awt.image.BufferedImage;
 
 /**
- * Provides a concrete implementation of the AbstractImageParser for the PNG image format.
+ * Provides a concrete implementation of the AbstractImageParser
+ * for the PNG image format.
  */
 public class PNGParser extends AbstractImageParser {
 

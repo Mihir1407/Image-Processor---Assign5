@@ -52,7 +52,8 @@ abstract class AbstractLoaderSaverCommand extends AbstractCommand {
    * @return Appropriate IImageFileParser instance based on the file extension.
    * @throws UnsupportedOperationException if the file extension is not supported.
    */
-  protected IImageFileParser getImageObject(String path) throws UnsupportedOperationException {
+  protected IImageFileParser getImageObject(String path)
+          throws UnsupportedOperationException {
     String extension = getFileExtension(path);
 
     switch (extension) {
