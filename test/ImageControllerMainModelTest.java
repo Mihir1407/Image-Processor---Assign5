@@ -1,6 +1,3 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +14,9 @@ import model.ImageModel;
 import model.image.Image;
 import model.image.Pixel;
 import view.ConsoleView;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test class for the ImageController class.

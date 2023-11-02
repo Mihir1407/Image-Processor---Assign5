@@ -8,7 +8,10 @@ import controller.PPMParser;
 import model.image.Image;
 import model.image.Pixel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test class for the PPMParser implementation of the

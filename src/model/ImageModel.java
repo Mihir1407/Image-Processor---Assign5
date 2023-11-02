@@ -89,6 +89,8 @@ public class ImageModel implements IImageModel {
 
               processedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
               break;
+            default:
+              // No action, incorrect command.
           }
         }
       }
@@ -391,7 +393,9 @@ public class ImageModel implements IImageModel {
           for (int i = -2; i <= 2; i++) {
             for (int j = -2; j <= 2; j++) {
 
-              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) continue;
+              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) {
+                continue;
+              }
 
               Pixel neighboringPixel = image.getPixel(x + i, y + j);
               redSum += neighboringPixel.getRed() * kernel[i + 2][j + 2];

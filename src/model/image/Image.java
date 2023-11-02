@@ -1,7 +1,5 @@
 package model.image;
 
-import java.awt.image.RenderedImage;
-
 /**
  * Represents a 2D image composed of pixels.
  * Provides methods to get pixel data, retrieve the width and

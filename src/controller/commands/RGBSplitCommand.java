@@ -14,15 +14,15 @@ public class RGBSplitCommand extends AbstractCombineSplitCommand {
    * Constructs an RGBSplitCommand with the provided image names for
    * the destination RGB channels and a reference to the model.
    *
-   * @param ImageName      The name of the source RGB image to be split.
+   * @param imageName      The name of the source RGB image to be split.
    * @param redImageName   Destination image for the red component.
    * @param greenImageName Destination image for the green component.
    * @param blueImageName  Destination image for the blue component.
    * @param model          A reference to the image model.
    */
-  public RGBSplitCommand(String ImageName, String redImageName,
+  public RGBSplitCommand(String imageName, String redImageName,
                          String greenImageName, String blueImageName, IImageModel model) {
-    super(ImageName, redImageName, greenImageName, blueImageName, model);
+    super(imageName, redImageName, greenImageName, blueImageName, model);
   }
 
   /**

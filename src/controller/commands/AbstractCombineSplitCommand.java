@@ -23,7 +23,8 @@ abstract class AbstractCombineSplitCommand extends AbstractCommand {
    * @param blueImageName  The name of the image representing the blue channel.
    * @param model          A reference to the image model.
    */
-  public AbstractCombineSplitCommand(String imageName, String redImageName, String greenImageName, String blueImageName, IImageModel model) {
+  public AbstractCombineSplitCommand(String imageName, String redImageName, String greenImageName,
+                                     String blueImageName, IImageModel model) {
     super(imageName, model);
     this.redImageName = redImageName;
     this.greenImageName = greenImageName;
