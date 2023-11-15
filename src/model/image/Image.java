@@ -1,5 +1,9 @@
 package model.image;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import model.HistogramRenderer;
 import model.strategy.FilterStrategy;
 
 /**
@@ -83,6 +87,63 @@ public class Image implements IImage {
       throw new IllegalArgumentException("Coordinates out of bounds!");
     }
     pixels[y][x] = pixel;
+  }
+
+  private Image processImage(String command) {
+    int height = this.getHeight();
+    int width = this.getWidth();
+    Pixel[][] processedPixels = new Pixel[height][width];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        Pixel originalPixel = this.getPixel(x, y);
+        switch (command) {
+          case "red":
+            processedPixels[y][x] = new Pixel(originalPixel.getRed(), 0, 0);
+            break;
+          case "green":
+            processedPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
+            break;
+          case "blue":
+            processedPixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
+            break;
+          case "value":
+            int maxPixelVal = Math.max(originalPixel.getRed(),
+                    Math.max(originalPixel.getGreen(), originalPixel.getBlue()));
+            processedPixels[y][x] = new Pixel(maxPixelVal, maxPixelVal, maxPixelVal);
+            break;
+          case "luma":
+            double lumaPixelVal = (0.2126 * originalPixel.getRed()
+                    + 0.7152 * originalPixel.getGreen() + 0.0722 * originalPixel.getBlue());
+            int roundedLumaValue = (int) Math.round(lumaPixelVal);
+            processedPixels[y][x] = new Pixel(roundedLumaValue, roundedLumaValue,
+                    roundedLumaValue);
+            break;
+          case "intensity":
+            int intensityPixelVal = ((originalPixel.getRed() + originalPixel.getGreen()
+                    + originalPixel.getBlue()) / 3);
+            processedPixels[y][x] = new Pixel(intensityPixelVal,
+                    intensityPixelVal, intensityPixelVal);
+            break;
+          case "sepia":
+            int originalRed = originalPixel.getRed();
+            int originalGreen = originalPixel.getGreen();
+            int originalBlue = originalPixel.getBlue();
+
+            int newRed = Math.min(255, (int) (0.393 * originalRed
+                    + 0.769 * originalGreen + 0.189 * originalBlue));
+            int newGreen = Math.min(255, (int) (0.349 * originalRed
+                    + 0.686 * originalGreen + 0.168 * originalBlue));
+            int newBlue = Math.min(255, (int) (0.272 * originalRed
+                    + 0.534 * originalGreen + 0.131 * originalBlue));
+
+            processedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
+            break;
+          default:
+            // No action, incorrect command.
+        }
+      }
+    }
+    return new Image(processedPixels);
   }
 
   public Image horizontalFlip() {
@@ -182,17 +243,50 @@ public class Image implements IImage {
     return applyKernel(sharpenKernel);
   }
 
-  public static Image combineColorChannels(Image redChannel, Image greenChannel
-          , Image blueChannel) {
-    int height = redChannel.getHeight();
-    int width = redChannel.getWidth();
+  public Image extractRedComponent() {
+    return processImage("red");
+  }
+
+  public Image extractGreenComponent() {
+    return processImage("green");
+  }
+
+  public Image extractBlueComponent() {
+    return processImage("blue");
+  }
+
+  public Image toValueComponent() {
+    return processImage("value");
+  }
+
+  public Image toLumaComponent() {
+    return processImage("luma");
+  }
+
+  public Image toIntensityComponent() {
+    return processImage("intensity");
+  }
+
+  public Image toSepia() {
+    return processImage("sepia");
+  }
+
+  public static Image combineColorChannels(Image redImage, Image greenImage, Image blueImage) {
+    int width = redImage.getWidth();
+    int height = redImage.getHeight();
+
+    if (greenImage.getWidth() != width || greenImage.getHeight() != height
+            || blueImage.getWidth() != width || blueImage.getHeight() != height) {
+      throw new IllegalArgumentException("All images must have the same dimensions.");
+    }
+
     Pixel[][] combinedPixels = new Pixel[height][width];
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int red = redChannel.getPixel(x, y).getRed();
-        int green = greenChannel.getPixel(x, y).getGreen();
-        int blue = blueChannel.getPixel(x, y).getBlue();
+        int red = redImage.getPixel(x, y).getRed();
+        int green = greenImage.getPixel(x, y).getGreen();
+        int blue = blueImage.getPixel(x, y).getBlue();
 
         combinedPixels[y][x] = new Pixel(red, green, blue);
       }
@@ -200,122 +294,33 @@ public class Image implements IImage {
     return new Image(combinedPixels);
   }
 
-  public Image extractRedComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] redPixels = new Pixel[height][width];
+  public Image histogram() {
+    int[][] histograms = this.calculateHistograms();
 
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        redPixels[y][x] = new Pixel(originalPixel.getRed(), 0, 0);
-      }
-    }
-    return new Image(redPixels);
+    int maxFrequency = this.findMaxFrequency(histograms[0], histograms[1], histograms[2]);
+    this.normalizeHistogram(histograms[0], maxFrequency);
+    this.normalizeHistogram(histograms[1], maxFrequency);
+    this.normalizeHistogram(histograms[2], maxFrequency);
+
+    BufferedImage histogramImageBuffered = HistogramRenderer.createHistogramImage(histograms);
+
+    Image histogramImage = convertBufferedImageToImage(histogramImageBuffered);
+    return histogramImage;
   }
 
-  public Image extractGreenComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] greenPixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        greenPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
+  private Image convertBufferedImageToImage(BufferedImage bufferedImage) {
+    Pixel[][] pixels = new Pixel[bufferedImage.getHeight()][bufferedImage.getWidth()];
+    for (int y = 0; y < bufferedImage.getHeight(); y++) {
+      for (int x = 0; x < bufferedImage.getWidth(); x++) {
+        int rgb = bufferedImage.getRGB(x, y);
+        Color color = new Color(rgb, true);
+        pixels[y][x] = new Pixel(color.getRed(), color.getGreen(), color.getBlue());
       }
     }
-    return new Image(greenPixels);
+    return new Image(pixels);
   }
 
-  public Image extractBlueComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] bluePixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        bluePixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
-      }
-    }
-    return new Image(bluePixels);
-  }
-
-  public Image toValueComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] valuePixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        int maxValue = Math.max(Math.max(originalPixel.getRed(), originalPixel.getGreen())
-                , originalPixel.getBlue());
-        valuePixels[y][x] = new Pixel(maxValue, maxValue, maxValue);
-      }
-    }
-    return new Image(valuePixels);
-  }
-
-  public Image toLumaComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] lumaPixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        int lumaValue = (int) Math.round(0.2126 * originalPixel.getRed()
-                + 0.7152 * originalPixel.getGreen()
-                + 0.0722 * originalPixel.getBlue());
-        lumaPixels[y][x] = new Pixel(lumaValue, lumaValue, lumaValue);
-      }
-    }
-    return new Image(lumaPixels);
-  }
-
-  public Image toIntensityComponent() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] intensityPixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        int intensityValue = (originalPixel.getRed() + originalPixel.getGreen()
-                + originalPixel.getBlue()) / 3;
-        intensityPixels[y][x] = new Pixel(intensityValue, intensityValue, intensityValue);
-      }
-    }
-    return new Image(intensityPixels);
-  }
-
-  public Image toSepia() {
-    int height = this.getHeight();
-    int width = this.getWidth();
-    Pixel[][] sepiaPixels = new Pixel[height][width];
-
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        Pixel originalPixel = this.getPixel(x, y);
-        int originalRed = originalPixel.getRed();
-        int originalGreen = originalPixel.getGreen();
-        int originalBlue = originalPixel.getBlue();
-
-        int newRed = Math.min(255, (int) (0.393 * originalRed + 0.769 * originalGreen
-                + 0.189 * originalBlue));
-        int newGreen = Math.min(255, (int) (0.349 * originalRed + 0.686 * originalGreen
-                + 0.168 * originalBlue));
-        int newBlue = Math.min(255, (int) (0.272 * originalRed + 0.534 * originalGreen
-                + 0.131 * originalBlue));
-        sepiaPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
-      }
-    }
-    return new Image(sepiaPixels);
-  }
-
-  public int[][] calculateHistograms() {
+  private int[][] calculateHistograms() {
     int[] redHistogram = new int[256];
     int[] greenHistogram = new int[256];
     int[] blueHistogram = new int[256];
@@ -331,7 +336,7 @@ public class Image implements IImage {
     return new int[][]{redHistogram, greenHistogram, blueHistogram};
   }
 
-  public static int findMaxFrequency(int[]... histograms) {
+  private int findMaxFrequency(int[]... histograms) {
     int max = 0;
     for (int[] histogram : histograms) {
       for (int freq : histogram) {
@@ -341,7 +346,7 @@ public class Image implements IImage {
     return max;
   }
 
-  public static void normalizeHistogram(int[] histogram, int maxFrequency) {
+  private void normalizeHistogram(int[] histogram, int maxFrequency) {
     for (int i = 0; i < histogram.length; i++) {
       histogram[i] = (histogram[i] * 255) / maxFrequency;
     }

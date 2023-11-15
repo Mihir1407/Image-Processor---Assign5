@@ -350,31 +350,9 @@ public class ImageModel implements IImageModel {
     if (image == null) {
       throw new IOException("Image not found.");
     } else {
-      int[][] histograms = image.calculateHistograms();
-
-      int maxFrequency = Image.findMaxFrequency(histograms[0], histograms[1], histograms[2]);
-      Image.normalizeHistogram(histograms[0], maxFrequency);
-      Image.normalizeHistogram(histograms[1], maxFrequency);
-      Image.normalizeHistogram(histograms[2], maxFrequency);
-
-      BufferedImage histogramImageBuffered = HistogramRenderer.createHistogramImage(histograms);
-
-      Image histogramImage = convertBufferedImageToImage(histogramImageBuffered);
-
+      Image histogramImage = image.histogram();
       imageMap.put(destImageName, histogramImage);
     }
-  }
-
-  private Image convertBufferedImageToImage(BufferedImage bufferedImage) {
-    Pixel[][] pixels = new Pixel[bufferedImage.getHeight()][bufferedImage.getWidth()];
-    for (int y = 0; y < bufferedImage.getHeight(); y++) {
-      for (int x = 0; x < bufferedImage.getWidth(); x++) {
-        int rgb = bufferedImage.getRGB(x, y);
-        Color color = new Color(rgb, true);
-        pixels[y][x] = new Pixel(color.getRed(), color.getGreen(), color.getBlue());
-      }
-    }
-    return new Image(pixels);
   }
 
   @Override
