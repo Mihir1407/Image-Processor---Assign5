@@ -1,11 +1,17 @@
 package model;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import model.image.Image;
 import model.image.Pixel;
+import model.strategy.FilterStrategy;
+import model.strategy.SepiaFilterStrategy;
+import model.strategy.SplitFilterDecorator;
 
 /**
  * Represents the model class for images, responsible for
@@ -24,80 +30,6 @@ public class ImageModel implements IImageModel {
    */
   public ImageModel() {
     this.imageMap = new HashMap<>();
-  }
-
-  /**
-   * Processes an image based on a given command and returns the processed image.
-   * The method retrieves the image from the map using the provided imageName,
-   * then applies operation based on the command.
-   * Supported commands include: "red", "green", "blue", "value", "luma",
-   * "intensity", and "sepia".
-   *
-   * @param imageName The name or identifier of the image to be processed.
-   * @param command   The image processing operation to apply.
-   * @return The processed image.
-   * @throws IOException If the image with the provided imageName is not found in the map.
-   */
-  private Image processImage(String imageName, String command) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] processedPixels = new Pixel[height][width];
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          switch (command) {
-            case "red":
-              processedPixels[y][x] = new Pixel(originalPixel.getRed(), 0, 0);
-              break;
-            case "green":
-              processedPixels[y][x] = new Pixel(0, originalPixel.getGreen(), 0);
-              break;
-            case "blue":
-              processedPixels[y][x] = new Pixel(0, 0, originalPixel.getBlue());
-              break;
-            case "value":
-              int maxPixelVal = Math.max(originalPixel.getRed(),
-                      Math.max(originalPixel.getGreen(), originalPixel.getBlue()));
-              processedPixels[y][x] = new Pixel(maxPixelVal, maxPixelVal, maxPixelVal);
-              break;
-            case "luma":
-              double lumaPixelVal = (0.2126 * originalPixel.getRed()
-                      + 0.7152 * originalPixel.getGreen() + 0.0722 * originalPixel.getBlue());
-              int roundedLumaValue = (int) Math.round(lumaPixelVal);
-              processedPixels[y][x] = new Pixel(roundedLumaValue, roundedLumaValue,
-                      roundedLumaValue);
-              break;
-            case "intensity":
-              int intensityPixelVal = ((originalPixel.getRed() + originalPixel.getGreen()
-                      + originalPixel.getBlue()) / 3);
-              processedPixels[y][x] = new Pixel(intensityPixelVal,
-                      intensityPixelVal, intensityPixelVal);
-              break;
-            case "sepia":
-              int originalRed = originalPixel.getRed();
-              int originalGreen = originalPixel.getGreen();
-              int originalBlue = originalPixel.getBlue();
-
-              int newRed = Math.min(255, (int) (0.393 * originalRed
-                      + 0.769 * originalGreen + 0.189 * originalBlue));
-              int newGreen = Math.min(255, (int) (0.349 * originalRed
-                      + 0.686 * originalGreen + 0.168 * originalBlue));
-              int newBlue = Math.min(255, (int) (0.272 * originalRed
-                      + 0.534 * originalGreen + 0.131 * originalBlue));
-
-              processedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
-              break;
-            default:
-              // No action, incorrect command.
-          }
-        }
-      }
-      return new Image(processedPixels);
-    } else {
-      throw new IOException("Image not found.");
-    }
   }
 
   /**
@@ -142,7 +74,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void redComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "red"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image redComponentImage = image.extractRedComponent();
+      imageMap.put(destImageName, redComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -154,7 +92,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void greenComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "green"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image greenComponentImage = image.extractGreenComponent();
+      imageMap.put(destImageName, greenComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -166,7 +110,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void blueComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "blue"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image blueComponentImage = image.extractBlueComponent();
+      imageMap.put(destImageName, blueComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -178,7 +128,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void valueComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "value"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image valueComponentImage = image.toValueComponent();
+      imageMap.put(destImageName, valueComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -190,7 +146,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void lumaComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "luma"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image lumaComponentImage = image.toLumaComponent();
+      imageMap.put(destImageName, lumaComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -202,7 +164,13 @@ public class ImageModel implements IImageModel {
    */
   @Override
   public void intensityComponent(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "intensity"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image intensityComponentImage = image.toIntensityComponent();
+      imageMap.put(destImageName, intensityComponentImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -213,8 +181,32 @@ public class ImageModel implements IImageModel {
    * @throws IOException If an error occurs during the process.
    */
   @Override
+  public void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt)
+          throws IOException {
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      FilterStrategy sepiaStrategy = new SepiaFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        sepiaStrategy = new SplitFilterDecorator(sepiaStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(sepiaStrategy);
+      imageMap.put(destImageName, resultImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
   public void sepia(String imageName, String destImageName) throws IOException {
-    imageMap.put(destImageName, processImage(imageName, "sepia"));
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image resultImage = image.toSepia();
+      imageMap.put(destImageName, resultImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
   }
 
   /**
@@ -228,19 +220,9 @@ public class ImageModel implements IImageModel {
   public void horizontalFlip(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] hFlipPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          hFlipPixels[y][x] = image.getPixel(width - 1 - x, y);
-        }
-      }
-      Image hFlipComponentImage = new Image(hFlipPixels);
-      imageMap.put(destImageName, hFlipComponentImage);
+      imageMap.put(destImageName, image.horizontalFlip());
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 
@@ -255,21 +237,12 @@ public class ImageModel implements IImageModel {
   public void verticalFlip(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] vFlipPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          vFlipPixels[y][x] = image.getPixel(x, height - 1 - y);
-        }
-      }
-      Image vFlipComponentImage = new Image(vFlipPixels);
-      imageMap.put(destImageName, vFlipComponentImage);
+      imageMap.put(destImageName, image.verticalFlip());
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
+
 
   /**
    * Applies brightening(increment/decrement) effect on the image.
@@ -279,32 +252,15 @@ public class ImageModel implements IImageModel {
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void brightenCommand(int increment, String imageName,
-                              String destImageName) throws IOException {
+  public void brightenCommand(int increment, String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] brightenPixels = new Pixel[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel originalPixel = image.getPixel(x, y);
-          int red = originalPixel.getRed() + increment > 255 ? 255 :
-                  Math.max(originalPixel.getRed() + increment, 0);
-          int green = originalPixel.getGreen() + increment > 255 ? 255 :
-                  Math.max(originalPixel.getGreen() + increment, 0);
-          int blue = originalPixel.getBlue() + increment > 255 ? 255 :
-                  Math.max(originalPixel.getBlue() + increment, 0);
-          brightenPixels[y][x] = new Pixel(red, green, blue);
-        }
-      }
-      Image brightenComponentImage = new Image(brightenPixels);
-      imageMap.put(destImageName, brightenComponentImage);
+      imageMap.put(destImageName, image.brighten(increment));
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
+
 
   /**
    * Applies blur effect on the image.
@@ -317,46 +273,9 @@ public class ImageModel implements IImageModel {
   public void blur(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] blurredPixels = new Pixel[height][width];
-
-      double[][] kernel = {
-              {1.0 / 16, 1.0 / 8, 1.0 / 16},
-              {1.0 / 8, 1.0 / 4, 1.0 / 8},
-              {1.0 / 16, 1.0 / 8, 1.0 / 16}
-      };
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          double redSum = 0;
-          double greenSum = 0;
-          double blueSum = 0;
-
-          for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-
-              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) {
-                continue;
-              }
-
-              Pixel neighboringPixel = image.getPixel(x + i, y + j);
-              redSum += neighboringPixel.getRed() * kernel[i + 1][j + 1];
-              greenSum += neighboringPixel.getGreen() * kernel[i + 1][j + 1];
-              blueSum += neighboringPixel.getBlue() * kernel[i + 1][j + 1];
-            }
-          }
-          int newRed = (int) Math.round(redSum);
-          int newGreen = (int) Math.round(greenSum);
-          int newBlue = (int) Math.round(blueSum);
-
-          blurredPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
-        }
-      }
-      Image blurredComponentImage = new Image(blurredPixels);
-      imageMap.put(destImageName, blurredComponentImage);
+      imageMap.put(destImageName, image.blur());
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 
@@ -372,49 +291,9 @@ public class ImageModel implements IImageModel {
   public void sharpen(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      int height = image.getHeight();
-      int width = image.getWidth();
-      Pixel[][] sharpenedPixels = new Pixel[height][width];
-
-      double[][] kernel = {
-              {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
-              {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
-              {-1.0 / 8, 1.0 / 4, 1, 1.0 / 4, -1.0 / 8},
-              {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
-              {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8}
-      };
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          double redSum = 0;
-          double greenSum = 0;
-          double blueSum = 0;
-
-          for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-
-              if (x + i < 0 || x + i >= width || y + j < 0 || y + j >= height) {
-                continue;
-              }
-
-              Pixel neighboringPixel = image.getPixel(x + i, y + j);
-              redSum += neighboringPixel.getRed() * kernel[i + 2][j + 2];
-              greenSum += neighboringPixel.getGreen() * kernel[i + 2][j + 2];
-              blueSum += neighboringPixel.getBlue() * kernel[i + 2][j + 2];
-            }
-          }
-
-          int newRed = Math.min(255, Math.max(0, (int) Math.round(redSum)));
-          int newGreen = Math.min(255, Math.max(0, (int) Math.round(greenSum)));
-          int newBlue = Math.min(255, Math.max(0, (int) Math.round(blueSum)));
-
-          sharpenedPixels[y][x] = new Pixel(newRed, newGreen, newBlue);
-        }
-      }
-      Image sharpenedComponentImage = new Image(sharpenedPixels);
-      imageMap.put(destImageName, sharpenedComponentImage);
+      imageMap.put(destImageName, image.sharpen());
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 
@@ -433,11 +312,11 @@ public class ImageModel implements IImageModel {
                        String destImageNameBlue) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      redComponent(imageName, destImageNameRed);
-      blueComponent(imageName, destImageNameBlue);
-      greenComponent(imageName, destImageNameGreen);
+      imageMap.put(destImageNameRed, image.extractRedComponent());
+      imageMap.put(destImageNameGreen, image.extractGreenComponent());
+      imageMap.put(destImageNameBlue, image.extractBlueComponent());
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 
@@ -457,24 +336,130 @@ public class ImageModel implements IImageModel {
     Image redImage = imageMap.get(redImageName);
     Image greenImage = imageMap.get(greenImageName);
     Image blueImage = imageMap.get(blueImageName);
-    if (redImage != null || greenImage != null || blueImage != null) {
-      int height = blueImage.getHeight();
-      int width = blueImage.getWidth();
-      Pixel[][] combinePixels = new Pixel[height][width];
+    if (redImage != null && greenImage != null && blueImage != null) {
+      Image combinedImage = Image.combineColorChannels(redImage, greenImage, blueImage);
+      imageMap.put(destImageName, combinedImage);
+    } else {
+      throw new IOException("One or more source images not found.");
+    }
+  }
+
+  @Override
+  public void histogram(String imageName, String destImageName) throws IOException {
+    Image image = imageMap.get(imageName);
+    if (image == null) {
+      throw new IOException("Image not found.");
+    } else {
+      int[][] histograms = image.calculateHistograms();
+
+      int maxFrequency = Image.findMaxFrequency(histograms[0], histograms[1], histograms[2]);
+      Image.normalizeHistogram(histograms[0], maxFrequency);
+      Image.normalizeHistogram(histograms[1], maxFrequency);
+      Image.normalizeHistogram(histograms[2], maxFrequency);
+
+      BufferedImage histogramImageBuffered = HistogramRenderer.createHistogramImage(histograms);
+
+      Image histogramImage = convertBufferedImageToImage(histogramImageBuffered);
+
+      imageMap.put(destImageName, histogramImage);
+    }
+  }
+
+  private Image convertBufferedImageToImage(BufferedImage bufferedImage) {
+    Pixel[][] pixels = new Pixel[bufferedImage.getHeight()][bufferedImage.getWidth()];
+    for (int y = 0; y < bufferedImage.getHeight(); y++) {
+      for (int x = 0; x < bufferedImage.getWidth(); x++) {
+        int rgb = bufferedImage.getRGB(x, y);
+        Color color = new Color(rgb, true);
+        pixels[y][x] = new Pixel(color.getRed(), color.getGreen(), color.getBlue());
+      }
+    }
+    return new Image(pixels);
+  }
+
+  @Override
+  public void colorCorrect(String imageName, String destImageName) throws IOException {
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image correctedImage = image.colorCorrect();
+      imageMap.put(destImageName, correctedImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  @Override
+  public void adjustLevels(String imageName, String destImageName, int b, int m, int w)
+          throws IOException {
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+      Image adjustedImage = image.adjustLevels(b, m, w);
+      imageMap.put(destImageName, adjustedImage);
+    } else {
+      throw new IOException("Image not found.");
+    }
+  }
+
+  /**
+   * Compression functions.
+   */
+  @Override
+  public void compressImage(String imageName, String destImageName, int percentage) throws IOException {
+    if (percentage < 0 || percentage > 100) {
+      throw new IllegalArgumentException("Percentage value should be between 0 and 100.");
+    }
+    Image image = imageMap.get(imageName);
+    if (image != null) {
+
+      int width = image.getWidth();
+      int height = image.getHeight();
+
+      double[][] redChannel = new double[height][width];
+      double[][] greenChannel = new double[height][width];
+      double[][] blueChannel = new double[height][width];
 
       for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-          int red = redImage.getPixel(x, y).getRed();
-          int green = greenImage.getPixel(x, y).getGreen();
-          int blue = blueImage.getPixel(x, y).getBlue();
-
-          combinePixels[y][x] = new Pixel(red, green, blue);
+          Pixel pixel = image.getPixel(x, y);
+          redChannel[y][x] = pixel.getRed();
+          greenChannel[y][x] = pixel.getGreen();
+          blueChannel[y][x] = pixel.getBlue();
         }
       }
-      Image combineComponentImage = new Image(combinePixels);
-      imageMap.put(destImageName, combineComponentImage);
+      redChannel = HaarWaveletTransform.transpose(redChannel);
+      greenChannel = HaarWaveletTransform.transpose(greenChannel);
+      blueChannel = HaarWaveletTransform.transpose(blueChannel);
+
+      redChannel = HaarWaveletTransform.haar(redChannel);
+      greenChannel = HaarWaveletTransform.haar(greenChannel);
+      blueChannel = HaarWaveletTransform.haar(blueChannel);
+
+      double threshold = HaarWaveletTransform.calThreshold(redChannel, greenChannel, blueChannel, percentage);
+      redChannel = HaarWaveletTransform.truncate(redChannel, threshold);
+      greenChannel = HaarWaveletTransform.truncate(greenChannel, threshold);
+      blueChannel = HaarWaveletTransform.truncate(blueChannel, threshold);
+
+      redChannel = HaarWaveletTransform.invHaar(redChannel, width, height);
+      greenChannel = HaarWaveletTransform.invHaar(greenChannel, width, height);
+      blueChannel = HaarWaveletTransform.invHaar(blueChannel, width, height);
+
+      redChannel = HaarWaveletTransform.transpose(redChannel);
+      greenChannel = HaarWaveletTransform.transpose(greenChannel);
+      blueChannel = HaarWaveletTransform.transpose(blueChannel);
+
+      Pixel[][] compressedPixels = new Pixel[height][width];
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          int red = (int) Math.round(Math.max(0, Math.min(255, redChannel[y][x])));
+          int green = (int) Math.round(Math.max(0, Math.min(255, greenChannel[y][x])));
+          int blue = (int) Math.round(Math.max(0, Math.min(255, blueChannel[y][x])));
+          compressedPixels[y][x] = new Pixel(red, green, blue);
+        }
+      }
+      Image compressedImage = new Image(compressedPixels);
+      imageMap.put(destImageName, compressedImage);
     } else {
-      throw new IOException("Model.Image not found.");
+      throw new IOException("Image not found.");
     }
   }
 }

@@ -1,11 +1,16 @@
 package controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import controller.commands.AdjustLevelsCommand;
 import controller.commands.BlueComponentCommand;
 import controller.commands.BlurCommand;
 import controller.commands.BrightenCommand;
+import controller.commands.ColorCorrectCommand;
+import controller.commands.CompressCommand;
 import controller.commands.GreenComponentCommand;
+import controller.commands.HistogramCommand;
 import controller.commands.HorizontalFlipCommand;
 import controller.commands.ICommand;
 import controller.commands.IntensityComponentCommand;
@@ -66,6 +71,26 @@ public class ImageController implements IController {
         view.showError("Error: " + e.getMessage());
       }
     }
+  }
+
+  /**
+   * Parses a script file and executes a list of commands.
+   * This method allows batch processing of multiple commands.
+   *
+   * @param filePath Path to the script file containing a list of commands.
+   */
+  @Override
+  public void runScript(String filePath) {
+    try {
+      IScriptParser scriptParser = new ScriptParser();
+      List<String> commands = scriptParser.parse(filePath);
+      for (String command : commands) {
+        executeCommand(command);
+      }
+    } catch (Exception e) {
+      view.showError("Error running the script file.");
+    }
+
   }
 
   /**
@@ -145,7 +170,29 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "sepia":
-          newCommand = new SepiaCommand(parts[1], parts[2], model);
+          Optional<Integer> splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Integer.parseInt(parts[4])) : Optional.empty();
+          newCommand = new SepiaCommand(parts[1], parts[2], model, splitPercentage);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "compress":
+          int cr = Integer.parseInt(parts[1]);
+          newCommand = new CompressCommand(cr, parts[2], parts[3], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "histogram":
+          newCommand = new HistogramCommand(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "color-correct":
+          newCommand = new ColorCorrectCommand(parts[1], parts[2], model);
+          commandSuccessful = newCommand.execute();
+          break;
+        case "levels-adjust":
+          int b = Integer.parseInt(parts[1]);
+          int m = Integer.parseInt(parts[2]);
+          int w = Integer.parseInt(parts[3]);
+          newCommand = new AdjustLevelsCommand(b, m, w, parts[4], parts[5], model);
           commandSuccessful = newCommand.execute();
           break;
         case "run":
@@ -164,21 +211,6 @@ public class ImageController implements IController {
       view.showMessage(parts[0] + " operation successful.");
     } else {
       view.showError(parts[0] + " operation failed.");
-    }
-  }
-
-  /**
-   * Parses a script file and executes a list of commands.
-   * This method allows batch processing of multiple commands.
-   *
-   * @param filePath Path to the script file containing a list of commands.
-   */
-  private void runScript(String filePath) {
-    IScriptParser scriptParser = new ScriptParser();
-    List<String> commands = scriptParser.parse(filePath);
-
-    for (String command : commands) {
-      executeCommand(command);
     }
   }
 }

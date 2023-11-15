@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import model.image.Image;
 import model.image.Pixel;
@@ -126,6 +127,11 @@ public class MockModel implements IImageModel {
     log.append("Intensity Component method called.");
   }
 
+  @Override
+  public void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt) throws IOException {
+
+  }
+
   /**
    * Logs the operation to perform a horizontal flip on the specified image.
    *
@@ -196,7 +202,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void sepia(String imageName, String destImageName) throws IOException {
+  public void sepia(String imageName, String destImageName) {
     log.append("Sepia Component method called.");
   }
 
@@ -233,6 +239,21 @@ public class MockModel implements IImageModel {
   public void rgbCombine(String redImageName, String greenImageName,
                          String blueImageName, String destImageName) throws IOException {
     log.append("RGB Combine method called.");
+  }
+
+  @Override
+  public void histogram(String imageName, String destImageName) throws IOException {
+
+  }
+
+  @Override
+  public void colorCorrect(String imageName, String destImageName) throws IOException {
+
+  }
+
+  @Override
+  public void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IOException {
+
   }
 
   /**

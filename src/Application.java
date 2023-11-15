@@ -1,3 +1,4 @@
+import controller.IController;
 import controller.ImageController;
 import model.IImageModel;
 import model.ImageModel;
@@ -21,7 +22,13 @@ public class Application {
   public static void main(String[] args) {
     IImageModel model = new ImageModel();
     IView view = new ConsoleView();
-    ImageController controller = new ImageController(model, view);
-    controller.execute();
+    IController controller = new ImageController(model, view);
+
+    if (args.length == 2 && "-file".equals(args[0])) {
+      String scriptFilePath = args[1];
+      controller.runScript(scriptFilePath);
+    } else {
+      controller.execute();
+    }
   }
 }

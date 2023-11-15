@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import model.image.Image;
 
@@ -28,138 +29,45 @@ public interface IImageModel {
    */
   Image getImage(String imageName) throws IOException;
 
-  /**
-   * Extracts the red component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the red component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void redComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Extracts the green component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the green component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void greenComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Extracts the blue component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the blue component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void blueComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Extracts the value component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the value component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void valueComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Extracts the luma component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the luma component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void lumaComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Extracts the intensity component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the intensity component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void intensityComponent(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Applies horizontal flip effect on the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the horizontal flip image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void horizontalFlip(String imageName, String destImageName) throws IOException;
+  void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt)
+          throws IOException;
 
-  /**
-   * Applies brightening(increment/decrement) effect on the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the brightening component image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void brightenCommand(int increment, String imageName,
-                       String destImageName) throws IOException;
-
-  /**
-   * Applies blur effect on the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the blur component image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void blur(String imageName, String destImageName) throws IOException;
-
-  /**
-   * Applies sharpening effect on the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the sharpened image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void sharpen(String imageName, String destImageName) throws IOException;
-
-  /**
-   * Applies vertical flip effect on the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the vertical flip image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void verticalFlip(String imageName, String destImageName) throws IOException;
-
-  /**
-   * Extracts the sepia component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path to save the sepia component image.
-   * @throws IOException If an error occurs during the process.
-   */
   void sepia(String imageName, String destImageName) throws IOException;
 
-  /**
-   * Splits the RGB components of an image into three separate images
-   * Red, Green, and Blue channels.
-   *
-   * @param imageName          The name of the source image to be split.
-   * @param destImageNameRed   The name of the destination image for the Red channel.
-   * @param destImageNameGreen The name of the destination image for the Green channel.
-   * @param destImageNameBlue  The name of the destination image for the Blue channel.
-   * @throws IOException If an error occurs during the process.
-   */
+
+  void horizontalFlip(String imageName, String destImageName) throws IOException;
+
+  void verticalFlip(String imageName, String destImageName) throws IOException;
+
+  void brightenCommand(int increment, String imageName, String destImageName) throws IOException;
+
+  void blur(String imageName, String destImageName) throws IOException;
+
+  void sharpen(String imageName, String destImageName) throws IOException;
+
   void rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen,
                 String destImageNameBlue) throws IOException;
 
-  /**
-   * Combines three images representing the Red, Green, and Blue channels
-   * into a single RGB image.
-   *
-   * @param redImageName   The name of the source image for the Red channel.
-   * @param greenImageName The name of the source image for the Green channel.
-   * @param blueImageName  The name of the source image for the Blue channel.
-   * @param destImageName  The name of the combined destination RGB image.
-   * @throws IOException If an error occurs during the process.
-   */
-  void rgbCombine(String redImageName, String greenImageName,
-                  String blueImageName, String destImageName) throws IOException;
+  void rgbCombine(String destImageName, String redImageName,
+                  String greenImageName, String blueImageName) throws IOException;
+
+  void histogram(String imageName, String destImageName) throws IOException;
+
+  void colorCorrect(String imageName, String destImageName) throws IOException;
+
+  void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IOException;
+
+  void compressImage(String imageName, String destImageName, int percentage) throws IOException;
 }

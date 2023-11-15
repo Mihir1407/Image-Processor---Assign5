@@ -14,4 +14,5 @@ public interface IController {
    */
   void execute();
 
+  void runScript(String filePath);
 }

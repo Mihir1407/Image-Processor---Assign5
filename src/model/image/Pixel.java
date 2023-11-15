@@ -5,7 +5,7 @@ package model.image;
  * and blue color components.
  * Each color component can have a value ranging from 0 to 255.
  */
-public class Pixel {
+public class Pixel implements IPixel{
   private int red;
   private int green;
   private int blue;

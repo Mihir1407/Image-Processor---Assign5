@@ -26,6 +26,6 @@ public class PNGParser extends AbstractImageParser {
    */
   @Override
   protected int getImageType() {
-    return BufferedImage.TYPE_INT_ARGB;
+    return BufferedImage.TYPE_INT_RGB;
   }
 }
