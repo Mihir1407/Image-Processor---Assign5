@@ -18,15 +18,17 @@ public class HaarWaveletTransform {
    * @param s The input list of Double values.
    * @return A list of transformed values containing averages and differences.
    */
-  public static List<Double> avgAndDiff(List<Double> s) {
+  private static List<Double> avgAndDiff(List<Double> s) {
     List<Double> average = new ArrayList<>();
     List<Double> difference = new ArrayList<>();
     double sqrtTwo = Math.sqrt(2);
     for (int i = 0; i < s.size(); i += 2) {
       double first = s.get(i);
       double second = (i + 1 < s.size()) ? s.get(i + 1) : 0;
-      average.add((first + second) / sqrtTwo);
-      difference.add((first - second) / sqrtTwo);
+      double roundedAvg = Math.round(((first + second) / sqrtTwo) * 100.0) / 100.0;
+      double roundedDiff = Math.round(((first - second) / sqrtTwo) * 100.0) / 100.0;
+      average.add(roundedAvg);
+      difference.add(roundedDiff);
     }
     average.addAll(difference);
     return average;
@@ -45,8 +47,10 @@ public class HaarWaveletTransform {
     for (int i = 0; i < halfSize; i++) {
       double first = s.get(i);
       double second = s.get(i + halfSize);
-      originalSequence.add((first + second) / sqrtTwo);
-      originalSequence.add((first - second) / sqrtTwo);
+      double roundedAvg = Math.round(((first + second) / sqrtTwo) * 100.0) / 100.0;
+      double roundedDiff = Math.round(((first - second) / sqrtTwo) * 100.0) / 100.0;
+      originalSequence.add(roundedAvg);
+      originalSequence.add(roundedDiff);
     }
     return originalSequence;
   }
