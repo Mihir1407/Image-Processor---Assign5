@@ -363,6 +363,94 @@ public class ImageControllerTest {
   }
 
   /**
+   * Tests the Histogram method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerHistogramMethodMock() {
+    String inputData = "histogram image-name dest-image-name";
+    ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
+    System.setIn(inContent);
+    ConsoleView view = new ConsoleView();
+    MockModel model = new MockModel();
+    ImageController controller = new ImageController(model, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = "histogram operation successful.";
+    assertEquals(expectedOutput + System.lineSeparator(), outContent.toString());
+    assertTrue(model.getLog().contains("Histogram method called."));
+  }
+
+  /**
+   * Tests the Compress method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerCompressMethodMock() {
+    String inputData = "compress 80 image-name dest-image-name";
+    ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
+    System.setIn(inContent);
+    ConsoleView view = new ConsoleView();
+    MockModel model = new MockModel();
+    ImageController controller = new ImageController(model, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = "compress operation successful.";
+    assertEquals(expectedOutput + System.lineSeparator(), outContent.toString());
+    assertTrue(model.getLog().contains("Compress method called."));
+  }
+
+  /**
+   * Tests the RGB Color Correct method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerColorCorrectMethodMock() {
+    String inputData = "color-correct image-name dest-image-name";
+    ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
+    System.setIn(inContent);
+    ConsoleView view = new ConsoleView();
+    MockModel model = new MockModel();
+    ImageController controller = new ImageController(model, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = "color-correct operation successful.";
+    assertEquals(expectedOutput + System.lineSeparator(), outContent.toString());
+    assertTrue(model.getLog().contains("Color Correct method called."));
+  }
+
+  /**
+   * Tests the RGB Adjusts Level method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerAdjustLevelsMethodMock() {
+    String inputData = "levels-adjust 20 100 250 image-name dest-image-name";
+    ByteArrayInputStream inContent = new ByteArrayInputStream(inputData.getBytes());
+    System.setIn(inContent);
+    ConsoleView view = new ConsoleView();
+    MockModel model = new MockModel();
+    ImageController controller = new ImageController(model, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = "levels-adjust operation successful.";
+    assertEquals(expectedOutput + System.lineSeparator(), outContent.toString());
+    assertTrue(model.getLog().contains("Adjust Levels method called."));
+  }
+
+  /**
    * Tests the Run Script method call of the ImageController
    * class using execute.
    * Ensures it processes the simulated console input correctly.
@@ -495,6 +583,11 @@ public class ImageControllerTest {
 
   }
 
+  /**
+   * Tests the Load command call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
   @Test
   public void testLoadCommand() {
     MockModel model = new MockModel();
@@ -512,6 +605,11 @@ public class ImageControllerTest {
     assertTrue(model.getLog().contains("Add Image method called."));
   }
 
+  /**
+   * Tests the save command call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
   @Test
   public void testSaveCommand() {
     MockModel model = new MockModel();

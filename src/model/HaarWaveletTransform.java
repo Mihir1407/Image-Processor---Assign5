@@ -18,7 +18,7 @@ public class HaarWaveletTransform {
    * @param s The input list of Double values.
    * @return A list of transformed values containing averages and differences.
    */
-  private static List<Double> avgAndDiff(List<Double> s) {
+  private List<Double> avgAndDiff(List<Double> s) {
     List<Double> average = new ArrayList<>();
     List<Double> difference = new ArrayList<>();
     double sqrtTwo = Math.sqrt(2);
@@ -40,7 +40,7 @@ public class HaarWaveletTransform {
    * @param s The list of transformed values containing averages and differences.
    * @return The original list of Double values before the transformation.
    */
-  public static List<Double> invAvgAndDiff(List<Double> s) {
+  private List<Double> invAvgAndDiff(List<Double> s) {
     List<Double> originalSequence = new ArrayList<>();
     int halfSize = s.size() / 2;
     double sqrtTwo = Math.sqrt(2);
@@ -61,7 +61,7 @@ public class HaarWaveletTransform {
    * @param X The original 2D array of doubles.
    * @return A new padded 2D array with dimensions that are powers of two.
    */
-  public static double[][] padArr(double[][] X) {
+  private double[][] padArr(double[][] X) {
     int width = X.length;
     int height = X[0].length;
     int newDim = powerOfTwo(Math.max(width, height));
@@ -87,25 +87,6 @@ public class HaarWaveletTransform {
   }
 
   /**
-   * Transposes a given 2D matrix.
-   *
-   * @param matrix The 2D matrix to be transposed.
-   * @return The transposed matrix.
-   */
-  public static double[][] transpose(double[][] matrix) {
-    int originalHeight = matrix.length;
-    int originalWidth = matrix[0].length;
-    double[][] transposedMatrix = new double[originalWidth][originalHeight];
-
-    for (int i = 0; i < originalHeight; i++) {
-      for (int j = 0; j < originalWidth; j++) {
-        transposedMatrix[j][i] = matrix[i][j];
-      }
-    }
-    return transposedMatrix;
-  }
-
-  /**
    * Removes padding from the array to get back to the original dimensions.
    * This method is typically used after the inverse Haar transform.
    *
@@ -114,7 +95,7 @@ public class HaarWaveletTransform {
    * @param originalHeight The height of the original array before padding.
    * @return The 2D array with padding removed.
    */
-  public static double[][] unpadArr(double[][] X, int originalWidth, int originalHeight) {
+  private double[][] unpadArr(double[][] X, int originalWidth, int originalHeight) {
     double[][] unpaddedArray = new double[originalWidth][originalHeight];
     for (int i = 0; i < originalWidth; i++) {
       System.arraycopy(X[i], 0, unpaddedArray[i], 0, originalHeight);
@@ -131,7 +112,7 @@ public class HaarWaveletTransform {
    * @param l The length of the part of the list to be transformed.
    * @return The list of transformed values.
    */
-  public static List<Double> transform(List<Double> s, int l) {
+  private List<Double> transform(List<Double> s, int l) {
     List<Double> transformedSequence = new ArrayList<>(s);
     int m = l;
     while (m > 1) {
@@ -152,7 +133,7 @@ public class HaarWaveletTransform {
    * @param l                   The length of the part of the list to be reverted.
    * @return The original list of values before transformation.
    */
-  public static List<Double> invert(List<Double> transformedSequence, int l) {
+  private List<Double> invert(List<Double> transformedSequence, int l) {
     List<Double> originalSequence = new ArrayList<>(transformedSequence);
     int m = 2;
     while (m <= l) {
@@ -171,7 +152,7 @@ public class HaarWaveletTransform {
    * @param mat The 2D matrix of doubles to be transformed.
    * @return The transformed 2D matrix.
    */
-  public static double[][] haar(double[][] mat) {
+  public double[][] haar(double[][] mat) {
     mat = padArr(mat);
     int currentLen = mat.length;
     while (currentLen > 1) {
@@ -208,7 +189,7 @@ public class HaarWaveletTransform {
    * @param originalHeight The original height of the matrix before padding and transformation.
    * @return The original 2D matrix before any transformations.
    */
-  public static double[][] invHaar(double[][] mat, int originalWidth, int originalHeight) {
+  public double[][] invHaar(double[][] mat, int originalWidth, int originalHeight) {
     int c = 2;
     int s = mat.length;
     while (c <= s) {
@@ -247,7 +228,7 @@ public class HaarWaveletTransform {
    * @param percentage   The percentage of coefficients to keep.
    * @return The calculated threshold value.
    */
-  public static double calThreshold(double[][] redChannel, double[][] greenChannel, double[][] blueChannel, double percentage) {
+  public double calThreshold(double[][] redChannel, double[][] greenChannel, double[][] blueChannel, double percentage) {
     if (percentage == 100.0) {
       return Double.MAX_VALUE;
     }
@@ -266,26 +247,5 @@ public class HaarWaveletTransform {
     thresholdIndex = Math.min(thresholdIndex, orderedValues.size() - 1);
 
     return orderedValues.get(thresholdIndex);
-  }
-
-  /**
-   * Truncates values in a 2D array that are below a specified threshold.
-   * This is used to apply the calculated threshold and zero out small coefficients.
-   *
-   * @param channel   The 2D array of doubles to be truncated.
-   * @param threshold The threshold below which values will be set to zero.
-   * @return The truncated 2D array.
-   */
-  public static double[][] truncate(double[][] channel, double threshold) {
-    int width = channel.length;
-    int height = channel[0].length;
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        if (Math.abs(channel[i][j]) < threshold) {
-          channel[i][j] = 0.0;
-        }
-      }
-    }
-    return channel;
   }
 }
