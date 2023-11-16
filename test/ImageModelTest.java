@@ -771,6 +771,100 @@ public class ImageModelTest {
   }
 
   /**
+   * Test that compressImage method correctly compresses the image by the given percentage.
+   */
+  @Test
+  public void testCompressImageProcessing() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int percentage = 50;
+    imageModel.compressImage("TestImage", "compressTestImage", percentage);
+
+    Image compressedImage = imageModel.getImage("compressTestImage");
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)},
+            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)},
+            {new Pixel(115, 165, 215), new Pixel(125, 175, 225)}
+    };
+
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that compressImage method correctly compresses the image by the given percentage on a 4x2
+   * image.
+   */
+  @Test
+  public void testCompressImageProcessing4X2() throws IOException {
+    pixelData = new Pixel[][]{
+            {new Pixel(100, 150, 200), new Pixel(110, 160, 210), new Pixel(120, 170, 220), new Pixel(130, 180, 230)},
+            {new Pixel(140, 190, 240), new Pixel(150, 200, 250), new Pixel(160, 210, 260), new Pixel(170, 220, 270)}
+    };
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int percentage = 50;
+    imageModel.compressImage("TestImage", "compressTestImage", percentage);
+
+    Image compressedImage = imageModel.getImage("compressTestImage");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(105, 155, 225), new Pixel(105, 155, 225), new Pixel(125, 175, 240), new Pixel(125, 175, 240)},
+            {new Pixel(145, 195, 225), new Pixel(145, 195, 225), new Pixel(165, 215, 240), new Pixel(165, 215, 240)}
+    };
+
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that compressImage method throws IllegalArgumentException for invalid percentage.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCompressImageInvalidPercentage() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int percentage = 150;
+    imageModel.compressImage("TestImage", "compressTestImage", percentage);
+  }
+
+  /**
+   * Test that compressImage method throws an IOException if the source image is not found.
+   */
+  @Test(expected = IOException.class)
+  public void testCompressImageNotFound() throws IOException {
+    int percentage = 50;
+    imageModel.compressImage("nonExistentImage", "compressTestImage", percentage);
+  }
+
+  /**
+   * Test that compressImage method correctly stores the destination image.
+   */
+  @Test
+  public void testCompressImageDestImag() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int percentage = 50;
+    imageModel.compressImage("TestImage", "compressTestImage", percentage);
+
+    assertNotNull(imageModel.getImage("compressTestImage"));
+  }
+
+  /**
    * Test that rgbCombine method throws an IOException if any of the images are not found.
    */
   @Test(expected = IOException.class)

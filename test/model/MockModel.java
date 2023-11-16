@@ -241,19 +241,56 @@ public class MockModel implements IImageModel {
     log.append("RGB Combine method called.");
   }
 
+  /**
+   * Logs the operation to generate a histogram representation of the specified image.
+   *
+   * @param imageName     the name of the source image
+   * @param destImageName the name of the destination image
+   * @throws IOException if an I/O error occurs
+   */
   @Override
   public void histogram(String imageName, String destImageName) throws IOException {
-
+    log.append("Histogram method called.");
   }
 
+  /**
+   * Logs the operation to perform color correction on the specified image.
+   *
+   * @param imageName     the name of the source image
+   * @param destImageName the name of the destination image
+   * @throws IOException if an I/O error occurs
+   */
   @Override
   public void colorCorrect(String imageName, String destImageName) throws IOException {
-
+    log.append("Color Correct method called.");
   }
 
+  /**
+   * Logs the operation to adjust the brightness levels of the specified image.
+   *
+   * @param imageName     the name of the source image
+   * @param destImageName the name of the destination image
+   * @param b             the black point value for level adjustment
+   * @param m             the mid-point value for level adjustment
+   * @param w             the white point value for level adjustment
+   * @throws IOException if an I/O error occurs
+   */
   @Override
   public void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IOException {
+    log.append("Adjust Levels method called.");
+  }
 
+  /**
+   * Logs the operation to compress the specified image using a percentage.
+   *
+   * @param imageName     the name of the source image
+   * @param destImageName the name of the destination image
+   * @param percentage    the percentage by which the image will be compressed
+   * @throws IOException if an I/O error occurs
+   */
+  @Override
+  public void compressImage(String imageName, String destImageName, int percentage) throws IOException {
+    log.append("Compress method called.");
   }
 
   /**

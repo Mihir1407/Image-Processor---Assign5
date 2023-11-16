@@ -23,6 +23,7 @@ import model.strategy.SplitFilterDecorator;
 public class ImageModel implements IImageModel {
 
   private final Map<String, Image> imageMap;
+  private HaarWaveletTransform haarWaveletTransform = new HaarWaveletTransform();
 
   /**
    * Constructs a new instance of the ImageModel.
@@ -173,13 +174,7 @@ public class ImageModel implements IImageModel {
     }
   }
 
-  /**
-   * Extracts the sepia component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
-   * @throws IOException If an error occurs during the process.
-   */
+
   @Override
   public void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt)
           throws IOException {
@@ -198,6 +193,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Extracts the sepia component of the image.
+   *
+   * @param imageName     The name of the image.
+   * @param destImageName The path where the intensity component image should be saved.
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
   public void sepia(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -344,6 +346,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Generates a histogram for the specified image and saves it as a new image.
+   *
+   * @param imageName      The name of the source image.
+   * @param destImageName  The name under which the histogram image will be saved.
+   * @throws IOException If the specified image is not found in the image map.
+   */
   @Override
   public void histogram(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -355,6 +364,13 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Applies color correction to the specified image and saves the result as a new image.
+   *
+   * @param imageName      The name of the source image to apply color correction to.
+   * @param destImageName  The name under which the color-corrected image will be saved.
+   * @throws IOException If the specified image is not found in the image map.
+   */
   @Override
   public void colorCorrect(String imageName, String destImageName) throws IOException {
     Image image = imageMap.get(imageName);
@@ -366,6 +382,16 @@ public class ImageModel implements IImageModel {
     }
   }
 
+  /**
+   * Adjusts the levels of the specified image and saves the result as a new image.
+   *
+   * @param imageName      The name of the source image to adjust levels for.
+   * @param destImageName  The name under which the adjusted image will be saved.
+   * @param b              The black point value for level adjustment.
+   * @param m              The mid point value for level adjustment.
+   * @param w              The white point value for level adjustment.
+   * @throws IOException If the specified image is not found in the image map.
+   */
   @Override
   public void adjustLevels(String imageName, String destImageName, int b, int m, int w)
           throws IOException {
@@ -379,7 +405,13 @@ public class ImageModel implements IImageModel {
   }
 
   /**
-   * Compression functions.
+   * Compresses the specified image by a percentage using the Haar Wavelet Transform
+   * and saves the result as a new image.
+   *
+   * @param imageName      The name of the source image to compress.
+   * @param destImageName  The name under which the compressed image will be saved.
+   * @param percentage     The percentage by which the image is to be compressed.
+   * @throws IOException If the specified image is not found in the image map.
    */
   @Override
   public void compressImage(String imageName, String destImageName, int percentage) throws IOException {
@@ -404,26 +436,27 @@ public class ImageModel implements IImageModel {
           blueChannel[y][x] = pixel.getBlue();
         }
       }
-      redChannel = HaarWaveletTransform.transpose(redChannel);
-      greenChannel = HaarWaveletTransform.transpose(greenChannel);
-      blueChannel = HaarWaveletTransform.transpose(blueChannel);
+      redChannel = transpose(redChannel);
+      greenChannel = transpose(greenChannel);
+      blueChannel = transpose(blueChannel);
 
-      redChannel = HaarWaveletTransform.haar(redChannel);
-      greenChannel = HaarWaveletTransform.haar(greenChannel);
-      blueChannel = HaarWaveletTransform.haar(blueChannel);
+      redChannel = haarWaveletTransform.haar(redChannel);
+      greenChannel = haarWaveletTransform.haar(greenChannel);
+      blueChannel = haarWaveletTransform.haar(blueChannel);
 
-      double threshold = HaarWaveletTransform.calThreshold(redChannel, greenChannel, blueChannel, percentage);
-      redChannel = HaarWaveletTransform.truncate(redChannel, threshold);
-      greenChannel = HaarWaveletTransform.truncate(greenChannel, threshold);
-      blueChannel = HaarWaveletTransform.truncate(blueChannel, threshold);
+      double threshold = haarWaveletTransform.calThreshold(redChannel, greenChannel, blueChannel, percentage);
 
-      redChannel = HaarWaveletTransform.invHaar(redChannel, width, height);
-      greenChannel = HaarWaveletTransform.invHaar(greenChannel, width, height);
-      blueChannel = HaarWaveletTransform.invHaar(blueChannel, width, height);
+      redChannel = truncate(redChannel, threshold);
+      greenChannel = truncate(greenChannel, threshold);
+      blueChannel = truncate(blueChannel, threshold);
 
-      redChannel = HaarWaveletTransform.transpose(redChannel);
-      greenChannel = HaarWaveletTransform.transpose(greenChannel);
-      blueChannel = HaarWaveletTransform.transpose(blueChannel);
+      redChannel = haarWaveletTransform.invHaar(redChannel, width, height);
+      greenChannel = haarWaveletTransform.invHaar(greenChannel, width, height);
+      blueChannel = haarWaveletTransform.invHaar(blueChannel, width, height);
+
+      redChannel = transpose(redChannel);
+      greenChannel = transpose(greenChannel);
+      blueChannel = transpose(blueChannel);
 
       Pixel[][] compressedPixels = new Pixel[height][width];
       for (int y = 0; y < height; y++) {
@@ -439,5 +472,45 @@ public class ImageModel implements IImageModel {
     } else {
       throw new IOException("Image not found.");
     }
+  }
+
+  /**
+   * Truncates values in a 2D array that are below a specified threshold.
+   * This is used to apply the calculated threshold and zero out small coefficients.
+   *
+   * @param channel   The 2D array of doubles to be truncated.
+   * @param threshold The threshold below which values will be set to zero.
+   * @return The truncated 2D array.
+   */
+  private double[][] truncate(double[][] channel, double threshold) {
+    int width = channel.length;
+    int height = channel[0].length;
+    for (int i = 0; i < width; i++) {
+      for (int j = 0; j < height; j++) {
+        if (Math.abs(channel[i][j]) < threshold) {
+          channel[i][j] = 0.0;
+        }
+      }
+    }
+    return channel;
+  }
+
+  /**
+   * Transposes a given 2D matrix.
+   *
+   * @param matrix The 2D matrix to be transposed.
+   * @return The transposed matrix.
+   */
+  private double[][] transpose(double[][] matrix) {
+    int originalHeight = matrix.length;
+    int originalWidth = matrix[0].length;
+    double[][] transposedMatrix = new double[originalWidth][originalHeight];
+
+    for (int i = 0; i < originalHeight; i++) {
+      for (int j = 0; j < originalWidth; j++) {
+        transposedMatrix[j][i] = matrix[i][j];
+      }
+    }
+    return transposedMatrix;
   }
 }
