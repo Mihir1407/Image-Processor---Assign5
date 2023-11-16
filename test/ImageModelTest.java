@@ -771,6 +771,15 @@ public class ImageModelTest {
   }
 
   /**
+   * Test that rgbCombine method throws an IOException if any of the images are not found.
+   */
+  @Test(expected = IOException.class)
+  public void testRgbCombineImageNotFound() throws IOException {
+    imageModel.rgbCombine("combinedImage", "nonExistentRedImage",
+            "nonExistentGreenImage", "nonExistentBlueImage");
+  }
+
+  /**
    * Test that compressImage method correctly compresses the image by the given percentage.
    */
   @Test
@@ -783,8 +792,7 @@ public class ImageModelTest {
     Image compressedImage = imageModel.getImage("compressTestImage");
     Pixel[][] expectedPixelData = new Pixel[][]{
             {new Pixel(115, 165, 215), new Pixel(115, 165, 215)},
-            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)},
-            {new Pixel(115, 165, 215), new Pixel(125, 175, 225)}
+            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)}
     };
 
     for (int y = 0; y < compressedImage.getHeight(); y++) {
@@ -805,8 +813,12 @@ public class ImageModelTest {
   @Test
   public void testCompressImageProcessing4X2() throws IOException {
     pixelData = new Pixel[][]{
-            {new Pixel(100, 150, 200), new Pixel(110, 160, 210), new Pixel(120, 170, 220), new Pixel(130, 180, 230)},
-            {new Pixel(140, 190, 240), new Pixel(150, 200, 250), new Pixel(160, 210, 260), new Pixel(170, 220, 270)}
+            {new Pixel(100, 150, 200), new Pixel(110, 160, 210),
+                    new Pixel(120, 170, 220),
+                    new Pixel(130, 180, 230)},
+            {new Pixel(140, 190, 240), new Pixel(150, 200, 250),
+                    new Pixel(160, 210, 260),
+                    new Pixel(170, 220, 270)}
     };
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
@@ -816,8 +828,12 @@ public class ImageModelTest {
     Image compressedImage = imageModel.getImage("compressTestImage");
 
     Pixel[][] expectedPixelData = new Pixel[][]{
-            {new Pixel(105, 155, 225), new Pixel(105, 155, 225), new Pixel(125, 175, 240), new Pixel(125, 175, 240)},
-            {new Pixel(145, 195, 225), new Pixel(145, 195, 225), new Pixel(165, 215, 240), new Pixel(165, 215, 240)}
+            {new Pixel(105, 155, 225), new Pixel(105, 155, 225),
+                    new Pixel(125, 175, 240),
+                    new Pixel(125, 175, 240)},
+            {new Pixel(145, 195, 225), new Pixel(145, 195, 225),
+                    new Pixel(165, 215, 240),
+                    new Pixel(165, 215, 240)}
     };
 
     for (int y = 0; y < compressedImage.getHeight(); y++) {
@@ -865,12 +881,124 @@ public class ImageModelTest {
   }
 
   /**
-   * Test that rgbCombine method throws an IOException if any of the images are not found.
+   * Test that Adjust Levels method correctly adjusts the image.
+   */
+  @Test
+  public void testAdjustLevelsImageProcessing() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int b = 20;
+    int m = 50;
+    int w = 100;
+    imageModel.adjustLevels("TestImage", "adjustTestImage", b,m,w);
+
+    Image adjustedImage = imageModel.getImage("adjustTestImage");
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(255, 255, 185), new Pixel(255, 255, 154)},
+            {new Pixel(255, 251, 119), new Pixel(255, 233, 80)}
+    };
+
+    for (int y = 0; y < adjustedImage.getHeight(); y++) {
+      for (int x = 0; x < adjustedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = adjustedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that adjustLevel method throws an IOException if the source image is not found.
    */
   @Test(expected = IOException.class)
-  public void testRgbCombineImageNotFound() throws IOException {
-    imageModel.rgbCombine("combinedImage", "nonExistentRedImage",
-            "nonExistentGreenImage", "nonExistentBlueImage");
+  public void testAdjustLevelImageNotFound() throws IOException {
+    int b = 20;
+    int m = 50;
+    int w = 100;
+    imageModel.adjustLevels("nonExistentImage", "adjustTestImage", b, m, w);
+  }
+
+  /**
+   * Test that adjustLevel method correctly stores the destination image.
+   */
+  @Test
+  public void testAdjustLevelImageDestImag() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int b = 20;
+    int m = 50;
+    int w = 100;
+    imageModel.adjustLevels("TestImage", "adjustTestImage", b,m,w);
+
+    assertNotNull(imageModel.getImage("adjustTestImage"));
+  }
+
+  /**
+   * Test that Color Correct method properly corrects the image.
+   */
+  @Test
+  public void testColorCorrectImageProcessing() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    imageModel.colorCorrect("TestImage", "colorCorrectTestImage");
+
+    Image colorCorrectImage = imageModel.getImage("colorCorrectTestImage");
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(150, 150, 150), new Pixel(160, 160, 160)},
+            {new Pixel(170, 170, 170), new Pixel(180, 180, 180)}
+    };
+
+    for (int y = 0; y < colorCorrectImage.getHeight(); y++) {
+      for (int x = 0; x < colorCorrectImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = colorCorrectImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that colorCorrect method throws an IOException if the source image is not found.
+   */
+  @Test(expected = IOException.class)
+  public void testColorCorrectImageNotFound() throws IOException {
+    imageModel.colorCorrect("nonExistentImage", "colorCorrectTestImage");
+  }
+
+  /**
+   * Test that colorCorrect method correctly stores the destination image.
+   */
+  @Test
+  public void testColorCorrectImageDestImag() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    imageModel.colorCorrect("TestImage", "colorCorrectTestImage");
+
+    assertNotNull(imageModel.getImage("colorCorrectTestImage"));
+  }
+
+  /**
+   * Test that Histogram method throws an IOException if the source image is not found.
+   */
+  @Test(expected = IOException.class)
+  public void testHistogramImageNotFound() throws IOException {
+    imageModel.histogram("nonExistentImage", "histogramTestImage");
+  }
+
+  /**
+   * Test that Histogram method correctly stores the histogram as the destination image.
+   */
+  @Test
+  public void testHistogramImageDestImag() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    imageModel.histogram("TestImage", "histogramTestImage");
+
+    assertNotNull(imageModel.getImage("histogramTestImage"));
   }
 
   /**

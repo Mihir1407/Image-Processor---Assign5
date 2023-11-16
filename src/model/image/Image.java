@@ -89,6 +89,13 @@ public class Image implements IImage {
     pixels[y][x] = pixel;
   }
 
+  /**
+   * Applies a specific processing command to the image, such as extracting
+   * a color component or converting the image to sepia tone.
+   *
+   * @param command the processing command to apply
+   * @return a new Image object with the specified processing applied
+   */
   private Image processImage(String command) {
     int height = this.getHeight();
     int width = this.getWidth();
@@ -146,6 +153,11 @@ public class Image implements IImage {
     return new Image(processedPixels);
   }
 
+  /**
+   * Creates a horizontally flipped copy of this image.
+   *
+   * @return a new Image object that is a horizontally flipped version of this image
+   */
   public Image horizontalFlip() {
     int height = this.getHeight();
     int width = this.getWidth();
@@ -159,6 +171,11 @@ public class Image implements IImage {
     return new Image(hFlipPixels);
   }
 
+  /**
+   * Creates a vertically flipped copy of this image.
+   *
+   * @return a new Image object that is a vertically flipped version of this image
+   */
   public Image verticalFlip() {
     int height = this.getHeight();
     int width = this.getWidth();
@@ -172,6 +189,12 @@ public class Image implements IImage {
     return new Image(vFlipPixels);
   }
 
+  /**
+   * Brightens or darkens the image by a given increment.
+   *
+   * @param increment the amount to change the brightness by
+   * @return a new Image object with the brightness adjusted
+   */
   public Image brighten(int increment) {
     int height = this.getHeight();
     int width = this.getWidth();
@@ -189,6 +212,12 @@ public class Image implements IImage {
     return new Image(brightenPixels);
   }
 
+  /**
+   * Applies a kernel to the image for operations like blurring or sharpening.
+   *
+   * @param kernel the matrix representing the kernel
+   * @return a new Image object with the kernel applied
+   */
   private Image applyKernel(double[][] kernel) {
     int height = this.getHeight();
     int width = this.getWidth();
@@ -223,6 +252,11 @@ public class Image implements IImage {
     return new Image(newPixels);
   }
 
+  /**
+   * Blurs the image using a predefined blur kernel.
+   *
+   * @return a new Image object that is a blurred version of this image
+   */
   public Image blur() {
     double[][] blurKernel = {
             {1.0 / 16, 1.0 / 8, 1.0 / 16},
@@ -232,6 +266,11 @@ public class Image implements IImage {
     return applyKernel(blurKernel);
   }
 
+  /**
+   * Sharpens the image using a predefined sharpening kernel.
+   *
+   * @return a new Image object that is a sharpened version of this image
+   */
   public Image sharpen() {
     double[][] sharpenKernel = {
             {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
@@ -243,30 +282,71 @@ public class Image implements IImage {
     return applyKernel(sharpenKernel);
   }
 
+  /**
+   * Extracts the red color component from the image, resulting in an image
+   * that only contains shades of red.
+   *
+   * @return a new Image object with only the red color component
+   */
   public Image extractRedComponent() {
     return processImage("red");
   }
 
+  /**
+   * Extracts the green color component from the image, resulting in an image
+   * that only contains shades of green.
+   *
+   * @return a new Image object with only the green color component
+   */
   public Image extractGreenComponent() {
     return processImage("green");
   }
 
+  /**
+   * Extracts the blue color component from the image, resulting in an image
+   * that only contains shades of blue.
+   *
+   * @return a new Image object with only the blue color component
+   */
   public Image extractBlueComponent() {
     return processImage("blue");
   }
 
+  /**
+   * Converts the image to grayscale based on the value component of the pixels,
+   * which is the maximum of the red, green, and blue color values.
+   *
+   * @return a new Image object converted to grayscale using the value component
+   */
   public Image toValueComponent() {
     return processImage("value");
   }
 
+  /**
+   * Converts the image to grayscale based on the luma component, which
+   * is a weighted average of the red, green, and blue color values.
+   *
+   * @return a new Image object converted to grayscale using the luma component
+   */
   public Image toLumaComponent() {
     return processImage("luma");
   }
 
+  /**
+   * Converts the image to grayscale based on the average intensity of the
+   * red, green, and blue color values.
+   *
+   * @return a new Image object converted to grayscale using the intensity component
+   */
   public Image toIntensityComponent() {
     return processImage("intensity");
   }
 
+  /**
+   * Applies a sepia tone to the image, giving it a warm brownish color.
+   *
+   * @return a new Image object with a sepia tone applied
+   */
   public Image toSepia() {
     return processImage("sepia");
   }
