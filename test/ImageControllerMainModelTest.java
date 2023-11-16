@@ -802,6 +802,208 @@ public class ImageControllerMainModelTest {
   }
 
   /**
+   * Tests the Compress method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerCompressMainModel1() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "compress 50 main_model_test_img main_model_test_img_compressed",
+            "save res/controllerTest/main_model_test_img_compressed.jpg "
+                    + "main_model_test_img_compressed"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "compress operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("main_model_test_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_compressed");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(114, 164, 213), new Pixel(114, 164, 213)},
+            {new Pixel(114, 164, 213), new Pixel(114, 164, 213)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
+   * Tests the Compress method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerCompressMainModel2() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/pixel_image.png pixel_img",
+            "compress 50 pixel_img main_model_test_img_compressed",
+            "save res/controllerTest/main_model_test_img_compressed.png "
+                    + "main_model_test_img_compressed"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "compress operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("pixel_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_compressed");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(0, 155, 205), new Pixel(0, 155, 205),
+                    new Pixel(0, 175, 225),new Pixel(0, 175, 225)},
+            {new Pixel(0, 155, 205), new Pixel(0,155, 205),
+                    new Pixel(0, 175, 225), new Pixel(0, 175, 225)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
+   * Tests the Color Correct method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerColorCorrectMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "color-correct main_model_test_img main_model_test_img_color_correct",
+            "save res/controllerTest/main_model_test_img_color_correct.jpg "
+                    + "main_model_test_img_color_correct"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "color-correct operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("main_model_test_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_color_correct");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(152, 152, 152), new Pixel(158, 158, 158)},
+            {new Pixel(167, 167, 167), new Pixel(173, 173, 173)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
+   * Tests the Adjust Level method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerAdjustLevelMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "levels-adjust 20 50 100 main_model_test_img main_model_test_img_levels_adjust",
+            "save res/controllerTest/main_model_test_img_levels_adjust.jpg "
+                    + "main_model_test_img_levels_adjust"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "levels-adjust operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("main_model_test_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_levels_adjust");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(255, 255, 179), new Pixel(255, 255, 161)},
+            {new Pixel(255, 254, 130), new Pixel(255, 244, 108)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
    * Tests the value,luma,sepia and intensity method call
    * of the ImageController class using execute.
    * Ensures it processes the simulated console input correctly.

@@ -470,6 +470,9 @@ public class ImageControllerTest {
             "horizontal-flip inputName outputName",
             "vertical-flip inputName outputName",
             "brighten 10 inputName outputName",
+            "compress 10 inputName outputName",
+            "color-correct inputName outputName",
+            "levels-adjust 20 100 250 image-name dest-image-name",
             "blur inputName outputName",
             "sharpen inputName outputName",
             "rgb-split image-name dest-image-name-red " +
@@ -497,6 +500,9 @@ public class ImageControllerTest {
     assertTrue(model.getLog().contains("Horizontal Flip method called."));
     assertTrue(model.getLog().contains("Vertical Flip method called."));
     assertTrue(model.getLog().contains("Brighten method called."));
+    assertTrue(model.getLog().contains("Compress method called."));
+    assertTrue(model.getLog().contains("Color Correct method called."));
+    assertTrue(model.getLog().contains("Adjust Levels method called."));
     assertTrue(model.getLog().contains("Blur method called."));
     assertTrue(model.getLog().contains("Sharpen method called."));
     assertTrue(model.getLog().contains("RGB Split method called."));
