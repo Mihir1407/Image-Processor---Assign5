@@ -1,17 +1,21 @@
 package model;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import model.image.Image;
-import model.image.Pixel;
+import model.strategy.AdjustLevelsFilterStrategy;
+import model.strategy.BlurFilterStrategy;
+import model.strategy.ColorCorrectFilterStrategy;
 import model.strategy.FilterStrategy;
+import model.strategy.IntensityFilterStrategy;
+import model.strategy.LumaFilterStrategy;
 import model.strategy.SepiaFilterStrategy;
+import model.strategy.SharpenFilterStrategy;
 import model.strategy.SplitFilterDecorator;
+import model.strategy.ValueFilterStrategy;
 
 /**
  * Represents the model class for images, responsible for
@@ -23,7 +27,6 @@ import model.strategy.SplitFilterDecorator;
 public class ImageModel implements IImageModel {
 
   private final Map<String, Image> imageMap;
-  private HaarWaveletTransform haarWaveletTransform = new HaarWaveletTransform();
 
   /**
    * Constructs a new instance of the ImageModel.
@@ -123,16 +126,24 @@ public class ImageModel implements IImageModel {
   /**
    * Extracts the value component of the image.
    *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the green component image should be saved.
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the green component image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void valueComponent(String imageName, String destImageName) throws IOException {
+  public void valueComponent(String imageName, String destImageName,
+                             Optional<Double> splitPercentageOpt) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      Image valueComponentImage = image.toValueComponent();
-      imageMap.put(destImageName, valueComponentImage);
+      FilterStrategy valueStrategy = new ValueFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        valueStrategy = new SplitFilterDecorator(valueStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(valueStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -141,16 +152,24 @@ public class ImageModel implements IImageModel {
   /**
    * Extracts the luma component of the image.
    *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the green component image should be saved.
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the green component image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void lumaComponent(String imageName, String destImageName) throws IOException {
+  public void lumaComponent(String imageName, String destImageName,
+                            Optional<Double> splitPercentageOpt) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      Image lumaComponentImage = image.toLumaComponent();
-      imageMap.put(destImageName, lumaComponentImage);
+      FilterStrategy lumaStrategy = new LumaFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        lumaStrategy = new SplitFilterDecorator(lumaStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(lumaStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -159,24 +178,39 @@ public class ImageModel implements IImageModel {
   /**
    * Extracts the intensity component of the image.
    *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the green component image should be saved.
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the green component image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void intensityComponent(String imageName, String destImageName) throws IOException {
+  public void intensityComponent(String imageName, String destImageName,
+                                 Optional<Double> splitPercentageOpt) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      Image intensityComponentImage = image.toIntensityComponent();
-      imageMap.put(destImageName, intensityComponentImage);
+      FilterStrategy intensityStrategy = new IntensityFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        intensityStrategy = new SplitFilterDecorator(intensityStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(intensityStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
   }
 
-
+  /**
+   * Extracts the sepia version of the image.
+   *
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the sepia image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
+   * @throws IOException If an error occurs during the process.
+   */
   @Override
-  public void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt)
+  public void sepia(String imageName, String destImageName, Optional<Double> splitPercentageOpt)
           throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
@@ -187,24 +221,6 @@ public class ImageModel implements IImageModel {
       }
 
       Image resultImage = image.applyFilter(sepiaStrategy);
-      imageMap.put(destImageName, resultImage);
-    } else {
-      throw new IOException("Image not found.");
-    }
-  }
-
-  /**
-   * Extracts the sepia component of the image.
-   *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
-   * @throws IOException If an error occurs during the process.
-   */
-  @Override
-  public void sepia(String imageName, String destImageName) throws IOException {
-    Image image = imageMap.get(imageName);
-    if (image != null) {
-      Image resultImage = image.toSepia();
       imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
@@ -254,7 +270,8 @@ public class ImageModel implements IImageModel {
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void brightenCommand(int increment, String imageName, String destImageName) throws IOException {
+  public void brightenCommand(int increment, String imageName, String destImageName)
+          throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
       imageMap.put(destImageName, image.brighten(increment));
@@ -267,15 +284,24 @@ public class ImageModel implements IImageModel {
   /**
    * Applies blur effect on the image.
    *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the intensity component image should be saved.
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the intensity component image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void blur(String imageName, String destImageName) throws IOException {
+  public void blur(String imageName, String destImageName, Optional<Double> splitPercentageOpt)
+          throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      imageMap.put(destImageName, image.blur());
+      FilterStrategy blurStrategy = new BlurFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        blurStrategy = new SplitFilterDecorator(blurStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(blurStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -284,16 +310,25 @@ public class ImageModel implements IImageModel {
   /**
    * Applies sharpening effect on the image.
    *
-   * @param imageName     The name of the image.
-   * @param destImageName The path where the intensity component
-   *                      image should be saved.
+   * @param imageName          The name of the image.
+   * @param destImageName      The path where the intensity component
+   *                           image should be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If an error occurs during the process.
    */
   @Override
-  public void sharpen(String imageName, String destImageName) throws IOException {
+  public void sharpen(String imageName, String destImageName,
+                      Optional<Double> splitPercentageOpt) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      imageMap.put(destImageName, image.sharpen());
+      FilterStrategy sharpenStrategy = new SharpenFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        sharpenStrategy = new SplitFilterDecorator(sharpenStrategy, splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(sharpenStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -349,34 +384,47 @@ public class ImageModel implements IImageModel {
   /**
    * Generates a histogram for the specified image and saves it as a new image.
    *
-   * @param imageName      The name of the source image.
-   * @param destImageName  The name under which the histogram image will be saved.
+   * @param imageName The name of the source image.
+   * @return A two-dimensional array representing the histograms of the red, green, and blue
+   * color channels.
+   * Each channel's histogram is an integer array with 256 values.
+   * Index 0 to 255 of each array corresponds to the frequency of color intensity at that
+   * level.
    * @throws IOException If the specified image is not found in the image map.
    */
   @Override
-  public void histogram(String imageName, String destImageName) throws IOException {
+  public int[][] histogram(String imageName) throws IOException {
     Image image = imageMap.get(imageName);
     if (image == null) {
       throw new IOException("Image not found.");
     } else {
-      Image histogramImage = image.histogram();
-      imageMap.put(destImageName, histogramImage);
+      int[][] histograms = image.calculateHistograms();
+      return histograms;
     }
   }
 
   /**
    * Applies color correction to the specified image and saves the result as a new image.
    *
-   * @param imageName      The name of the source image to apply color correction to.
-   * @param destImageName  The name under which the color-corrected image will be saved.
+   * @param imageName          The name of the source image to apply color correction to.
+   * @param destImageName      The name under which the color-corrected image will be saved.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If the specified image is not found in the image map.
    */
   @Override
-  public void colorCorrect(String imageName, String destImageName) throws IOException {
+  public void colorCorrect(String imageName, String destImageName,
+                           Optional<Double> splitPercentageOpt) throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      Image correctedImage = image.colorCorrect();
-      imageMap.put(destImageName, correctedImage);
+      FilterStrategy colorCorrectStrategy = new ColorCorrectFilterStrategy();
+
+      if (splitPercentageOpt.isPresent()) {
+        colorCorrectStrategy = new SplitFilterDecorator(colorCorrectStrategy,
+                splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(colorCorrectStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -385,20 +433,29 @@ public class ImageModel implements IImageModel {
   /**
    * Adjusts the levels of the specified image and saves the result as a new image.
    *
-   * @param imageName      The name of the source image to adjust levels for.
-   * @param destImageName  The name under which the adjusted image will be saved.
-   * @param b              The black point value for level adjustment.
-   * @param m              The mid point value for level adjustment.
-   * @param w              The white point value for level adjustment.
+   * @param imageName          The name of the source image to adjust levels for.
+   * @param destImageName      The name under which the adjusted image will be saved.
+   * @param b                  The black point value for level adjustment.
+   * @param m                  The mid point value for level adjustment.
+   * @param w                  The white point value for level adjustment.
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException If the specified image is not found in the image map.
    */
   @Override
-  public void adjustLevels(String imageName, String destImageName, int b, int m, int w)
+  public void adjustLevels(String imageName, String destImageName, int b, int m, int w,
+                           Optional<Double> splitPercentageOpt)
           throws IOException {
     Image image = imageMap.get(imageName);
     if (image != null) {
-      Image adjustedImage = image.adjustLevels(b, m, w);
-      imageMap.put(destImageName, adjustedImage);
+      FilterStrategy adjustLevelsStrategy = new AdjustLevelsFilterStrategy(b, m, w);
+
+      if (splitPercentageOpt.isPresent()) {
+        adjustLevelsStrategy = new SplitFilterDecorator(adjustLevelsStrategy,
+                splitPercentageOpt.get());
+      }
+
+      Image resultImage = image.applyFilter(adjustLevelsStrategy);
+      imageMap.put(destImageName, resultImage);
     } else {
       throw new IOException("Image not found.");
     }
@@ -408,109 +465,22 @@ public class ImageModel implements IImageModel {
    * Compresses the specified image by a percentage using the Haar Wavelet Transform
    * and saves the result as a new image.
    *
-   * @param imageName      The name of the source image to compress.
-   * @param destImageName  The name under which the compressed image will be saved.
-   * @param percentage     The percentage by which the image is to be compressed.
+   * @param imageName     The name of the source image to compress.
+   * @param destImageName The name under which the compressed image will be saved.
+   * @param percentage    The percentage by which the image is to be compressed.
    * @throws IOException If the specified image is not found in the image map.
    */
   @Override
-  public void compressImage(String imageName, String destImageName, int percentage) throws IOException {
+  public void compressImage(String imageName, String destImageName, int percentage)
+          throws IOException {
     if (percentage < 0 || percentage > 100) {
-      throw new IllegalArgumentException("Percentage value should be between 0 and 100.");
+      throw new IllegalArgumentException("Percentage must be between 0 and 100.");
     }
     Image image = imageMap.get(imageName);
-    if (image != null) {
-
-      int width = image.getWidth();
-      int height = image.getHeight();
-
-      double[][] redChannel = new double[height][width];
-      double[][] greenChannel = new double[height][width];
-      double[][] blueChannel = new double[height][width];
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          Pixel pixel = image.getPixel(x, y);
-          redChannel[y][x] = pixel.getRed();
-          greenChannel[y][x] = pixel.getGreen();
-          blueChannel[y][x] = pixel.getBlue();
-        }
-      }
-      redChannel = transpose(redChannel);
-      greenChannel = transpose(greenChannel);
-      blueChannel = transpose(blueChannel);
-
-      redChannel = haarWaveletTransform.haar(redChannel);
-      greenChannel = haarWaveletTransform.haar(greenChannel);
-      blueChannel = haarWaveletTransform.haar(blueChannel);
-
-      double threshold = haarWaveletTransform.calThreshold(redChannel, greenChannel, blueChannel, percentage);
-
-      redChannel = truncate(redChannel, threshold);
-      greenChannel = truncate(greenChannel, threshold);
-      blueChannel = truncate(blueChannel, threshold);
-
-      redChannel = haarWaveletTransform.invHaar(redChannel, width, height);
-      greenChannel = haarWaveletTransform.invHaar(greenChannel, width, height);
-      blueChannel = haarWaveletTransform.invHaar(blueChannel, width, height);
-
-      redChannel = transpose(redChannel);
-      greenChannel = transpose(greenChannel);
-      blueChannel = transpose(blueChannel);
-
-      Pixel[][] compressedPixels = new Pixel[height][width];
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          int red = (int) Math.round(Math.max(0, Math.min(255, redChannel[y][x])));
-          int green = (int) Math.round(Math.max(0, Math.min(255, greenChannel[y][x])));
-          int blue = (int) Math.round(Math.max(0, Math.min(255, blueChannel[y][x])));
-          compressedPixels[y][x] = new Pixel(red, green, blue);
-        }
-      }
-      Image compressedImage = new Image(compressedPixels);
-      imageMap.put(destImageName, compressedImage);
-    } else {
+    if (image == null) {
       throw new IOException("Image not found.");
     }
-  }
-
-  /**
-   * Truncates values in a 2D array that are below a specified threshold.
-   * This is used to apply the calculated threshold and zero out small coefficients.
-   *
-   * @param channel   The 2D array of doubles to be truncated.
-   * @param threshold The threshold below which values will be set to zero.
-   * @return The truncated 2D array.
-   */
-  private double[][] truncate(double[][] channel, double threshold) {
-    int width = channel.length;
-    int height = channel[0].length;
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        if (Math.abs(channel[i][j]) < threshold) {
-          channel[i][j] = 0.0;
-        }
-      }
-    }
-    return channel;
-  }
-
-  /**
-   * Transposes a given 2D matrix.
-   *
-   * @param matrix The 2D matrix to be transposed.
-   * @return The transposed matrix.
-   */
-  private double[][] transpose(double[][] matrix) {
-    int originalHeight = matrix.length;
-    int originalWidth = matrix[0].length;
-    double[][] transposedMatrix = new double[originalWidth][originalHeight];
-
-    for (int i = 0; i < originalHeight; i++) {
-      for (int j = 0; j < originalWidth; j++) {
-        transposedMatrix[j][i] = matrix[i][j];
-      }
-    }
-    return transposedMatrix;
+    Image compressedImage = image.compress(percentage);
+    imageMap.put(destImageName, compressedImage);
   }
 }

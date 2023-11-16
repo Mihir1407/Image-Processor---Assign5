@@ -251,7 +251,8 @@ public class ImageModelTest {
   public void testValueComponentProcessing() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.valueComponent("TestImage", "valueTestImage");
+    imageModel.valueComponent("TestImage", "valueTestImage",
+            Optional.empty());
 
     Image valueImage = imageModel.getImage("valueTestImage");
 
@@ -272,7 +273,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testValueComponentInvalidImageName() throws IOException {
-    imageModel.valueComponent("invalid", "dest");
+    imageModel.valueComponent("invalid", "dest",
+            Optional.empty());
   }
 
   /**
@@ -282,7 +284,8 @@ public class ImageModelTest {
   public void testValueComponentDestImageName() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.valueComponent("TestImage", "valueTestImage");
+    imageModel.valueComponent("TestImage", "valueTestImage",
+            Optional.empty());
 
     assertNotNull(imageModel.getImage("valueTestImage"));
   }
@@ -294,7 +297,8 @@ public class ImageModelTest {
   public void testLumaComponentProcessing() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.lumaComponent("TestImage", "lumaTestImage");
+    imageModel.lumaComponent("TestImage", "lumaTestImage",
+            Optional.empty());
 
     Image lumaImage = imageModel.getImage("lumaTestImage");
 
@@ -316,7 +320,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testLumaComponentInvalidImageName() throws IOException {
-    imageModel.lumaComponent("invalid", "dest");
+    imageModel.lumaComponent("invalid", "dest",
+            Optional.empty());
   }
 
   /**
@@ -326,7 +331,8 @@ public class ImageModelTest {
   public void testLumaComponentDestImageName() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.lumaComponent("TestImage", "lumaTestImage");
+    imageModel.lumaComponent("TestImage", "lumaTestImage",
+            Optional.empty());
 
     assertNotNull(imageModel.getImage("lumaTestImage"));
   }
@@ -338,7 +344,8 @@ public class ImageModelTest {
   public void testIntensityComponentProcessing() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.intensityComponent("TestImage", "intensityTestImage");
+    imageModel.intensityComponent("TestImage", "intensityTestImage",
+            Optional.empty());
 
     Image intensityImage = imageModel.getImage("intensityTestImage");
 
@@ -359,7 +366,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testIntensityComponentInvalidImageName() throws IOException {
-    imageModel.intensityComponent("invalid", "dest");
+    imageModel.intensityComponent("invalid", "dest",
+            Optional.empty());
   }
 
   /**
@@ -369,7 +377,8 @@ public class ImageModelTest {
   public void testIntensityComponentDestImageName() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.intensityComponent("TestImage", "intensityTestImage");
+    imageModel.intensityComponent("TestImage", "intensityTestImage",
+            Optional.empty());
 
     assertNotNull(imageModel.getImage("intensityTestImage"));
   }
@@ -381,7 +390,7 @@ public class ImageModelTest {
   public void testSepiaProcessing() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.sepia("TestImage", "sepiaTestImage");
+    imageModel.sepia("TestImage", "sepiaTestImage", Optional.empty());
 
     Image sepiaImage = imageModel.getImage("sepiaTestImage");
 
@@ -413,7 +422,7 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testSepiaComponentInvalidImageName() throws IOException {
-    imageModel.sepia("invalid", "dest");
+    imageModel.sepia("invalid", "dest", Optional.empty());
   }
 
   /**
@@ -423,7 +432,8 @@ public class ImageModelTest {
   public void testSepiaDestImageName() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.sepia("TestImage", "sepiaTestImage");
+    imageModel.sepia("TestImage", "sepiaTestImage"
+            , Optional.empty());
 
     assertNotNull(imageModel.getImage("sepiaTestImage"));
   }
@@ -589,28 +599,29 @@ public class ImageModelTest {
   @Test
   public void testBlur() throws IOException {
     Pixel[][] samplePixels = {
-      {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
-       new Pixel(0, 0, 255)},
-      {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
-       new Pixel(255, 0, 0)},
-      {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
-       new Pixel(0, 255, 0)}
+            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
     };
     Image img = new Image(samplePixels);
     imageModel.addImage(img, "TestImage");
 
-    imageModel.blur("TestImage", "blurredTestImage");
+    imageModel.blur("TestImage", "blurredTestImage",
+            Optional.empty());
 
     Image blurredImage = imageModel.getImage("blurredTestImage");
     Pixel[][] blurredPixels = blurredImage.getPixels();
 
     Pixel[][] expectedPixels = {
-      {new Pixel(64, 64, 16), new Pixel(48, 80, 64),
-       new Pixel(32, 32, 80)},
-      {new Pixel(48, 80, 64), new Pixel(80, 80, 96),
-       new Pixel(80, 48, 64)},
-      {new Pixel(32, 32, 80), new Pixel(80, 48, 64),
-       new Pixel(64, 64, 16)}
+            {new Pixel(64, 64, 16), new Pixel(48, 80, 64),
+                    new Pixel(32, 32, 80)},
+            {new Pixel(48, 80, 64), new Pixel(80, 80, 96),
+                    new Pixel(80, 48, 64)},
+            {new Pixel(32, 32, 80), new Pixel(80, 48, 64),
+                    new Pixel(64, 64, 16)}
     };
 
     for (int y = 0; y < 3; y++) {
@@ -627,7 +638,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testBlurImageNotFound() throws IOException {
-    imageModel.blur("nonExistentImage", "blurredTestImage");
+    imageModel.blur("nonExistentImage", "blurredTestImage",
+            Optional.empty());
   }
 
   /**
@@ -636,28 +648,29 @@ public class ImageModelTest {
   @Test
   public void testSharpen() throws IOException {
     Pixel[][] samplePixels = {
-      {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
-       new Pixel(0, 0, 255)},
-      {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
-       new Pixel(255, 0, 0)},
-      {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
-       new Pixel(0, 255, 0)}
+            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
     };
     Image img = new Image(samplePixels);
     imageModel.addImage(img, "sample");
 
-    imageModel.sharpen("sample", "sharpenedSample");
+    imageModel.sharpen("sample", "sharpenedSample",
+            Optional.empty());
 
     Image sharpenedImage = imageModel.getImage("sharpenedSample");
     Pixel[][] sharpenedPixels = sharpenedImage.getPixels();
 
     Pixel[][] expectedPixels = {
-      {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
-       new Pixel(0, 0, 255)},
-      {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
-       new Pixel(255, 96, 96)},
-      {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
-       new Pixel(96, 191, 0)}
+            {new Pixel(191, 96, 0), new Pixel(96, 255, 96),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(96, 255, 96), new Pixel(191, 191, 255),
+                    new Pixel(255, 96, 96)},
+            {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
+                    new Pixel(96, 191, 0)}
     };
 
     for (int y = 0; y < 3; y++) {
@@ -674,7 +687,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testSharpenImageNotFound() throws IOException {
-    imageModel.sharpen("nonExistentImage", "sharpenedSample");
+    imageModel.sharpen("nonExistentImage", "sharpenedSample",
+            Optional.empty());
   }
 
   /**
@@ -890,7 +904,8 @@ public class ImageModelTest {
     int b = 20;
     int m = 50;
     int w = 100;
-    imageModel.adjustLevels("TestImage", "adjustTestImage", b,m,w);
+    imageModel.adjustLevels("TestImage", "adjustTestImage", b, m, w,
+            Optional.empty());
 
     Image adjustedImage = imageModel.getImage("adjustTestImage");
     Pixel[][] expectedPixelData = new Pixel[][]{
@@ -917,7 +932,8 @@ public class ImageModelTest {
     int b = 20;
     int m = 50;
     int w = 100;
-    imageModel.adjustLevels("nonExistentImage", "adjustTestImage", b, m, w);
+    imageModel.adjustLevels("nonExistentImage", "adjustTestImage", b, m, w,
+            Optional.empty());
   }
 
   /**
@@ -930,7 +946,8 @@ public class ImageModelTest {
     int b = 20;
     int m = 50;
     int w = 100;
-    imageModel.adjustLevels("TestImage", "adjustTestImage", b,m,w);
+    imageModel.adjustLevels("TestImage", "adjustTestImage", b, m, w,
+            Optional.empty());
 
     assertNotNull(imageModel.getImage("adjustTestImage"));
   }
@@ -942,7 +959,8 @@ public class ImageModelTest {
   public void testColorCorrectImageProcessing() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.colorCorrect("TestImage", "colorCorrectTestImage");
+    imageModel.colorCorrect("TestImage", "colorCorrectTestImage",
+            Optional.empty());
 
     Image colorCorrectImage = imageModel.getImage("colorCorrectTestImage");
     Pixel[][] expectedPixelData = new Pixel[][]{
@@ -966,7 +984,8 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testColorCorrectImageNotFound() throws IOException {
-    imageModel.colorCorrect("nonExistentImage", "colorCorrectTestImage");
+    imageModel.colorCorrect("nonExistentImage", "colorCorrectTestImage",
+            Optional.empty());
   }
 
   /**
@@ -976,7 +995,8 @@ public class ImageModelTest {
   public void testColorCorrectImageDestImag() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.colorCorrect("TestImage", "colorCorrectTestImage");
+    imageModel.colorCorrect("TestImage", "colorCorrectTestImage",
+            Optional.empty());
 
     assertNotNull(imageModel.getImage("colorCorrectTestImage"));
   }
@@ -986,19 +1006,7 @@ public class ImageModelTest {
    */
   @Test(expected = IOException.class)
   public void testHistogramImageNotFound() throws IOException {
-    imageModel.histogram("nonExistentImage", "histogramTestImage");
-  }
-
-  /**
-   * Test that Histogram method correctly stores the histogram as the destination image.
-   */
-  @Test
-  public void testHistogramImageDestImag() throws IOException {
-    Image img = new Image(pixelData);
-    imageModel.addImage(img, "TestImage");
-    imageModel.histogram("TestImage", "histogramTestImage");
-
-    assertNotNull(imageModel.getImage("histogramTestImage"));
+    imageModel.histogram("nonExistentImage");
   }
 
   /**
@@ -1008,7 +1016,8 @@ public class ImageModelTest {
   public void testBlurSharpenRgbSplitCombine() throws IOException {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
-    imageModel.blur("TestImage", "blurredImg");
+    imageModel.blur("TestImage", "blurredImg",
+            Optional.empty());
 
     Image blurredImage = imageModel.getImage("blurredImg");
     Pixel[][] blurredPixels = blurredImage.getPixels();
@@ -1026,7 +1035,8 @@ public class ImageModelTest {
       }
     }
 
-    imageModel.sharpen("blurredImg", "sharpenedImg");
+    imageModel.sharpen("blurredImg", "sharpenedImg",
+            Optional.empty());
 
     Image sharpenedImage = imageModel.getImage("sharpenedImg");
     Pixel[][] sharpenedPixels = sharpenedImage.getPixels();
@@ -1089,7 +1099,8 @@ public class ImageModelTest {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
 
-    imageModel.sharpen("TestImage", "sharpenedImg");
+    imageModel.sharpen("TestImage", "sharpenedImg",
+            Optional.empty());
 
     Image sharpenedImage = imageModel.getImage("sharpenedImg");
     Pixel[][] sharpenedPixels = sharpenedImage.getPixels();
@@ -1107,7 +1118,8 @@ public class ImageModelTest {
       }
     }
 
-    imageModel.blur("sharpenedImg", "blurredImg");
+    imageModel.blur("sharpenedImg", "blurredImg",
+            Optional.empty());
 
     Image blurredImage = imageModel.getImage("blurredImg");
     Pixel[][] blurredPixels = blurredImage.getPixels();
@@ -1170,7 +1182,8 @@ public class ImageModelTest {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
 
-    imageModel.valueComponent("TestImage", "valueImg");
+    imageModel.valueComponent("TestImage", "valueImg",
+            Optional.empty());
 
     Image valueImage = imageModel.getImage("valueImg");
     Pixel[][] valuePixels = valueImage.getPixels();
@@ -1222,7 +1235,7 @@ public class ImageModelTest {
             {new Pixel(90, 80, 62), new Pixel(86, 76, 59)},
     };
 
-    imageModel.sepia("redComp", "sepia");
+    imageModel.sepia("redComp", "sepia", Optional.empty());
     Image sepiaImage = imageModel.getImage("sepia");
     Pixel[][] sepiaPixels = sepiaImage.getPixels();
 
@@ -1243,7 +1256,8 @@ public class ImageModelTest {
     Image img = new Image(pixelData);
     imageModel.addImage(img, "TestImage");
 
-    imageModel.valueComponent("TestImage", "valueImg");
+    imageModel.valueComponent("TestImage", "valueImg",
+            Optional.empty());
 
     Image valueImage = imageModel.getImage("valueImg");
     Pixel[][] valuePixels = valueImage.getPixels();
@@ -1261,7 +1275,8 @@ public class ImageModelTest {
       }
     }
 
-    imageModel.valueComponent("valueImg", "lumaImg");
+    imageModel.valueComponent("valueImg", "lumaImg",
+            Optional.empty());
 
     Image lumaImage = imageModel.getImage("lumaImg");
     Pixel[][] lumaPixels = lumaImage.getPixels();
@@ -1279,7 +1294,7 @@ public class ImageModelTest {
       }
     }
 
-    imageModel.sepia("lumaImg", "sepiaImg");
+    imageModel.sepia("lumaImg", "sepiaImg", Optional.empty());
 
     Image sepiaImage = imageModel.getImage("sepiaImg");
     Pixel[][] sepiaPixels = sepiaImage.getPixels();
@@ -1297,7 +1312,8 @@ public class ImageModelTest {
       }
     }
 
-    imageModel.intensityComponent("sepiaImg", "intensityImg");
+    imageModel.intensityComponent("sepiaImg", "intensityImg",
+            Optional.empty());
 
     Image intensityImage = imageModel.getImage("intensityImg");
     Pixel[][] intensityPixels = intensityImage.getPixels();

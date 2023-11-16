@@ -228,7 +228,8 @@ public class HaarWaveletTransform {
    * @param percentage   The percentage of coefficients to keep.
    * @return The calculated threshold value.
    */
-  public double calThreshold(double[][] redChannel, double[][] greenChannel, double[][] blueChannel, double percentage) {
+  public double calThreshold(double[][] redChannel, double[][] greenChannel, double[][] blueChannel,
+                             double percentage) {
     if (percentage == 100.0) {
       return Double.MAX_VALUE;
     }

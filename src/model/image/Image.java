@@ -3,7 +3,8 @@ package model.image;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import model.HistogramRenderer;
+import controller.HistogramRenderer;
+import model.HaarWaveletTransform;
 import model.strategy.FilterStrategy;
 
 /**
@@ -374,33 +375,7 @@ public class Image implements IImage {
     return new Image(combinedPixels);
   }
 
-  public Image histogram() {
-    int[][] histograms = this.calculateHistograms();
-
-    int maxFrequency = this.findMaxFrequency(histograms[0], histograms[1], histograms[2]);
-    this.normalizeHistogram(histograms[0], maxFrequency);
-    this.normalizeHistogram(histograms[1], maxFrequency);
-    this.normalizeHistogram(histograms[2], maxFrequency);
-
-    BufferedImage histogramImageBuffered = HistogramRenderer.createHistogramImage(histograms);
-
-    Image histogramImage = convertBufferedImageToImage(histogramImageBuffered);
-    return histogramImage;
-  }
-
-  private Image convertBufferedImageToImage(BufferedImage bufferedImage) {
-    Pixel[][] pixels = new Pixel[bufferedImage.getHeight()][bufferedImage.getWidth()];
-    for (int y = 0; y < bufferedImage.getHeight(); y++) {
-      for (int x = 0; x < bufferedImage.getWidth(); x++) {
-        int rgb = bufferedImage.getRGB(x, y);
-        Color color = new Color(rgb, true);
-        pixels[y][x] = new Pixel(color.getRed(), color.getGreen(), color.getBlue());
-      }
-    }
-    return new Image(pixels);
-  }
-
-  private int[][] calculateHistograms() {
+  public int[][] calculateHistograms() {
     int[] redHistogram = new int[256];
     int[] greenHistogram = new int[256];
     int[] blueHistogram = new int[256];
@@ -416,22 +391,6 @@ public class Image implements IImage {
     return new int[][]{redHistogram, greenHistogram, blueHistogram};
   }
 
-  private int findMaxFrequency(int[]... histograms) {
-    int max = 0;
-    for (int[] histogram : histograms) {
-      for (int freq : histogram) {
-        max = Math.max(max, freq);
-      }
-    }
-    return max;
-  }
-
-  private void normalizeHistogram(int[] histogram, int maxFrequency) {
-    for (int i = 0; i < histogram.length; i++) {
-      histogram[i] = (histogram[i] * 255) / maxFrequency;
-    }
-  }
-
   public Image colorCorrect() {
 
     int[][] histograms = this.calculateHistograms();
@@ -443,7 +402,7 @@ public class Image implements IImage {
     int redPeak = findMeaningfulPeak(redHistogram);
     int greenPeak = findMeaningfulPeak(greenHistogram);
     int bluePeak = findMeaningfulPeak(blueHistogram);
-    int averagePeak = (redPeak + greenPeak + bluePeak) / 3;
+    double averagePeak = (redPeak + greenPeak + bluePeak) / 3;
 
     return applyColorCorrection(redPeak, greenPeak, bluePeak, averagePeak);
   }
@@ -460,18 +419,18 @@ public class Image implements IImage {
     return peakValue;
   }
 
-  private Image applyColorCorrection(int redPeak, int greenPeak, int bluePeak, int averagePeak) {
+  private Image applyColorCorrection(int redPeak, int greenPeak, int bluePeak, double averagePeak) {
     Pixel[][] correctedPixels = new Pixel[this.getHeight()][this.getWidth()];
-    int redOffset = averagePeak - redPeak;
-    int greenOffset = averagePeak - greenPeak;
-    int blueOffset = averagePeak - bluePeak;
+    double redOffset = averagePeak - redPeak;
+    double greenOffset = averagePeak - greenPeak;
+    double blueOffset = averagePeak - bluePeak;
 
     for (int y = 0; y < this.getHeight(); y++) {
       for (int x = 0; x < this.getWidth(); x++) {
         Pixel pixel = this.getPixel(x, y);
-        int correctedRed = clamp(pixel.getRed() + redOffset);
-        int correctedGreen = clamp(pixel.getGreen() + greenOffset);
-        int correctedBlue = clamp(pixel.getBlue() + blueOffset);
+        int correctedRed = clamp((int)pixel.getRed() + (int)redOffset);
+        int correctedGreen = clamp(pixel.getGreen() + (int)greenOffset);
+        int correctedBlue = clamp(pixel.getBlue() + (int)blueOffset);
         correctedPixels[y][x] = new Pixel(correctedRed, correctedGreen, correctedBlue);
       }
     }
@@ -519,6 +478,104 @@ public class Image implements IImage {
     }
 
     return new Image(pixels);
+  }
+
+  /**
+   * Compresses this image using the Haar Wavelet Transform and returns the compressed image.
+   *
+   * @param percentage The percentage by which to compress the image.
+   * @return A new compressed Image.
+   */
+  public Image compress(int percentage) {
+    int width = this.getWidth();
+    int height = this.getHeight();
+
+    double[][] redChannel = new double[height][width];
+    double[][] greenChannel = new double[height][width];
+    double[][] blueChannel = new double[height][width];
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        Pixel pixel = this.getPixel(x, y);
+        redChannel[y][x] = pixel.getRed();
+        greenChannel[y][x] = pixel.getGreen();
+        blueChannel[y][x] = pixel.getBlue();
+      }
+    }
+    redChannel = transpose(redChannel);
+    greenChannel = transpose(greenChannel);
+    blueChannel = transpose(blueChannel);
+
+    HaarWaveletTransform haarWaveletTransform = new HaarWaveletTransform();
+    redChannel = haarWaveletTransform.haar(redChannel);
+    greenChannel = haarWaveletTransform.haar(greenChannel);
+    blueChannel = haarWaveletTransform.haar(blueChannel);
+
+    double threshold = haarWaveletTransform.calThreshold(redChannel,
+            greenChannel, blueChannel, percentage);
+
+    redChannel = truncate(redChannel, threshold);
+    greenChannel = truncate(greenChannel, threshold);
+    blueChannel = truncate(blueChannel, threshold);
+
+    redChannel = haarWaveletTransform.invHaar(redChannel, width, height);
+    greenChannel = haarWaveletTransform.invHaar(greenChannel, width, height);
+    blueChannel = haarWaveletTransform.invHaar(blueChannel, width, height);
+
+    redChannel = transpose(redChannel);
+    greenChannel = transpose(greenChannel);
+    blueChannel = transpose(blueChannel);
+
+    Pixel[][] compressedPixels = new Pixel[height][width];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int red = (int) Math.round(Math.max(0, Math.min(255, redChannel[y][x])));
+        int green = (int) Math.round(Math.max(0, Math.min(255, greenChannel[y][x])));
+        int blue = (int) Math.round(Math.max(0, Math.min(255, blueChannel[y][x])));
+        compressedPixels[y][x] = new Pixel(red, green, blue);
+      }
+    }
+    return new Image(compressedPixels);
+  }
+
+  /**
+   * Truncates values in a 2D array that are below a specified threshold.
+   * This is used to apply the calculated threshold and zero out small coefficients.
+   *
+   * @param channel   The 2D array of doubles to be truncated.
+   * @param threshold The threshold below which values will be set to zero.
+   * @return The truncated 2D array.
+   */
+  private double[][] truncate(double[][] channel, double threshold) {
+    int width = channel.length;
+    int height = channel[0].length;
+    for (int i = 0; i < width; i++) {
+      for (int j = 0; j < height; j++) {
+        if (Math.abs(channel[i][j]) < threshold) {
+          channel[i][j] = 0.0;
+        }
+      }
+    }
+    return channel;
+  }
+
+  /**
+   * Transposes a given 2D matrix.
+   *
+   * @param matrix The 2D matrix to be transposed.
+   * @return The transposed matrix.
+   */
+  private double[][] transpose(double[][] matrix) {
+    int originalHeight = matrix.length;
+    int originalWidth = matrix[0].length;
+    double[][] transposedMatrix = new double[originalWidth][originalHeight];
+
+    for (int i = 0; i < originalHeight; i++) {
+      for (int j = 0; j < originalWidth; j++) {
+        transposedMatrix[j][i] = matrix[i][j];
+      }
+    }
+    return transposedMatrix;
   }
 
   public Image applyFilter(FilterStrategy filterStrategy) {

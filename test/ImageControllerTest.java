@@ -549,13 +549,10 @@ public class ImageControllerTest {
       controller.execute();
     } catch (NoSuchElementException ignored) {
     }
-    String expectedError1 = "ERROR: Error executing command: "
-            + "Error reading the script file: hello.txt";
-    String expectedError2 = "ERROR: run operation failed.";
+    String expectedError1 = "ERROR: Error running the script file.";
 
     String actualErrOutput = errContent.toString();
     assertTrue(actualErrOutput.contains(expectedError1));
-    assertTrue(actualErrOutput.contains(expectedError2));
     System.setErr(originalErr);
   }
 

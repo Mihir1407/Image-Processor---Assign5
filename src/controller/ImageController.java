@@ -107,6 +107,7 @@ public class ImageController implements IController {
     ICommand newCommand;
     try {
       commandSuccessful = true;
+      Optional<Double> splitPercentage;
       switch (parts[0]) {
         case "load":
           newCommand = new LoadCommand(parts[1], parts[2], model);
@@ -129,15 +130,21 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "value-component":
-          newCommand = new ValueComponentCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new ValueComponentCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "luma-component":
-          newCommand = new LumaComponentCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new LumaComponentCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "intensity-component":
-          newCommand = new IntensityComponentCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new IntensityComponentCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "horizontal-flip":
@@ -162,16 +169,20 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "blur":
-          newCommand = new BlurCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new BlurCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "sharpen":
-          newCommand = new SharpenCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new SharpenCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "sepia":
-          Optional<Integer> splitPercentage = parts.length > 3 && parts[3].equals("split")
-                  ? Optional.of(Integer.parseInt(parts[4])) : Optional.empty();
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
           newCommand = new SepiaCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
@@ -185,14 +196,18 @@ public class ImageController implements IController {
           commandSuccessful = newCommand.execute();
           break;
         case "color-correct":
-          newCommand = new ColorCorrectCommand(parts[1], parts[2], model);
+          splitPercentage = parts.length > 3 && parts[3].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[4])) : Optional.empty();
+          newCommand = new ColorCorrectCommand(parts[1], parts[2], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "levels-adjust":
+          splitPercentage = parts.length > 6 && parts[6].equals("split")
+                  ? Optional.of(Double.parseDouble(parts[7])) : Optional.empty();
           int b = Integer.parseInt(parts[1]);
           int m = Integer.parseInt(parts[2]);
           int w = Integer.parseInt(parts[3]);
-          newCommand = new AdjustLevelsCommand(b, m, w, parts[4], parts[5], model);
+          newCommand = new AdjustLevelsCommand(b, m, w, parts[4], parts[5], model, splitPercentage);
           commandSuccessful = newCommand.execute();
           break;
         case "run":

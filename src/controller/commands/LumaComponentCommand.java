@@ -1,5 +1,7 @@
 package controller.commands;
 
+import java.util.Optional;
+
 import model.IImageModel;
 
 /**
@@ -8,30 +10,30 @@ import model.IImageModel;
  * This command uses the underlying image model to extract the luma component
  * of the source image and saves the resultant image with a new name.
  */
-public class LumaComponentCommand extends AbstractTransformCommand {
+public class LumaComponentCommand extends AbstractSplitCommand {
 
   /**
    * Constructs a LumaComponentCommand with the provided source
    * image name, destination image name, and a reference to the model.
    *
-   * @param imageName     The name of the source image.
-   * @param destImageName The name of the destination image.
-   * @param model         A reference to the image model.
+   * @param imageName       The name of the source image.
+   * @param destImageName   The name of the destination image.
+   * @param model           A reference to the image model.
+   * @param splitPercentage An optional split percentage for sepia effect.
    */
   public LumaComponentCommand(String imageName,
-                              String destImageName, IImageModel model) {
-    super(imageName, destImageName, model);
+                              String destImageName, IImageModel model,
+                              Optional<Double> splitPercentage) {
+    super(imageName, destImageName, model, splitPercentage);
   }
 
   /**
-   * Processes the image.
-   * Derived classes should provide their specific image processing logic
-   * by overriding this method.
+   * Processes the image by directing the model to extract the luma component of the image.
    *
    * @throws Exception if an error occurs during image processing.
    */
   @Override
   protected void processImage() throws Exception {
-    this.model.lumaComponent(this.imageName, this.destImageName);
+    this.model.lumaComponent(this.imageName, this.destImageName, this.splitPercentage);
   }
 }

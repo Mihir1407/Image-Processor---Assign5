@@ -28,45 +28,77 @@ An interface defining the model for the image processing application, detailing 
   - `sepia(String imageName, String destImageName)`: Applies a sepia tint to the image.
   - `rgbSplit(String imageName, String destImageNameRed, String destImageNameGreen, String destImageNameBlue)`: Dismantles an image into its RGB channels.
   - `rgbCombine(String redImageName, String greenImageName, String blueImageName, String destImageName)`: Merges separate RGB images into one.
+  - `histogram(String imageName)`: Generates a histogram representation of an image.
+  - `colorCorrect(String imageName, String destImageName, Optional<Double> splitPercentageOpt)`: Performs color correction on the image.
+  - `adjustLevels(String imageName, String destImageName, int b, int m, int w, Optional<Double> splitPercentageOpt)`: Adjusts the brightness, midtones, and white levels of the image.
+  - `compressImage(String imageName, String destImageName, int percentage)`: Compresses the image by a specified percentage.
 
 ### ImageModel.java:
-A concrete implementation of `IImageModel.java` which manages and processes images within the application. It implements all methods from `IImageModel.java` and also includes additional private methods to support various image processing commands.
+A concrete implementation of `IImageModel.java` which manages and processes images within the application. It implements all methods from `IImageModel.java`.
 
 - **Package**: model
 
 - **Fields**:
   - `imageMap`: A `Map` structure (specifically, a `HashMap`) that maintains all the images within the model. The image name acts as the key (String) and the image itself as the value (`Image`).
 
-- **Methods**:
-  - `processImage(String imageName, String command)`: A private method that processes an image based on a given command. This method supports the following operations:
-    - **Color Manipulations**:
-      - `red`: Isolates the red component of the pixel.
-      - `green`: Isolates the green component of the pixel.
-      - `blue`: Isolates the blue component of the pixel.
-    - **Grayscale Conversions**:
-      - `value`: Uses the maximum value among the RGB components for grayscale conversion.
-      - `luma`: Uses weighted values of RGB for grayscale conversion.
-      - `intensity`: Calculates the average of RGB components for grayscale conversion.
-    - **Sepia Tint**:
-      - `sepia`: Applies a sepia tone to the image.
+- **Responsibilities**: 
+  - The `ImageModel` is responsible for adding and retrieving `Image` objects from the `imageMap`. Image processing operations are not handled directly by the `ImageModel`; instead, they are performed by calling methods on the `Image` objects themselves. This adheres to the principles of object-oriented design by keeping the `ImageModel` focused on managing the collection of `Image` objects, while the `Image` class encapsulates the details of image processing.
       
-    The method fetches the image from the `imageMap` using the provided `imageName` and then applies the desired operation based on the given `command`. If the image is not found, an `IOException` with a message "Image not found." is thrown.
+The method fetches the image from the `imageMap` using the provided `imageName` and then applies the desired operation based on the given `command`. If the image is not found, an `IOException` with a message "Image not found." is thrown.
+
+### Design Changes and Justifications:
+
+- **Refactoring to Image Class**: Initially, the `ImageModel` class contained the logic for image processing operations. This design was changed to move the image processing logic into the `Image` class.
+
+  **Justification**:
+  - _Encapsulation_: By shifting the logic to the `Image` class, we encapsulate the behavior with the data it manipulates, adhering to OOP principles.
+  - _Cohesion_: The `Image` class is now more cohesive, as it contains all the operations that directly pertain to image data.
+  - _Separation of Concerns_: `ImageModel` is now solely responsible for managing the storage and retrieval of `Image` objects, while `Image` handles the processing. This separation allows for clearer organization and the potential for easier testing and maintenance.
 
 ### Image.java:
-Represents a two-dimensional image where each unit is a `Pixel`. This class provides methods to manipulate and query image data.
+Represents a two-dimensional image composed of pixels. This class provides extensive methods for manipulating and querying image data and encapsulates all image processing logic.
 
-- **Package**: model.image
+- **Package**: `model.image`
 
 - **Fields**:
-  - `pixels`: A 2D array representing the pixel matrix of the image. Each element of this array is an instance of the `Pixel` class.
+  - `pixels`: A 2D array of `Pixel` objects representing the image's pixel data.
 
-- **Methods**:
-  - **Constructor**: `Image(Pixel[][] pixels)`: Constructs an `Image` object using a 2D array of `Pixel` objects.
-  - `getPixels()`: Retrieves the 2D array (`Pixel[][]`) that represents the pixel matrix of the image.
-  - `getPixel(int x, int y)`: Retrieves the `Pixel` at the specified (x, y) coordinates of the image.
-  - `getWidth()`: Retrieves the width (number of columns) of the image, in pixels.
-  - `getHeight()`: Retrieves the height (number of rows) of the image, in pixels.
-  - `setPixel(int x, int y, Pixel pixel)`: Sets the `Pixel` value at the specified (x, y) coordinates within the image. Throws an `IllegalArgumentException` if the provided x and y coordinates are outside the dimensions of the image.
+- **Constructor**:
+  - `Image(Pixel[][] pixels)`: Initializes an `Image` object with a 2D array of `Pixel` objects.
+
+- **Core Methods**:
+  - `getPixels()`: Returns the 2D pixel array.
+  - `getPixel(int x, int y)`: Retrieves a pixel at specified coordinates.
+  - `getWidth()`: Gets the image's width.
+  - `getHeight()`: Gets the image's height.
+  - `setPixel(int x, int y, Pixel pixel)`: Sets a pixel at specified coordinates.
+
+- **Image Processing Methods**:
+  - `horizontalFlip()`: Returns a horizontally flipped copy of the image.
+  - `verticalFlip()`: Returns a vertically flipped copy of the image.
+  - `brighten(int increment)`: Brightens or darkens the image.
+  - `applyKernel(double[][] kernel)`: Applies a convolution kernel to the image.
+  - `blur()`: Blurs the image.
+  - `sharpen()`: Sharpens the image.
+  - `extractRedComponent()`: Extracts the red channel.
+  - `extractGreenComponent()`: Extracts the green channel.
+  - `extractBlueComponent()`: Extracts the blue channel.
+  - `toValueComponent()`: Converts to grayscale using the value component.
+  - `toLumaComponent()`: Converts to grayscale using the luma component.
+  - `toIntensityComponent()`: Converts to grayscale using the intensity component.
+  - `toSepia()`: Applies a sepia tone to the image.
+  - `combineColorChannels(Image redImage, Image greenImage, Image blueImage)`: Combines separate RGB channel images into one image.
+  - `calculateHistograms()`: Calculates histograms for the RGB channels.
+  - `colorCorrect()`: Performs color correction.
+  - `adjustLevels(int b, int m, int w)`: Adjusts the levels for brightness, midtones, and highlights.
+  - `compress(int percentage)`: Compresses the image by a percentage.
+  - `applyFilter(FilterStrategy filterStrategy)`: Applies a filter strategy to the image.
+
+- **Private Helper Methods**:
+  - `truncate(double[][] channel, double threshold)`: Applies a threshold to truncate small coefficients.
+  - `transpose(double[][] matrix)`: Transposes a 2D matrix.
+
+This `Image` class serves as the central hub for image processing tasks, adhering to object-oriented principles by encapsulating image data and related behaviors.
 
 ### Pixel.java:
 Describes a single pixel in an image using RGB color components. Each component (red, green, and blue) has a value that can range from 0 to 255.
@@ -84,6 +116,134 @@ Describes a single pixel in an image using RGB color components. Each component 
   - `getRed()`: Retrieves the red color component of the pixel.
   - `getGreen()`: Retrieves the green color component of the pixel.
   - `getBlue()`: Retrieves the blue color component of the pixel.
+
+### HaarWaveletTransform.java:
+This class is dedicated to performing the Haar Wavelet Transform and its inverse on image data. It facilitates image compression by converting the image data into a frequency domain, enabling selective coefficient truncation for data reduction.
+
+- **Package**: `model`
+
+- **Key Functionalities**:
+  - Performs forward and inverse Haar Wavelet Transform on 2D matrices.
+  - Applies thresholding to truncate small coefficients during compression.
+  - Supports padding and unpadding operations to handle image dimensions not in powers of two.
+
+- **Methods**:
+  - `avgAndDiff(List<Double> s)`: Calculates averages and differences for Haar Wavelet Transform.
+  - `invAvgAndDiff(List<Double> s)`: Reverts the averages and differences to reconstruct the original data.
+  - `padArr(double[][] X)`: Pads a 2D array to make it square with dimensions as powers of two.
+  - `powerOfTwo(int number)`: Calculates the next power of two greater than or equal to a given number.
+  - `unpadArr(double[][] X, int originalWidth, int originalHeight)`: Removes padding to revert to original dimensions.
+  - `transform(List<Double> s, int l)`: Applies the Haar Wavelet Transform to a list.
+  - `invert(List<Double> transformedSequence, int l)`: Applies the inverse Haar Wavelet Transform to a list.
+  - `haar(double[][] mat)`: Applies the Haar Wavelet Transform to a 2D matrix.
+  - `invHaar(double[][] mat, int originalWidth, int originalHeight)`: Applies the inverse Haar Wavelet Transform to a 2D matrix.
+  - `calThreshold(double[][] redChannel, double[][] greenChannel, double[][] blueChannel, double percentage)`: Calculates the threshold for truncating values in compression.
+
+The `HaarWaveletTransform` class provides a robust toolkit for handling image compression tasks within the application, adhering to the principles of image processing and data compression algorithms.
+
+### Strategy Package (`model.strategy`):
+
+This package is part of the model and includes classes that implement the Strategy pattern for image processing. It allows for the dynamic application of various filters and effects to images, such as blur, sharpen, sepia, and more, potentially with support for a split view.
+
+### Design Justifications:
+
+The Strategy package is an integral part of the model layer in the image processing application. It employs the Strategy design pattern to encapsulate various image filtering algorithms behind a common interface. This pattern is highly beneficial for the following reasons:
+
+- _Flexibility_: The Strategy pattern allows for easy swapping of algorithms at runtime, providing a flexible mechanism to change image processing behaviors without altering the client code.
+- _Extensibility_: New filtering strategies can be added without disturbing existing code, making the system easy to extend.
+- _Maintainability_: Each filter strategy is maintained within its own class, promoting a cleaner and more modular design which in turn makes the codebase easier to understand and maintain.
+- _Testability_: Individual strategies can be tested in isolation, ensuring that each filter behaves as expected.
+
+### FilterStrategy.java:
+Defines the strategy interface for applying various filters to an image. Implementations of this interface encapsulate specific image filtering algorithms.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Applies the filter strategy to the provided image and returns a new `Image` instance with the filter applied.
+
+### SplitFilterDecorator.java:
+Implements the `FilterStrategy` interface to apply a split-view effect to image filters. It decorates an existing filter strategy, applying it to only a portion of the image as specified by a percentage split point.
+
+- **Package**: model.strategy
+
+- **Fields**:
+  - `originalStrategy`: The original `FilterStrategy` that is being decorated.
+  - `splitPercentage`: A double value representing the percentage of the image width to apply the original strategy.
+
+- **Methods**:
+  - **Constructor**: `SplitFilterDecorator(FilterStrategy strategy, double splitPercentage)`: Initializes a new instance of `SplitFilterDecorator` with a given filter strategy and a split percentage.
+  - `apply(Image originalImage)`: Overrides the `apply` method to apply the filter strategy to the image up to the specified split point. Pixels to the left of the split point are processed, while pixels to the right remain unchanged. Returns a new `Image` instance with the filter applied partially.
+
+### AdjustLevelsFilterStrategy.java:
+Implements the `FilterStrategy` interface to perform levels adjustment on images. The strategy adjusts the intensity distribution of the shadows, midtones, and highlights based on the provided parameters.
+
+- **Package**: model.strategy
+
+- **Fields**:
+  - `b`: Integer value representing the black point for shadows adjustment (0-255).
+  - `m`: Integer value representing the midpoint for midtones adjustment (0-255).
+  - `w`: Integer value representing the white point for highlights adjustment (0-255).
+
+- **Methods**:
+  - **Constructor**: `AdjustLevelsFilterStrategy(int b, int m, int w)`: Creates an instance of `AdjustLevelsFilterStrategy` with specified levels for shadows (b), midtones (m), and highlights (w). The values must follow the order `b` < `m` < `w` and be within the range [0, 255].
+  - `apply(Image image)`: Applies the levels adjustment to the provided image based on the initial black point, midpoint, and white point values. It returns a new `Image` object with the modified intensity levels.
+
+### BlurFilterStrategy.java:
+Defines a strategy for applying a blur effect to an image. It encapsulates the blurring algorithm by utilizing the `blur` method defined in the `Image` class.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Takes an `Image` object as input and returns a new `Image` instance that has been blurred. This method calls the `blur` method of the `Image` class to perform the actual blurring operation.
+
+### ColorCorrectFilterStrategy.java:
+Implements a strategy for color correction in images, part of the model's strategy pattern. It leverages the `colorCorrect` method from the `Image` class to adjust the color balance.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Accepts an `Image` object and returns a new `Image` instance with color correction applied. The color correction process is handled by invoking the `colorCorrect` method on the `Image` class.
+
+### IntensityFilterStrategy.java:
+This class is part of the strategy pattern in the model package that applies an intensity-based filter to an image. It converts the image to grayscale by averaging the RGB color channels.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Takes an `Image` object and returns a new `Image` instance converted to grayscale using the intensity method. The conversion leverages the `toIntensityComponent` method from the `Image` class.
+
+### LumaFilterStrategy.java:
+Part of the model's strategy pattern, this class applies a luma-based filter to convert an image into a grayscale version. It calculates the luma component as a weighted sum of the RGB color channels.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Accepts an `Image` object and uses the `toLumaComponent` method of the `Image` class to return a new `Image` instance in grayscale. The luma-based conversion considers the relative luminance of the color channels to produce the grayscale image.
+
+### SepiaFilterStrategy.java:
+This class is an implementation of the `FilterStrategy` interface and is responsible for converting an image to a sepia tone. It leverages the `toSepia` method from the `Image` class to achieve the sepia effect.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Takes an `Image` object as input and calls the `toSepia` method on it. The result is a new `Image` object that has been processed to have a sepia tone, giving it a warm, brownish-gray color typical of historic photographs.
+
+### SharpenFilterStrategy.java:
+This class implements the `FilterStrategy` interface to apply a sharpening filter to an image. The sharpening process enhances the edges and details within the image, making it appear more crisp and defined.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Takes an `Image` object as input and applies a sharpening filter by invoking the `sharpen` method from the `Image` class. The resulting `Image` object is returned with enhanced definition.
+
+### ValueFilterStrategy.java:
+This class provides an implementation of the `FilterStrategy` interface to convert an image to its value component. The value component is derived from the highest values among the three RGB color channels.
+
+- **Package**: model.strategy
+
+- **Methods**:
+  - `apply(Image image)`: Accepts an `Image` object and applies a value filter, extracting the highest value from the red, green, and blue color channels for each pixel. It utilizes the `toValueComponent` method from the `Image` class to produce a grayscale image based on the value component. The resultant `Image` object, now reflecting the value component of the original image, is returned.
 
 ## Controller:
 The `Controller` represents all the components that define the 'Controller' in the MVC architecture.
@@ -146,6 +306,15 @@ Extends `AbstractCommand.java` and provides foundational functionalities for tra
 
 - **Methods**:
   - **Constructor**: `AbstractTransformCommand(String imageName, String destImageName, IImageModel model)`: Constructs the command with the provided source image name, destination image name, and a reference to the model.
+
+### AbstractSplitCommand.java:
+A specialized abstract command that extends `AbstractTransformCommand` with added functionality to handle image transformations with an optional split effect. This command forms the basis for commands that require a split view of the transformation.
+
+- **Package**: controller.commands
+
+- **Methods**:
+  - **Constructor**: `AbstractSplitCommand(String imageName, String destImageName, IImageModel model, Optional<Double> splitPercentage)`: Creates an abstract command for transforming images with the ability to apply the transformation up to a specified split percentage. The constructor requires the name of the source image, the name for the transformed destination image, the image model, and an optional split percentage.
+  - `processImage()`: This abstract method must be implemented by subclasses to specify the image processing behavior. It should apply the desired transformation to the image and respect the split percentage if provided.
 
 ### LoadCommand.java:
 Extends `AbstractLoaderSaverCommand.java` and is tasked with loading an image into the model from a specified file path. This class encapsulates the command to retrieve an image from the given path and load it into the model under a provided name.
@@ -305,6 +474,57 @@ Extends `AbstractCombineSplitCommand.java` and is designed to combine separate r
 - **Methods**:
   - **Constructor**: `RGBCombineCommand(String ImageName, String redImageName, String greenImageName, String blueImageName, IImageModel model)`: Constructs the command with the provided image names for the RGB channels and a reference to the image model.
   - `processImage()`: Overrides the abstract method from `AbstractCombineSplitCommand.java`. It uses the underlying image model to combine the separate red, green, and blue components into a single RGB image and saves the resultant image with the specified name.
+
+### AdjustLevelsCommand.java:
+A concrete command class in the controller.commands package, designed to adjust the intensity levels of an image's shadows, midtones, and highlights. It extends `AbstractSplitCommand` to optionally incorporate a split effect where part of the image remains unaltered.
+
+- **Package**: controller.commands
+
+- **Fields**:
+    - `b`: An integer representing the adjustment value for shadows (brightness).
+    - `m`: An integer representing the adjustment value for midtones.
+    - `w`: An integer representing the adjustment value for highlights (white levels).
+
+- **Methods**:
+    - **Constructor**: `AdjustLevelsCommand(int b, int m, int w, String imageName, String destImageName, IImageModel model, Optional<Double> splitPercentage)`: Instantiates the command with specific values for brightness, midtones, and white levels adjustments, along with the source image name, destination image name, image model reference, and an optional percentage for the split effect.
+    - `processImage()`: Implements the abstract method from `AbstractSplitCommand`. It instructs the model to perform level adjustments on the specified image, considering the split percentage if provided. Throws an exception if the image processing fails.
+
+### ColorCorrectCommand.java:
+Part of the `controller.commands` package, this command class is responsible for adjusting the color balance of an image to produce a more natural or desired appearance. It extends the `AbstractSplitCommand` for optional application of the color correction effect up to a certain percentage of the image, providing a split view functionality.
+
+- **Package**: controller.commands
+
+- **Methods**:
+    - **Constructor**: `ColorCorrectCommand(String imageName, String destImageName, IImageModel model, Optional<Double> splitPercentage)`: Initializes a new instance of `ColorCorrectCommand` with the specified image names, the model, and an optional split percentage. The split percentage determines the extent of the image to which the color correction will be applied.
+    - `processImage()`: This overridden method directs the model to apply color correction to the source image. If a split percentage is specified, the color correction is applied only up to that point, leaving the rest of the image in its original state. The method may throw an exception if the image processing encounters issues.
+
+### CompressCommand.java:
+
+Part of the `controller.commands` package, this command class handles the compression of an image using the Haar Wavelet Transform. The compression is done based on a specified compression ratio.
+
+- **Package**: controller.commands
+
+- **Fields**:
+  - `compressionRatio`: The ratio by which the image is to be compressed.
+
+- **Methods**:
+  - **Constructor**: `CompressCommand(int compressionRatio, String imageName, String destImageName, IImageModel model)`
+    Constructs a new `CompressCommand` object with the specified compression ratio, image name, destination image name, and image model.
+  - `processImage()`: `protected void processImage() throws Exception`
+    This overridden method processes the image by compressing it using the model's compression method. The compression ratio provided during instantiation is used.
+
+### HistogramCommand.java:
+
+Part of the `controller.commands` package, this command class generates a histogram for an image within the model. It extends `AbstractTransformCommand` and captures the histogram representation of the pixel intensity distribution in the image.
+
+- **Package**: controller.commands
+
+- **Methods**:
+  - **Constructor**: `HistogramCommand(String imageName, String destImageName, IImageModel model)`
+    Constructs a new `HistogramCommand` with the specified source and destination image names, as well as a reference to the image model.
+  - `processImage()`: `protected void processImage() throws Exception`
+    Executes the histogram creation process. Retrieves histogram data from the model for the specified image and utilizes the `HistogramRenderer` to create a visual representation of the histogram. The resulting image is then added to the model under the destination image name.
+
 
 ### IController.java:
 Defines the contract for a controller in MVC architectural pattern. The interface specifies the core responsibilities of the controller, which include interpreting user inputs and orchestrating interactions between the model and the view components.

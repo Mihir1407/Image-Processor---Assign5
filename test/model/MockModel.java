@@ -38,7 +38,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void addImage(Image image, String imagePath) throws IOException {
+  public void addImage(Image image, String imagePath) {
     log.append("Add Image method called.");
   }
 
@@ -50,7 +50,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public Image getImage(String imageName) throws IOException {
+  public Image getImage(String imageName) {
     log.append("Get Image method called.");
     return dummyImage;
   }
@@ -63,7 +63,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void redComponent(String imageName, String destImageName) throws IOException {
+  public void redComponent(String imageName, String destImageName) {
     log.append("Red Component method called.");
   }
 
@@ -75,7 +75,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void greenComponent(String imageName, String destImageName) throws IOException {
+  public void greenComponent(String imageName, String destImageName) {
     log.append("Green Component method called.");
   }
 
@@ -87,49 +87,55 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void blueComponent(String imageName, String destImageName) throws IOException {
+  public void blueComponent(String imageName, String destImageName) {
     log.append("Blue Component method called.");
   }
 
   /**
    * Logs the extraction of the value component.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void valueComponent(String imageName, String destImageName) throws IOException {
+  public void valueComponent(String imageName, String destImageName,
+                             Optional<Double> splitPercentageOpt) {
     log.append("Value Component method called.");
   }
 
   /**
    * Logs the extraction of the luma component.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void lumaComponent(String imageName, String destImageName) throws IOException {
+  public void lumaComponent(String imageName, String destImageName,
+                            Optional<Double> splitPercentageOpt) {
     log.append("Luma Component method called.");
   }
 
   /**
    * Logs the extraction of the intensity component.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void intensityComponent(String imageName, String destImageName) throws IOException {
+  public void intensityComponent(String imageName, String destImageName,
+                                 Optional<Double> splitPercentageOpt) {
     log.append("Intensity Component method called.");
   }
 
   @Override
-  public void sepia(String imageName, String destImageName, Optional<Integer> splitPercentageOpt) throws IOException {
-
+  public void sepia(String imageName, String destImageName, Optional<Double> splitPercentageOpt) {
+    log.append("Sepia Component method called.");
   }
 
   /**
@@ -140,7 +146,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void horizontalFlip(String imageName, String destImageName) throws IOException {
+  public void horizontalFlip(String imageName, String destImageName) {
     log.append("Horizontal Flip method called.");
   }
 
@@ -161,24 +167,28 @@ public class MockModel implements IImageModel {
   /**
    * Logs the operation to apply a blur effect to the specified image.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void blur(String imageName, String destImageName) throws IOException {
+  public void blur(String imageName, String destImageName, Optional<Double> splitPercentageOpt)
+          throws IOException {
     log.append("Blur method called.");
   }
 
   /**
    * Logs the operation to apply a sharpening effect to the specified image.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void sharpen(String imageName, String destImageName) throws IOException {
+  public void sharpen(String imageName, String destImageName,
+                      Optional<Double> splitPercentageOpt) throws IOException {
     log.append("Sharpen method called.");
   }
 
@@ -190,20 +200,8 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void verticalFlip(String imageName, String destImageName) throws IOException {
+  public void verticalFlip(String imageName, String destImageName) {
     log.append("Vertical Flip method called.");
-  }
-
-  /**
-   * Logs the operation to apply a sepia tone effect to the specified image.
-   *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
-   * @throws IOException if an I/O error occurs
-   */
-  @Override
-  public void sepia(String imageName, String destImageName) {
-    log.append("Sepia Component method called.");
   }
 
   /**
@@ -221,7 +219,7 @@ public class MockModel implements IImageModel {
    */
   @Override
   public void rgbSplit(String imageName, String destImageNameRed, String
-          destImageNameGreen, String destImageNameBlue) throws IOException {
+          destImageNameGreen, String destImageNameBlue) {
     log.append("RGB Split method called.");
   }
 
@@ -244,39 +242,45 @@ public class MockModel implements IImageModel {
   /**
    * Logs the operation to generate a histogram representation of the specified image.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
-   * @throws IOException if an I/O error occurs
+   * @param imageName The name of the source image.
+   * @return A placeholder return value since the actual histogram generation is not performed in
+   *         this method.Always returns null.
+   * @throws IOException If an I/O error occurs.
    */
   @Override
-  public void histogram(String imageName, String destImageName) throws IOException {
+  public int[][] histogram(String imageName) throws IOException {
     log.append("Histogram method called.");
+    return null;
   }
 
   /**
    * Logs the operation to perform color correction on the specified image.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void colorCorrect(String imageName, String destImageName) throws IOException {
+  public void colorCorrect(String imageName, String destImageName,
+                           Optional<Double> splitPercentageOpt) throws IOException {
     log.append("Color Correct method called.");
   }
 
   /**
    * Logs the operation to adjust the brightness levels of the specified image.
    *
-   * @param imageName     the name of the source image
-   * @param destImageName the name of the destination image
-   * @param b             the black point value for level adjustment
-   * @param m             the mid-point value for level adjustment
-   * @param w             the white point value for level adjustment
+   * @param imageName          the name of the source image
+   * @param destImageName      the name of the destination image
+   * @param b                  the black point value for level adjustment
+   * @param m                  the mid-point value for level adjustment
+   * @param w                  the white point value for level adjustment
+   * @param splitPercentageOpt an optional split percentage for value extraction
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IOException {
+  public void adjustLevels(String imageName, String destImageName, int b, int m, int w,
+                           Optional<Double> splitPercentageOpt) throws IOException {
     log.append("Adjust Levels method called.");
   }
 
@@ -289,7 +293,7 @@ public class MockModel implements IImageModel {
    * @throws IOException if an I/O error occurs
    */
   @Override
-  public void compressImage(String imageName, String destImageName, int percentage) throws IOException {
+  public void compressImage(String imageName, String destImageName, int percentage) {
     log.append("Compress method called.");
   }
 

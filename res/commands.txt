@@ -112,3 +112,100 @@ vertical-flip filmHFlip filmHFlipVFlip
 
 #save 'filmHFlipVFlip' as 'filmHFlipVFlip.png'
 save res\images\filmHFlipVFlip.png filmHFlipVFlip
+
+#compress 'film' by 20% as 'filmCompress20'
+compress 20 film filmCompress20
+
+#save 'filmCompress20' as 'filmCompress20.jpg'
+save res\images\filmCompress20.jpg filmCompress20
+
+#create histogram for 'filmCompress20'
+histogram filmCompress20 filmCompress20Hist
+
+#save 'filmCompress20Hist' as 'filmCompress20.png'
+save res\images\filmCompress20Hist.jpg filmCompress20Hist
+
+#compress 'film' by 50% as 'filmCompress50'
+compress 50 film filmCompress50
+
+#save 'filmCompress50' as 'filmCompress50.jpg'
+save res\images\filmCompress50.jpg filmCompress50
+
+#create histogram for 'filmCompress50'
+histogram filmCompress50 filmCompress50Hist
+
+#save 'filmCompress50Hist' as 'filmCompress50.png'
+save res\images\filmCompress50Hist.jpg filmCompress50Hist
+
+#compress 'film' by 90% as 'filmCompress90'
+compress 90 film filmCompress90
+
+#save 'filmCompress90' as 'filmCompress90.jpg'
+save res\images\filmCompress90.jpg filmCompress90
+
+#create histogram for 'filmCompress90'
+histogram filmCompress90 filmCompress90Hist
+
+#save 'filmCompress90Hist' as 'filmCompress90.png'
+save res\images\filmCompress90Hist.jpg filmCompress90Hist
+
+#create histogram for 'film' as 'filmHist'
+histogram film filmHist
+
+#save 'filmHist' as 'filmHist.jpeg'
+save res\images\filmHist.jpeg filmHist
+
+#color-correct 'film' as 'filmColorCorrect'
+color-correct film filmColorCorrect
+
+#save 'filmColorCorrect' as 'filmColorCorrect.png'
+save res\images\filmColorCorrect.png filmColorCorrect
+
+#create histogram for 'filmColorCorrect' as 'filmColorCorrectHist'
+histogram filmColorCorrect filmColorCorrectHist
+
+#save 'filmColorCorrectHist' as 'filmColorCorrectHist.jpg'
+save res\images\filmColorCorrectHist.jpg filmColorCorrectHist
+
+#adjust levels for 'film' as 'filmLevelsAdjust'
+levels-adjust 20 100 255 film filmLevelsAdjust
+
+#save 'filmLevelsAdjust' as 'filmLevelsAdjust.png'
+save res\images\filmLevelsAdjust.png filmLevelsAdjust
+
+#create histogram for 'filmLevelsAdjust' as 'filmLevelsAdjustHist'
+histogram filmLevelsAdjust filmLevelsAdjustHist
+
+#save 'filmLevelsAdjustHist' as 'filmLevelsAdjustHist.png'
+save res\images\filmLevelsAdjustHist.png filmLevelsAdjustHist
+
+#adjust levels for 'film' as 'filmLevelsAdjust2'
+levels-adjust 100 133 255 film filmLevelsAdjust2
+
+#save 'filmLevelsAdjust2' as 'filmLevelsAdjust2.png'
+save res\images\filmLevelsAdjust2.png filmLevelsAdjust2
+
+#create histogram for 'filmLevelsAdjust2' as 'filmLevelsAdjust2Hist'
+histogram filmLevelsAdjust2 filmLevelsAdjust2Hist
+
+#save 'filmLevelsAdjust2Hist' as 'filmLevelsAdjust2Hist.png'
+save res\images\filmLevelsAdjust2Hist.png filmLevelsAdjust2Hist
+
+#produce a 50% split sepia-toned version of 'film' as an image 'filmSepiaSplit50'
+sepia film filmSepiaSplit50 split 50
+
+#save 'filmSepiaSplit50' as 'filmSepiaSplit50.jpg'
+save res\images\filmSepiaSplit50.jpg filmSepiaSplit50
+
+#produce a 30% blurred version of 'film' as an image 'filmBlurSplit30'
+blur film filmBlurSplit30 split 30
+
+#save 'filmBlurSplit30' as 'filmBlurSplit30.jpeg'
+save res\images\filmBlurSplit30.jpeg filmBlurSplit30
+
+#create an 60% split greyscale using only the luma component, as an image 'filmLumaSplit60'
+luma-component film filmLumaSplit60 split 60
+
+#save 'filmLumaSplit60' as 'filmLumaSplit60.png'
+save res\images\filmLumaSplit60.png filmLumaSplit60
+

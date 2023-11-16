@@ -22,9 +22,7 @@ public class VerticalFlipCommand extends AbstractTransformCommand {
   }
 
   /**
-   * Processes the image.
-   * Derived classes should provide their specific image processing logic
-   * by overriding this method.
+   * Processes the image by directing the model to vertically flip the image.
    *
    * @throws Exception if an error occurs during image processing.
    */

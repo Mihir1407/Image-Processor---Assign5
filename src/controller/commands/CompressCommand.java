@@ -11,7 +11,7 @@ public class CompressCommand extends AbstractTransformCommand {
   private final int compressionRatio;
 
   /**
-   * Constructs a new {@code CompressCommand} object.
+   * Constructs a new CompressCommand object.
    *
    * @param compressionRatio the ratio by which the image is to be compressed.
    * @param imageName        the name of the image to compress.
