@@ -14,5 +14,11 @@ public interface IController {
    */
   void execute();
 
+  /**
+   * Parses a script file and executes a list of commands.
+   * This method allows batch processing of multiple commands.
+   *
+   * @param filePath Path to the script file containing a list of commands.
+   */
   void runScript(String filePath);
 }

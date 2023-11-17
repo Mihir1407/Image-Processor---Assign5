@@ -333,6 +333,51 @@ public class ImageControllerMainModelTest {
   }
 
   /**
+   * Tests the intensity component with split method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerIntensityComponentWithSplitMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "intensity-component main_model_test_img main_model_test_img_intensity split 50",
+            "save res/controllerTest/main_model_test_img_intensity.jpg "
+                    + "main_model_test_img_intensity"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "intensity-component operation successful.",
+            "save operation successful.", "");
+    assertEquals(expectedOutput, outContent.toString());
+    Image intensityImage = imageModel.getImage("main_model_test_img_intensity");
+    Pixel[][] expectedImage = new Pixel[2][2];
+    expectedImage[0][0] = new Pixel(152, 152, 152);
+    expectedImage[0][1] = new Pixel(109, 159, 208);
+
+    expectedImage[1][0] = new Pixel(167, 167, 167);
+    expectedImage[1][1] = new Pixel(124, 174, 223);
+    for (int i = 0; i < intensityImage.getWidth(); i++) {
+      for (int j = 0; j < intensityImage.getHeight(); j++) {
+        assertEquals(expectedImage[i][j].getRed(), intensityImage.getPixels()[i][j].getRed());
+        assertEquals(expectedImage[i][j].getGreen(), intensityImage.getPixels()[i][j].getGreen());
+        assertEquals(expectedImage[i][j].getBlue(), intensityImage.getPixels()[i][j].getBlue());
+      }
+    }
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
    * Tests the sepia component method call of the ImageController
    * class using execute.
    * Ensures it processes the simulated console input correctly.
@@ -605,6 +650,61 @@ public class ImageControllerMainModelTest {
        new Pixel(255, 96, 96)},
       {new Pixel(0, 0, 255), new Pixel(255, 96, 96),
        new Pixel(96, 191, 0)}
+    };
+
+    for (int y = 0; y < sharpenedImage.getHeight(); y++) {
+      for (int x = 0; x < sharpenedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixels[y][x];
+        Pixel actualPixel = sharpenedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
+   * Tests the Sharpen with split method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerSharpenWithSplitMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_sharpen_test_img.png "
+                    + "main_model_sharpen_test_img",
+            "sharpen main_model_sharpen_test_img main_model_test_img_sharpened split 50",
+            "save res/controllerTest/main_model_test_img_sharpened.png "
+                    + "main_model_test_img_sharpened"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "sharpen operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image sharpenedImage = imageModel.getImage("main_model_test_img_sharpened");
+
+    Pixel[][] expectedPixels = {
+            {new Pixel(191, 96, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(96, 255, 96), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
     };
 
     for (int y = 0; y < sharpenedImage.getHeight(); y++) {
@@ -954,6 +1054,57 @@ public class ImageControllerMainModelTest {
   }
 
   /**
+   * Tests the Color Correct with split method call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerColorCorrectWithSplitMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "color-correct main_model_test_img main_model_test_img_color_correct split 50",
+            "save res/controllerTest/main_model_test_img_color_correct.jpg "
+                    + "main_model_test_img_color_correct"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "color-correct operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("main_model_test_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_color_correct");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(152, 152, 152), new Pixel(109, 159, 208)},
+            {new Pixel(167, 167, 167), new Pixel(124, 174, 223)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+
+  /**
    * Tests the Adjust Level method call of the ImageController
    * class using execute.
    * Ensures it processes the simulated console input correctly.
@@ -988,6 +1139,56 @@ public class ImageControllerMainModelTest {
     Pixel[][] expectedPixelData = new Pixel[][]{
             {new Pixel(255, 255, 179), new Pixel(255, 255, 161)},
             {new Pixel(255, 254, 130), new Pixel(255, 244, 108)}
+    };
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+
+    System.setOut(System.out);
+    System.setIn(System.in);
+  }
+
+  /**
+   * Tests the Adjust Level method with split call of the ImageController
+   * class using execute.
+   * Ensures it processes the simulated console input correctly.
+   */
+  @Test
+  public void testControllerAdjustLevelWithSplitMainModel() throws IOException {
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+    String allInputData = String.join(System.lineSeparator(),
+            "load res/controllerTest/main_model_test_img.jpg main_model_test_img",
+            "levels-adjust 20 50 100 main_model_test_img main_model_test_img_levels_adjust split 50",
+            "save res/controllerTest/main_model_test_img_levels_adjust.jpg "
+                    + "main_model_test_img_levels_adjust"
+    );
+    System.setIn(new ByteArrayInputStream(allInputData.getBytes()));
+    ConsoleView view = new ConsoleView();
+    ImageController controller = new ImageController(imageModel, view);
+    try {
+      controller.execute();
+    } catch (NoSuchElementException ignored) {
+    }
+    String expectedOutput = String.join(System.lineSeparator(),
+            "load operation successful.",
+            "levels-adjust operation successful.",
+            "save operation successful.",
+            "");
+    assertEquals(expectedOutput.trim(), outContent.toString().trim());
+
+    Image originalImage = imageModel.getImage("main_model_test_img");
+    Image compressedImage = imageModel.getImage("main_model_test_img_levels_adjust");
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(255, 255, 179), new Pixel(109, 159, 208)},
+            {new Pixel(255, 254, 130), new Pixel(124, 174, 223)}
     };
     for (int y = 0; y < compressedImage.getHeight(); y++) {
       for (int x = 0; x < compressedImage.getWidth(); x++) {

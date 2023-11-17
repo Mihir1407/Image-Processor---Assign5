@@ -26,7 +26,7 @@ public class HistogramCommand extends AbstractTransformCommand {
   /**
    * Executes the histogram creation process. Retrieves histogram data from the model for the
    * specified image and utilizes the HistogramRenderer to create a visual representation of
-   * the histogram. The resulting image is then added to the model under the destination image name.
+   * the histogram.
    *
    * @throws Exception if an error occurs during the histogram generation process, such as
    *                   issues with accessing the image data or during the rendering of the

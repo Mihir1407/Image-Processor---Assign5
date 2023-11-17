@@ -352,6 +352,15 @@ public class Image implements IImage {
     return processImage("sepia");
   }
 
+  /**
+   * Combines the color channels from three separate images to create a new image.
+   *
+   * @param redImage   the image providing the red color channel
+   * @param greenImage the image providing the green color channel
+   * @param blueImage  the image providing the blue color channel
+   * @return a new image representing the combination of all color channels
+   * @throws IllegalArgumentException if the images do not have the same dimensions
+   */
   public static Image combineColorChannels(Image redImage, Image greenImage, Image blueImage) {
     int width = redImage.getWidth();
     int height = redImage.getHeight();
@@ -375,6 +384,11 @@ public class Image implements IImage {
     return new Image(combinedPixels);
   }
 
+  /**
+   * Calculates histograms for each color channel (red, green, and blue) of this image.
+   *
+   * @return a 2D array containing three histograms (one for each color channel).
+   */
   public int[][] calculateHistograms() {
     int[] redHistogram = new int[256];
     int[] greenHistogram = new int[256];
@@ -391,6 +405,12 @@ public class Image implements IImage {
     return new int[][]{redHistogram, greenHistogram, blueHistogram};
   }
 
+  /**
+   * Performs color correction on this image based on the peak values of the color histograms.
+   * It adjusts each color channel to have the same peak value, normalizing the color balance.
+   *
+   * @return a new image with color correction applied
+   */
   public Image colorCorrect() {
 
     int[][] histograms = this.calculateHistograms();
@@ -407,6 +427,13 @@ public class Image implements IImage {
     return applyColorCorrection(redPeak, greenPeak, bluePeak, averagePeak);
   }
 
+  /**
+   * Finds the most meaningful peak in a histogram, ignoring the edges.
+   * This is used to determine a significant peak in color intensity.
+   *
+   * @param histogram the histogram to analyze
+   * @return the value of the most significant peak intensity
+   */
   private int findMeaningfulPeak(int[] histogram) {
     int peak = 0;
     int peakValue = 0;
@@ -419,6 +446,16 @@ public class Image implements IImage {
     return peakValue;
   }
 
+  /**
+   * Applies color correction to the image based on the provided peak values
+   * for each color channel.
+   *
+   * @param redPeak     the peak value of the red channel histogram
+   * @param greenPeak   the peak value of the green channel histogram
+   * @param bluePeak    the peak value of the blue channel histogram
+   * @param averagePeak the average of the peak values from all three histograms
+   * @return a new image with the color correction applied
+   */
   private Image applyColorCorrection(int redPeak, int greenPeak, int bluePeak, double averagePeak) {
     Pixel[][] correctedPixels = new Pixel[this.getHeight()][this.getWidth()];
     double redOffset = averagePeak - redPeak;
@@ -428,9 +465,9 @@ public class Image implements IImage {
     for (int y = 0; y < this.getHeight(); y++) {
       for (int x = 0; x < this.getWidth(); x++) {
         Pixel pixel = this.getPixel(x, y);
-        int correctedRed = clamp((int)pixel.getRed() + (int)redOffset);
-        int correctedGreen = clamp(pixel.getGreen() + (int)greenOffset);
-        int correctedBlue = clamp(pixel.getBlue() + (int)blueOffset);
+        int correctedRed = clamp((int) pixel.getRed() + (int) redOffset);
+        int correctedGreen = clamp(pixel.getGreen() + (int) greenOffset);
+        int correctedBlue = clamp(pixel.getBlue() + (int) blueOffset);
         correctedPixels[y][x] = new Pixel(correctedRed, correctedGreen, correctedBlue);
       }
     }
@@ -438,10 +475,27 @@ public class Image implements IImage {
     return new Image(correctedPixels);
   }
 
+  /**
+   * Clamps a given value to the range of 0 to 255.
+   *
+   * @param value the value to clamp
+   * @return the clamped value
+   */
   private int clamp(int value) {
     return Math.max(0, Math.min(255, value));
   }
 
+  /**
+   * Adjusts the levels of an image by modifying the range of values.
+   * The parameters b, m, and w represent the black point, mid-point, and white point respectively.
+   *
+   * @param b the black point (minimum intensity value)
+   * @param m the mid-point (mid-range intensity value)
+   * @param w the white point (maximum intensity value)
+   * @return a new image with the levels adjusted
+   * @throws IllegalArgumentException if the level values are out of range or
+   *                                  not in ascending order
+   */
   public Image adjustLevels(int b, int m, int w) {
     if (b < 0 || b > 255 || m < 0 || m > 255 || w < 0 || w > 255) {
       throw new IllegalArgumentException("Level values must be between 0 and 255.");
@@ -578,6 +632,12 @@ public class Image implements IImage {
     return transposedMatrix;
   }
 
+  /**
+   * Applies a specified filter strategy to this image.
+   *
+   * @param filterStrategy the filter strategy to apply to the image
+   * @return the image after the filter strategy has been applied
+   */
   public Image applyFilter(FilterStrategy filterStrategy) {
     return filterStrategy.apply(this);
   }

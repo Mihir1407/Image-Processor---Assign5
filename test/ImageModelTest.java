@@ -269,6 +269,35 @@ public class ImageModelTest {
   }
 
   /**
+   * Test that value method correctly processes the image with the sepia formula amd split.
+   */
+  @Test
+  public void testValueProcessingWithSplit() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 30.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.valueComponent("TestImage",
+            "valueTestImageSplit", split);
+
+    Image valueImageSplit = imageModel.getImage("valueTestImageSplit");
+    Pixel[][] expectedImage = new Pixel[2][2];
+    expectedImage[0][0] = new Pixel(100, 150, 200);
+    expectedImage[0][1] = new Pixel(110, 160, 210);
+
+    expectedImage[1][0] = new Pixel(120, 170, 220);
+    expectedImage[1][1] = new Pixel(130, 180, 230);
+
+    for (int i = 0; i < valueImageSplit.getWidth(); i++) {
+      for (int j = 0; j < valueImageSplit.getHeight(); j++) {
+        assertEquals(expectedImage[i][j].getRed(), valueImageSplit.getPixels()[i][j].getRed());
+        assertEquals(expectedImage[i][j].getGreen(), valueImageSplit.getPixels()[i][j].getGreen());
+        assertEquals(expectedImage[i][j].getBlue(), valueImageSplit.getPixels()[i][j].getBlue());
+      }
+    }
+  }
+
+  /**
    * Test that valueComponent method throws an IOException for an invalid image name.
    */
   @Test(expected = IOException.class)
@@ -311,6 +340,35 @@ public class ImageModelTest {
         assertEquals(roundedLumaValue, lumaPixel.getRed());
         assertEquals(roundedLumaValue, lumaPixel.getGreen());
         assertEquals(roundedLumaValue, lumaPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that luma method correctly processes the image with the sepia formula amd split.
+   */
+  @Test
+  public void testLumaProcessingWithSplit() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.lumaComponent("TestImage",
+            "lumaTestImageSplit", split);
+
+    Image lumaImageSplit = imageModel.getImage("lumaTestImageSplit");
+    Pixel[][] expectedImage = new Pixel[2][2];
+    expectedImage[0][0] = new Pixel(143, 143, 143);
+    expectedImage[0][1] = new Pixel(110, 160, 210);
+
+    expectedImage[1][0] = new Pixel(163, 163, 163);
+    expectedImage[1][1] = new Pixel(130, 180, 230);
+
+    for (int i = 0; i < lumaImageSplit.getWidth(); i++) {
+      for (int j = 0; j < lumaImageSplit.getHeight(); j++) {
+        assertEquals(expectedImage[i][j].getRed(), lumaImageSplit.getPixels()[i][j].getRed());
+        assertEquals(expectedImage[i][j].getGreen(), lumaImageSplit.getPixels()[i][j].getGreen());
+        assertEquals(expectedImage[i][j].getBlue(), lumaImageSplit.getPixels()[i][j].getBlue());
       }
     }
   }
@@ -359,6 +417,61 @@ public class ImageModelTest {
         assertEquals(intensityValue, intensityPixel.getBlue());
       }
     }
+  }
+
+  /**
+   * Test that intensity method correctly processes the image with the sepia formula amd split.
+   */
+  @Test
+  public void testIntensityProcessingWithSplit() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.intensityComponent("TestImage",
+            "intensityTestImageSplit", split);
+
+    Image intesityImageSplit = imageModel.getImage("intensityTestImageSplit");
+    Pixel[][] expectedImage = new Pixel[2][2];
+    expectedImage[0][0] = new Pixel(150, 150, 150);
+    expectedImage[0][1] = new Pixel(110, 160, 210);
+
+    expectedImage[1][0] = new Pixel(170, 170, 170);
+    expectedImage[1][1] = new Pixel(130, 180, 230);
+
+    for (int i = 0; i < intesityImageSplit.getWidth(); i++) {
+      for (int j = 0; j < intesityImageSplit.getHeight(); j++) {
+        assertEquals(expectedImage[i][j].getRed(), intesityImageSplit.getPixels()[i][j].getRed());
+        assertEquals(expectedImage[i][j].getGreen(), intesityImageSplit.getPixels()[i][j].getGreen());
+        assertEquals(expectedImage[i][j].getBlue(), intesityImageSplit.getPixels()[i][j].getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that intensity method for incorrect split.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testIntensityProcessingWithInvalidSplit1() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 110.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.intensityComponent("TestImage",
+            "intensityTestImageSplit", split);
+  }
+
+  /**
+   * Test that intensity method for incorrect split.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testIntensityProcessingWithInvalidSplit2() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = -110.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.intensityComponent("TestImage",
+            "intensityTestImageSplit", split);
   }
 
   /**
@@ -413,6 +526,34 @@ public class ImageModelTest {
         assertEquals(newRed, sepiaPixel.getRed());
         assertEquals(newGreen, sepiaPixel.getGreen());
         assertEquals(newBlue, sepiaPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test that sepia method correctly processes the image with the sepia formula amd split.
+   */
+  @Test
+  public void testSepiaProcessingWithSplit() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.sepia("TestImage", "sepiaTestImageSplit", split);
+
+    Image sepiaImageSplit = imageModel.getImage("sepiaTestImageSplit");
+    Pixel[][] expectedImage = new Pixel[2][2];
+    expectedImage[0][0] = new Pixel(192, 171, 133);
+    expectedImage[0][1] = new Pixel(110, 160, 210);
+
+    expectedImage[1][0] = new Pixel(219, 195, 152);
+    expectedImage[1][1] = new Pixel(130, 180, 230);
+
+    for (int i = 0; i < sepiaImageSplit.getWidth(); i++) {
+      for (int j = 0; j < sepiaImageSplit.getHeight(); j++) {
+        assertEquals(expectedImage[i][j].getRed(), sepiaImageSplit.getPixels()[i][j].getRed());
+        assertEquals(expectedImage[i][j].getGreen(), sepiaImageSplit.getPixels()[i][j].getGreen());
+        assertEquals(expectedImage[i][j].getBlue(), sepiaImageSplit.getPixels()[i][j].getBlue());
       }
     }
   }
@@ -634,12 +775,94 @@ public class ImageModelTest {
   }
 
   /**
+   * Test that blur method correctly blurs the image with split.
+   */
+  @Test
+  public void testBlurWithSplit() throws IOException {
+    Pixel[][] samplePixels = {
+            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
+    };
+    Image img = new Image(samplePixels);
+    imageModel.addImage(img, "TestImage");
+
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.blur("TestImage", "blurredTestImageSplit", split);
+
+    Image blurredImage = imageModel.getImage("blurredTestImageSplit");
+    Pixel[][] blurredPixels = blurredImage.getPixels();
+
+    Pixel[][] expectedPixels = {
+            {new Pixel(64, 64, 16), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(48, 80, 64), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(32, 32, 80), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
+    };
+
+    for (int y = 0; y < 3; y++) {
+      for (int x = 0; x < 3; x++) {
+        assertEquals(expectedPixels[y][x].getRed(), blurredPixels[y][x].getRed());
+        assertEquals(expectedPixels[y][x].getGreen(), blurredPixels[y][x].getGreen());
+        assertEquals(expectedPixels[y][x].getGreen(), blurredPixels[y][x].getGreen());
+      }
+    }
+  }
+
+  /**
    * Test that blur method throws an IOException if the image is not found.
    */
   @Test(expected = IOException.class)
   public void testBlurImageNotFound() throws IOException {
     imageModel.blur("nonExistentImage", "blurredTestImage",
             Optional.empty());
+  }
+
+  /**
+   * Test that sharpen method correctly sharpens the image with split.
+   */
+  @Test
+  public void testSharpenWithSplit() throws IOException {
+    Pixel[][] samplePixels = {
+            {new Pixel(255, 0, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(0, 255, 0), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
+    };
+    Image img = new Image(samplePixels);
+    imageModel.addImage(img, "TestImage");
+
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.sharpen("TestImage", "sharpenedTestImageSplit", split);
+
+    Image sharpenedImage = imageModel.getImage("sharpenedTestImageSplit");
+    Pixel[][] sharpenedPixels = sharpenedImage.getPixels();
+
+    Pixel[][] expectedPixels = {
+            {new Pixel(191, 96, 0), new Pixel(0, 255, 0),
+                    new Pixel(0, 0, 255)},
+            {new Pixel(96, 255, 96), new Pixel(0, 0, 255),
+                    new Pixel(255, 0, 0)},
+            {new Pixel(0, 0, 255), new Pixel(255, 0, 0),
+                    new Pixel(0, 255, 0)}
+    };
+
+    for (int y = 0; y < 3; y++) {
+      for (int x = 0; x < 3; x++) {
+        assertEquals(expectedPixels[y][x].getRed(), sharpenedPixels[y][x].getRed());
+        assertEquals(expectedPixels[y][x].getGreen(), sharpenedPixels[y][x].getGreen());
+        assertEquals(expectedPixels[y][x].getGreen(), sharpenedPixels[y][x].getGreen());
+      }
+    }
   }
 
   /**
@@ -882,6 +1105,24 @@ public class ImageModelTest {
   }
 
   /**
+   * Test with invalid percentage for compress operation.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCompressImageWithInvalidPercentageBelowRange() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.compressImage("testImage", "destImage", -1);
+  }
+
+  /**
+   * Test with invalid percentage for compress operation.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCompressImageWithInvalidPercentageAboveRange() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.compressImage("testImage", "destImage", 105);
+  }
+
+  /**
    * Test that compressImage method correctly stores the destination image.
    */
   @Test
@@ -925,6 +1166,37 @@ public class ImageModelTest {
   }
 
   /**
+   * Test that Adjust Levels method correctly adjusts the image with split.
+   */
+  @Test
+  public void testAdjustLevelsWithSplitImageProcessing() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    int b = 20;
+    int m = 50;
+    int w = 100;
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.adjustLevels("TestImage", "adjustTestImageSplit",b,m,w, split);
+
+    Image adjustedImage = imageModel.getImage("adjustTestImageSplit");
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(255, 255, 185), new Pixel(110, 160, 210)},
+            {new Pixel(255, 251, 119), new Pixel(130, 180, 230)}
+    };
+
+    for (int y = 0; y < adjustedImage.getHeight(); y++) {
+      for (int x = 0; x < adjustedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = adjustedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
    * Test that adjustLevel method throws an IOException if the source image is not found.
    */
   @Test(expected = IOException.class)
@@ -950,6 +1222,35 @@ public class ImageModelTest {
             Optional.empty());
 
     assertNotNull(imageModel.getImage("adjustTestImage"));
+  }
+
+  /**
+   * Test that Color Correct method properly corrects the image with split.
+   */
+  @Test
+  public void testColorCorrectWithSplitImageProcessing() throws IOException {
+    Image img = new Image(pixelData);
+    imageModel.addImage(img, "TestImage");
+    double splitPercentage = 50.0;
+    Optional<Double> split = Optional.of(splitPercentage);
+    imageModel.colorCorrect("TestImage", "colorCorrectTestImage", split);
+
+
+    Image colorCorrectImage = imageModel.getImage("colorCorrectTestImage");
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(150, 150, 150), new Pixel(110, 160, 210)},
+            {new Pixel(170, 170, 170), new Pixel(130, 180, 230)}
+    };
+
+    for (int y = 0; y < colorCorrectImage.getHeight(); y++) {
+      for (int x = 0; x < colorCorrectImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = colorCorrectImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
   }
 
   /**
