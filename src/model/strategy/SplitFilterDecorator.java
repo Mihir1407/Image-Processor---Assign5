@@ -20,6 +20,9 @@ public class SplitFilterDecorator implements FilterStrategy {
    * @param splitPercentage The percentage of the image width at which the filter effect is split.
    */
   public SplitFilterDecorator(FilterStrategy strategy, double splitPercentage) {
+    if (splitPercentage < 0 || splitPercentage > 100 ) {
+      throw new IllegalArgumentException("Split percentage value needs to between 0 and 100.");
+    }
     this.originalStrategy = strategy;
     this.splitPercentage = splitPercentage;
   }

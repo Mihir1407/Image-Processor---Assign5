@@ -524,6 +524,120 @@ public class ImageTest {
   }
 
   /**
+   * Test to check invalid input for adjust level operation on an image.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testAdjustLevelsInvalidInputOutOfRange() {
+    Image image = new Image(pixelData);
+    image.adjustLevels(-1, 128, 256);
+  }
+
+  /**
+   * Test to check invalid input for adjust level operation on an image.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testAdjustLevelsInvalidInputNotAscending() {
+    Image image = new Image(pixelData);
+    image.adjustLevels(50, 30, 40);
+  }
+
+  /**
+   * Test to check compress operation on an image.
+   */
+  @Test
+  public void testCompressImageProcessing() {
+    Image img = new Image(pixelData);
+    int percentage = 50;
+
+    Image compressedImage = img.compress(percentage);
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)},
+            {new Pixel(115, 165, 215), new Pixel(115, 165, 215)}
+    };
+
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+
+  /**
+   * Test to check Level Adjustment operation on an image.
+   */
+  @Test
+  public void testCompressImageProcessing4X2() {
+    pixelData = new Pixel[][]{
+            {new Pixel(100, 150, 200), new Pixel(110, 160, 210),
+                    new Pixel(120, 170, 220),
+                    new Pixel(130, 180, 230)},
+            {new Pixel(140, 190, 240), new Pixel(150, 200, 250),
+                    new Pixel(160, 210, 260),
+                    new Pixel(170, 220, 270)}
+    };
+    Image img = new Image(pixelData);
+    int percentage = 50;
+    Image compressedImage = img.compress(percentage);
+
+    Pixel[][] expectedPixelData = new Pixel[][]{
+            {new Pixel(105, 155, 225), new Pixel(105, 155, 225),
+                    new Pixel(125, 175, 240),
+                    new Pixel(125, 175, 240)},
+            {new Pixel(145, 195, 225), new Pixel(145, 195, 225),
+                    new Pixel(165, 215, 240),
+                    new Pixel(165, 215, 240)}
+    };
+
+    for (int y = 0; y < compressedImage.getHeight(); y++) {
+      for (int x = 0; x < compressedImage.getWidth(); x++) {
+        Pixel expectedPixel = expectedPixelData[y][x];
+        Pixel actualPixel = compressedImage.getPixel(x, y);
+        assertEquals(expectedPixel.getRed(), actualPixel.getRed());
+        assertEquals(expectedPixel.getGreen(), actualPixel.getGreen());
+        assertEquals(expectedPixel.getBlue(), actualPixel.getBlue());
+      }
+    }
+  }
+  /**
+   * Test that rgbCombine method combines red, green and blue components into rgb color image.
+   */
+  @Test
+  public void testRgbCombine() throws IOException {
+    Pixel[][] redPixels = {
+            {new Pixel(255, 0, 0), new Pixel(255, 0, 0)},
+            {new Pixel(255, 0, 0), new Pixel(255, 0, 0)}
+    };
+    Image redImage = new Image(redPixels);
+
+    Pixel[][] greenPixels = {
+            {new Pixel(0, 255, 0), new Pixel(0, 255, 0)},
+            {new Pixel(0, 255, 0), new Pixel(0, 255, 0)}
+    };
+    Image greenImage = new Image(greenPixels);
+
+    Pixel[][] bluePixels = {
+            {new Pixel(0, 0, 255), new Pixel(0, 0, 255)},
+            {new Pixel(0, 0, 255), new Pixel(0, 0, 255)}
+    };
+    Image blueImage = new Image(bluePixels);
+
+    Image combinedImage = Image.combineColorChannels(redImage,greenImage,blueImage);
+    Pixel[][] combinedPixels = combinedImage.getPixels();
+
+    for (int y = 0; y < 2; y++) {
+      for (int x = 0; x < 2; x++) {
+        assertEquals(255, combinedPixels[y][x].getRed());
+        assertEquals(255, combinedPixels[y][x].getGreen());
+        assertEquals(255, combinedPixels[y][x].getBlue());
+      }
+    }
+  }
+
+  /**
    * Test to check Multiple Operations on an image.
    */
   @Test
@@ -537,7 +651,6 @@ public class ImageTest {
             {new Pixel(200, 200, 200), new Pixel(210, 210, 210)},
             {new Pixel(220, 220, 220), new Pixel(230, 230, 230)},
     };
-
     for (int y = 0; y < 2; y++) {
       for (int x = 0; x < 2; x++) {
         assertEquals(expectedPixels2[y][x].getRed(), valuePixels[y][x].getRed());
@@ -545,8 +658,6 @@ public class ImageTest {
         assertEquals(expectedPixels2[y][x].getBlue(), valuePixels[y][x].getBlue());
       }
     }
-
-
     Image hFlipImage = valueImage.horizontalFlip();
     Pixel[][] hFlipPixels = hFlipImage.getPixels();
 
@@ -565,7 +676,6 @@ public class ImageTest {
 
     Image redCompImage = hFlipImage.extractRedComponent();
     Pixel[][] redCompPixels = redCompImage.getPixels();
-
     for (int y = 0; y < 2; y++) {
       for (int x = 0; x < 2; x++) {
         assertEquals(expectedPixels1[y][x].getRed(), redCompPixels[y][x].getRed());
@@ -573,16 +683,12 @@ public class ImageTest {
         assertEquals(0, redCompPixels[y][x].getBlue());
       }
     }
-
     Pixel[][] expectedPixels3 = {
             {new Pixel(82, 73, 57), new Pixel(78, 69, 54)},
             {new Pixel(90, 80, 62), new Pixel(86, 76, 59)},
     };
-
-
     Image sepiaImage = redCompImage.toSepia();
     Pixel[][] sepiaPixels = sepiaImage.getPixels();
-
     for (int y = 0; y < 2; y++) {
       for (int x = 0; x < 2; x++) {
         assertEquals(expectedPixels3[y][x].getRed(), sepiaPixels[y][x].getRed());
